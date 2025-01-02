@@ -1,0 +1,8 @@
+{
+    "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+    "name": "daiku",
+    "start_url": "/",
+    "id": "pwa/dev",
+    "categories": ["entertainment"],
+    "display": "standalone"
+}
