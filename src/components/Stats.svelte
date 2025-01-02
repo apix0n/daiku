@@ -23,7 +23,7 @@
             <span class="highlight">
                 {[data.animeData.current, data.animeData.watched, data.animeData.dropped].reduce((total, section) => {
                     return total + section.reduce((sectionTotal, anime) => {
-                        return sectionTotal + (anime.episodesProgress || anime.episodesNumber || 0);
+                        return sectionTotal + (anime.episodesProgress || anime.episodesNumber * (1 + anime.rewatch) || 0);
                     }, 0);
                 }, 0)}
             </span>

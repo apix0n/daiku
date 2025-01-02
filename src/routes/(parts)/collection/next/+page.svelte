@@ -158,7 +158,7 @@
         background-color: var(--background-2);
         padding: 20px;
         min-width: 300px;
-        max-width: 100vw;
+        max-width: 95vw;
         border-radius: 13px;
         text-align: center;
         position: relative;

@@ -3,7 +3,7 @@
 
     const animeWatchTime = data.animeData.current.concat(data.animeData.watched, data.animeData.dropped)
         .reduce((total, anime) => {
-            const episodesWatched = anime.episodesProgress || anime.episodesNumber || 0;
+            const episodesWatched = anime.episodesProgress || anime.episodesNumber * (1 + anime.rewatch) || 0;
             return total + (episodesWatched * anime.episodesDuration);
         }, 0);
     

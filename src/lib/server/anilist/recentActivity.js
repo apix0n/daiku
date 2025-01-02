@@ -20,6 +20,7 @@ async function getRecentActivityData(userId, threshold) {
                         }
                         id
                         type
+                        format
                     }
                     status
                 }
@@ -35,24 +36,26 @@ let recentActivityCache = [];
 async function recentActivity(userRecentActivityData) {
     const allRecentActivity = userRecentActivityData;
 
-    return allRecentActivity.map(activity => {
-        const mediaType = activity.media.type === 'ANIME' ? 'anime' : 'manga';
-        let messagePrefix = `${activity.status}`.charAt(0).toUpperCase() + `${activity.status}`.slice(1) // Upper case first letter
-        let activityProgress = messagePrefix !== "Dropped" ? activity.progress : null;
-        if (`${activity.progress}`.includes('-')) {
-            messagePrefix += 's';
-        } // Add 's' if multiple episodes/chapters 
-        return {
-            date: new Date(activity.createdAt * 1000).toISOString(),
-            mediaTitle: activity.media.title.english || activity.media.title.romaji,
-            mediaType: mediaType,
-            messagePrefix: messagePrefix,
-            activityProgress: activityProgress,
-            messageRoot: activityProgress === null ? null : 'of',
-            mediaLink: `${anilistGlobal.siteUrl}/${mediaType}/${activity.media.id}`,
-            coverSrc: activity.media.coverImage.medium || activity.media.coverImage.large || activity.media.coverImage.extraLarge
-        };
-    });
+    return allRecentActivity
+        .filter(activity => activity.media.format !== 'MOVIE') // Ignore AniList watched movies
+        .map(activity => {
+            const mediaType = activity.media.type === 'ANIME' ? 'anime' : 'manga';
+            let messagePrefix = `${activity.status}`.charAt(0).toUpperCase() + `${activity.status}`.slice(1) // Upper case first letter
+            let activityProgress = messagePrefix !== "Dropped" ? activity.progress : null;
+            if (`${activity.progress}`.includes('-')) {
+                messagePrefix += 's';
+            } // Add 's' if multiple episodes/chapters 
+            return {
+                date: new Date(activity.createdAt * 1000).toISOString(),
+                mediaTitle: activity.media.title.english || activity.media.title.romaji,
+                mediaType: mediaType,
+                messagePrefix: messagePrefix,
+                activityProgress: activityProgress,
+                messageRoot: activityProgress === null ? null : 'of',
+                mediaLink: `${anilistGlobal.siteUrl}/${mediaType}/${activity.media.id}`,
+                coverSrc: activity.media.coverImage.medium || activity.media.coverImage.large || activity.media.coverImage.extraLarge
+            };
+        });
 }
 
 export async function fetchRecentActivity(userId, threshold) {
