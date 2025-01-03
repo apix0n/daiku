@@ -41,7 +41,10 @@ async function recentActivity(userRecentActivityData) {
         .map(activity => {
             const mediaType = activity.media.type === 'ANIME' ? 'anime' : 'manga';
             let messagePrefix = `${activity.status}`.charAt(0).toUpperCase() + `${activity.status}`.slice(1) // Upper case first letter
-            let activityProgress = messagePrefix !== "Dropped" ? activity.progress : null;
+            if (messagePrefix === "Rewatched") { // rewatched to "completed rewatching"
+                messagePrefix = "Completed rewatch";
+            }
+            let activityProgress = messagePrefix !== "Dropped" && messagePrefix !== "Completed rewatch" ? activity.progress : null;
             if (`${activity.progress}`.includes('-')) {
                 messagePrefix += 's';
             } // Add 's' if multiple episodes/chapters 
@@ -51,7 +54,7 @@ async function recentActivity(userRecentActivityData) {
                 mediaType: mediaType,
                 messagePrefix: messagePrefix,
                 activityProgress: activityProgress,
-                messageRoot: activityProgress === null ? null : 'of',
+                messageRoot: activityProgress === null && activityProgress === "Completed rewatch" ? null : 'of',
                 mediaLink: `${anilistGlobal.siteUrl}/${mediaType}/${activity.media.id}`,
                 coverSrc: activity.media.coverImage.medium || activity.media.coverImage.large || activity.media.coverImage.extraLarge
             };
