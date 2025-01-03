@@ -1,6 +1,5 @@
-import { parseString } from 'xml2js';
-import { getTmdbInfos } from '../tmdb/getTmdbInfos';
 import { error } from '@sveltejs/kit';
+import { XMLParser } from 'fast-xml-parser';
 
 export async function fetchWatchedMovies(username) {
     const watchedMovies = [];
@@ -8,22 +7,15 @@ export async function fetchWatchedMovies(username) {
     const response = await fetch(feed);
     const feedText = await response.text();
 
-    let parsedFeed;
+    let parsedFeed = new XMLParser().parse(feedText);
 
-    parseString(feedText, (err, result) => {
-        if (err) {
-            throw new Error('Failed to parse XML');
-        }
-        parsedFeed = JSON.parse(JSON.stringify(result));
-    });
-
-    for (const item of parsedFeed['rss'].channel[0].item) {
-        const tmdbId = parseInt(item['tmdb:movieId']?.[0]); 
+    for (const item of parsedFeed.rss.channel.item) {
+        const tmdbId = parseInt(item['tmdb:movieId']); 
         let filmTitle, coverSrc, runtime;
 
         if (tmdbId) {
-            filmTitle = item['letterboxd:filmTitle']?.[0];
-            const summary = item['description']?.[0];
+            filmTitle = item['letterboxd:filmTitle'];
+            const summary = item['description'];
             const imgSrcRegex = /<img\s+src="([^"]+)"/;
             const match = imgSrcRegex.exec(summary);
             coverSrc = match ? match[1] : null;
@@ -32,11 +24,11 @@ export async function fetchWatchedMovies(username) {
             continue
         }
 
-        const finishedDate = item['letterboxd:watchedDate']?.[0];
+        const finishedDate = item['letterboxd:watchedDate'];
         const mediaType = 'movie';
-        const rating = Math.round(parseFloat(item['letterboxd:memberRating']?.[0] ?? 0) * 2);
-        const isRewatch = item['letterboxd:rewatch']?.[0] === 'Yes';
-        const reviewLink = item.link?.[0];
+        const rating = Math.round(parseFloat(item['letterboxd:memberRating'] ?? 0) * 2);
+        const isRewatch = item['letterboxd:rewatch'] === 'Yes';
+        const reviewLink = item.link;
 
         watchedMovies.push({
             title: filmTitle,
