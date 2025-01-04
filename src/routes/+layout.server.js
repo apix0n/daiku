@@ -44,7 +44,7 @@ export async function load({ fetch }) {
     const anilistUserId = cache.anilistUserId;
 
     // Check if cached data exists and is still valid 
-    if (cache.animeData && cache.mangaData && cache.plannedData && (now - cache.anilistTimestamp < anilistCacheExpiration)) {
+    if (cache.animeData && cache.mangaData && cache.plannedData && (now - new Date(cache.anilistTimestamp) < anilistCacheExpiration)) {
         console.log("[anilist] ----- served cached data -----");
         animeData = cache.animeData;
         mangaData = cache.mangaData;
@@ -77,7 +77,7 @@ export async function load({ fetch }) {
         }
     }
 
-    if (cache.mangaCollection && (now - cache.mangacollecTimestamp < mangacollecCacheExpiration)) {
+    if (cache.mangaCollection && (now - new Date(cache.mangacollecTimestamp) < mangacollecCacheExpiration)) {
         console.log("[mangacollec] - served cached data -----");
         mangaCollection = cache.mangaCollection;
     } else {
@@ -102,7 +102,7 @@ export async function load({ fetch }) {
         }
     }
 
-    if (cache.watchedMovies && (now - cache.letterboxdTimestamp < letterboxdCacheExpiration)) {
+    if (cache.watchedMovies && (now - new Date(cache.letterboxdTimestamp) < letterboxdCacheExpiration)) {
         console.log("[letterboxd] -- served cached data -----");
         watchedMovies = cache.watchedMovies;
     } else {
@@ -126,7 +126,7 @@ export async function load({ fetch }) {
         }
     }
 
-    if (cache.watchedAnimeMovies && (now - cache.anilistMoviesTimestamp < anilistCacheExpiration)) {
+    if (cache.watchedAnimeMovies && (now - new Date(cache.anilistMoviesTimestamp) < anilistCacheExpiration)) {
         console.log("[alMovies] ---- served cached data -----");
         watchedAnimeMovies = cache.watchedAnimeMovies;
     } else {
