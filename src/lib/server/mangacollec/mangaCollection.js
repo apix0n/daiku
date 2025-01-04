@@ -51,31 +51,41 @@ export async function fetchMangaCollection(username) {
         const editionsList = collectionJson.editions.filter(edition => edition.series_id === serie.id);
         const editionsData = editionsList.map(edition => {
             const volumesInEdition = collectionJson.volumes
-                .filter(vol => vol.edition_id === edition.id && new Date(vol.release_date) <= new Date())
+                .filter(vol => vol.edition_id === edition.id)
                 .sort((a, b) => a.number - b.number);
+
+            const toAmazonThumbnailLink = (url) => {
+                if (!url) return null;
+                const amazonRegex = /^(https:\/\/m\.media-amazon\.com\/.*)(\.[a-z]+)$/i;
+                return url.replace(amazonRegex, '$1._SY342_SX342_$2');
+            };
 
             const possessedVolumes = volumesInEdition
                 .filter(vol => vol.id in possessedVolumesData)
                 .map(vol => ({
                     numeroTome: vol.number,
                     isbn: vol.isbn,
-                    coverLink: vol.image_url,
+                    coverLink: toAmazonThumbnailLink(vol.image_url),
                     dateAjout: possessedVolumesData[vol.id]
                 }));
 
             const nextVolumes = volumesInEdition
                 .filter(vol => !(vol.id in possessedVolumesData))
-                .map(vol => ({
-                    numeroTome: vol.number,
-                    isbn: vol.isbn,
-                    coverLink: vol.image_url
-                }));
+                .map(vol => {
+                    return {
+                        numeroTome: vol.number,
+                        isbn: vol.isbn,
+                        coverLink: toAmazonThumbnailLink(vol.image_url) || toAmazonThumbnailLink(volumesInEdition.find(v => v.image_url)?.image_url),
+                        noCover: !vol.image_url,
+                        releaseDate: new Date(vol.release_date) <= new Date() ? null : new Date(vol.release_date)
+                    };
+                });
 
             const latestDate = possessedVolumes.length ? Math.max(...possessedVolumes.map(v => new Date(v.dateAjout))) : null;
 
             return {
                 titreEdition: edition.title || "Edition simple",
-                nombreVolumesParus: volumesInEdition.length,
+                nombreVolumesParus: volumesInEdition.filter(vol => new Date(vol.release_date) <= new Date()).length,
                 nombreVolumesEdition: edition.volumes_count,
                 nombreVolumesTotal: edition.last_volume_number,
                 possessions: possessedVolumes,
@@ -91,7 +101,7 @@ export async function fetchMangaCollection(username) {
         };
     }).filter(serie => serie.editions.length);
 
-    mangaCollectionData.sort((a, b) => b.dateDernierAjout - a.dateDernierAjout);
+    mangaCollectionData.sort((a, b) => b.dateDernierAjout - a.dateDernierAjout); // sort by latest addition date (if has possession)
 
     return {
         updatedAt: new Date().toISOString(),

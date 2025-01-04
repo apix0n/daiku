@@ -447,10 +447,24 @@ svg {
     gap: 5px;
 }
 
+.possession span {
+    line-height: 1.2;
+}
+
 .cover {
     width: auto;
     max-width: 100px;
     border-radius: 2px;
+}
+
+@media screen and (max-width: 600px) {
+    .cover {
+        max-width: 75px;
+    }
+
+    .edition {
+        margin-left: 10px;
+    }
 }
 
 .manga-list {

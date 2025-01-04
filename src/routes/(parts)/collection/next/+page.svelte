@@ -42,45 +42,53 @@
         }, 0);
     }, 0);
 
-    $: seriesWithNext = collection.filter(manga => 
-        manga.editions.some(edition => edition.next.length > 0)
-    );
+    $: seriesWithNext = collection
+        .filter(manga => manga.editions.some(edition => edition.next.length > 0)) // filter out series without next volumes
+        .sort((a, b) => { // sort series with only non-released volumes at the bottom
+            const aHasOnlyReleaseDate = a.editions.every(edition => 
+                edition.next.every(volume => volume.releaseDate != null)
+            );
+            const bHasOnlyReleaseDate = b.editions.every(edition => 
+                edition.next.every(volume => volume.releaseDate != null)
+            );
+            return aHasOnlyReleaseDate - bHasOnlyReleaseDate;
+        });
 </script>
 
 <h2>wished mangas<span>· {totalVolumes} tomes sur {seriesWithNext.length} séries</span></h2>
 <div class="manga-list">
-    {#each collection as manga}
-        {#if manga.editions.some(edition => edition.next.length > 0)}
-            <div class="manga">
-                <h2>{manga.titre}</h2>
-                {#each manga.editions as edition}
-                {#if edition.next.length > 0}
-                <div class="edition">
-                    <div class="edition-info">
-                        <h3>{edition.titreEdition}</h3>
-                        <span class="volume-info possessed">{edition.next.length} voulus</span>
-                        {#if edition.nombreVolumesEdition - edition.nombreVolumesParus > 0 || edition.nombreVolumesTotal - edition.nombreVolumesParus > 0}
+    {#each seriesWithNext as manga}
+        <div class="manga">
+            <h2>{manga.titre}</h2>
+            {#each manga.editions as edition}
+            {#if edition.next.length > 0}
+            <div class="edition">
+                <div class="edition-info">
+                    <h3>{edition.titreEdition}</h3>
+                    {#if edition.next.filter(volume => volume.releaseDate == null).length != 0}
+                        <span class="volume-info possessed">{edition.next.filter(volume => volume.releaseDate == null).length} voulus</span>
+                    {/if}
+                    {#if edition.nombreVolumesEdition - edition.nombreVolumesParus > 0 || edition.nombreVolumesTotal - edition.nombreVolumesParus > 0}
                         <span class="volume-info">
-                                {edition.nombreVolumesTotal - edition.nombreVolumesParus > 0 ? `${edition.nombreVolumesTotal - edition.nombreVolumesParus} annoncé${edition.nombreVolumesTotal - edition.nombreVolumesParus > 1 ? 's' : ''}` : ''}
-                                {edition.nombreVolumesTotal - edition.nombreVolumesParus > 0 && edition.nombreVolumesEdition - edition.nombreVolumesParus ? ' · ' : '' }  <!-- Add a separator if both conditions are true -->
-                                {edition.nombreVolumesEdition - edition.nombreVolumesParus > 0 ? `${edition.nombreVolumesEdition - edition.nombreVolumesParus} à paraître` : ''}
-                            </span>
-                        {/if}
-                    </div>
-                    <div class="possessions">
-                        {#each edition.next as next}
-                        <!-- svelte-ignore a11y_click_events_have_key_events -->
-                        <div class="possession" role="button" tabindex="0" on:click={() => openModal(next, edition, manga)}>
-                            <img src={next.coverLink} alt={`Cover of volume ${next.numeroTome}`} class="cover" />
-                            <span>Tome {next.numeroTome}</span>
-                        </div>
-                        {/each}
-                    </div>
+                            {edition.nombreVolumesTotal - edition.nombreVolumesParus > 0 ? `${edition.nombreVolumesTotal - edition.nombreVolumesParus} annoncé${edition.nombreVolumesTotal - edition.nombreVolumesParus > 1 ? 's' : ''}` : ''}
+                            {edition.nombreVolumesTotal - edition.nombreVolumesParus > 0 && edition.nombreVolumesEdition - edition.nombreVolumesParus ? ' · ' : '' }  <!-- Add a separator if both conditions are true -->
+                            {edition.nombreVolumesEdition - edition.nombreVolumesParus > 0 ? `${edition.nombreVolumesEdition - edition.nombreVolumesParus} à paraître` : ''}
+                        </span>
+                    {/if}
                 </div>
-                {/if}
+                <div class="possessions">
+                    {#each edition.next as next}
+                    <!-- svelte-ignore a11y_click_events_have_key_events -->
+                    <div class="possession" class:torelease={next.releaseDate} class:nocover={next.noCover} releaseDate={next.releaseDate != null ? new Date(next.releaseDate).toLocaleDateString() : ''} role="button" tabindex="0" on:click={() => openModal(next, edition, manga)}>
+                        <img src={next.coverLink} alt={`Cover of volume ${next.numeroTome}`} class="cover" />
+                        <span>Tome {next.numeroTome}</span>
+                    </div>
+                    {/each}
+                </div>
+            </div>
+            {/if}
             {/each}
         </div>
-        {/if}
     {/each}
 </div>
 
@@ -90,9 +98,14 @@
 <div class="modal" on:click={closeModal}>
     <div class="modal-content" on:click|stopPropagation>
         <button class="close" on:click={closeModal} aria-label="Close modal">&times;</button>
-        <img src={selectedVolume.coverLink} alt={`Cover of volume ${selectedVolume.numeroTome}`} class="cover" />
+        {#if !selectedVolume.noCover}
+            <img src={selectedVolume.coverLink} alt={`Cover of volume ${selectedVolume.numeroTome}`} class="cover" />
+        {/if}
         <h2>{selectedVolume.mangaTitle}</h2>
         <h3>{selectedVolume.editionTitle} · Tome {selectedVolume.numeroTome}</h3>
+        {#if selectedVolume.releaseDate != null}
+            <h3>releases on {new Date(selectedVolume.releaseDate).toLocaleDateString()}</h3>
+        {/if}
         <p class="isbn">ISBN: {selectedVolume.isbn}</p>
         <div class="enseignes">
             <a href={"https://www.cultura.com/search/results?search_query=" + selectedVolume.isbn} target="_blank" style="--accent: #014886; --accentHover: #00396a; --accentText: var(--white)">
@@ -157,7 +170,7 @@
     .modal-content {
         background-color: var(--background-2);
         padding: 20px;
-        min-width: 300px;
+        width: 300px;
         max-width: 95vw;
         border-radius: 13px;
         text-align: center;
@@ -222,5 +235,42 @@
         font-weight: 400;
         letter-spacing: 8px;
         text-indent: 1em;
+    }
+
+    .torelease img {
+        filter: grayscale(75%);
+    }
+
+    .torelease::before {
+        content: attr(releaseDate);
+        position: absolute;
+        height: calc(100% - 1rem * 1.2 - 5px + 1px); /* 1rem * 1.2 is the height of the span, 5px is the gap, 1px is idk else it looked weird */
+        width: 100%;
+        z-index: 1;
+        color: var(--white);
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(3px);
+        border-radius: 2px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2px;
+        box-sizing: border-box;
+    }
+
+    @media screen and (max-width: 600px) {
+        .torelease::before {
+            font-size: .8em;
+        }
+    }
+
+    .torelease.nocover img {
+        filter: grayscale(100%);
+        border-radius: 3px;
+    }
+
+    .torelease.nocover::before {
+        background: var(--background-3-hover);
+        color: var(--text);
     }
 </style>
