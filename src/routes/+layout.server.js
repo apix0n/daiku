@@ -12,17 +12,26 @@ import { combineMoviesLists } from '$lib/server/combineMoviesLists';
 import { replaceByTmdb } from '$lib/server/tmdb/replaceByTmdb';
 import { allRecentActivity } from '$lib/server/allRecentActivity';
 
+import { KV_REST_API_URL, KV_REST_API_TOKEN } from "$env/static/private";
+import { Redis } from '@upstash/redis';
+
+// Initialize Redis
+const redis = new Redis({
+    url: KV_REST_API_URL || "",
+    token: KV_REST_API_TOKEN || ""
+});
+
 // Define a cache object 
-let cache = {};
+let cache = await redis.get("cache") || {};
 let anilistCacheExpiration = 5 * 60 * 1000; // 5 minutes -- minutes to seconds to milliseconds
 let mangacollecCacheExpiration = 120 * 60 * 1000; // 120 minutes -- minutes to seconds to milliseconds
 let letterboxdCacheExpiration = 6 * 60 * 60 * 1000; // 6 hours -- minutes to seconds to milliseconds
 
-export async function load({ fetch }) {
-    const anilistUsername = 'replacethis';
-    const mangacollecUsername = 'replacethis';
-    const letterboxdUsername = 'replacethis';
+const anilistUsername = 'replacethis';
+const mangacollecUsername = 'replacethis';
+const letterboxdUsername = 'replacethis';
 
+export async function load({ fetch }) {
     const now = new Date();
 
     let animeData, mangaData, plannedData, mangaCollection, watchedMovies, watchedAnimeMovies, recentActivity, watchedMoviesFinal;
@@ -30,6 +39,7 @@ export async function load({ fetch }) {
     // Check if anilistUserId is cached
     if (!cache.anilistUserId) {
         cache.anilistUserId = await getUserId(anilistUsername);
+        await redis.set("cache", cache);
     }
     const anilistUserId = cache.anilistUserId;
 
@@ -52,6 +62,7 @@ export async function load({ fetch }) {
                 cache.mangaData = mangaData;
                 cache.plannedData = plannedData;
                 cache.anilistTimestamp = now;
+                await redis.set("cache", cache);
             }
         } catch (error) {
             console.error('Error fetching anilist data:', error);
@@ -78,6 +89,7 @@ export async function load({ fetch }) {
                 console.log("[mangacollec] - fetched & cached new data -----");
                 cache.mangaCollection = mangaCollection;
                 cache.mangacollecTimestamp = now;
+                await redis.set("cache", cache);
             }
         } catch (error) {
             console.error('Error fetching mangacollec data:', error);
@@ -101,6 +113,7 @@ export async function load({ fetch }) {
                 console.log("[letterboxd] -- fetched & cached new data -----");
                 cache.watchedMovies = watchedMovies;
                 cache.letterboxdTimestamp = now;
+                await redis.set("cache", cache);
             }
         } catch (error) {
             console.error('Error fetching letterboxd data:', error);
@@ -124,6 +137,7 @@ export async function load({ fetch }) {
                 console.log("[alMovies] ---- fetched & cached new data -----");
                 cache.watchedAnimeMovies = watchedAnimeMovies;
                 cache.anilistMoviesTimestamp = now;
+                await redis.set("cache", cache);
             }
         } catch (error) {
             console.error('Error fetching anilist movie data:', error);
@@ -141,16 +155,20 @@ export async function load({ fetch }) {
     } catch (error) {
         watchedMoviesFinal = combineMoviesLists(watchedMovies, watchedAnimeMovies)
     }
-
+    
+    const recentActivityDate = new Date(now.getTime());
+    recentActivityDate.setHours(0, 0, 0, 0);
+    const recentActivityThreshold = Math.floor(recentActivityDate.getTime() / 1000) - 6 * 24 * 60 ** 2; // So it fetches the 6 previous days, including all data from today 
+    
     try {
-        const recentActivityDate = new Date(now.getTime());
-        recentActivityDate.setHours(0, 0, 0, 0);
-        const recentActivityThreshold = Math.floor(recentActivityDate.getTime() / 1000) - 6 * 24 * 60 ** 2; // So it fetches the 6 previous days, including all data from today 
         recentActivity = await fetchRecentActivity(anilistUserId, recentActivityThreshold);
+        cache.recentActivity = recentActivity;
+        await redis.set("cache", cache);
         recentActivity = allRecentActivity(recentActivity, mangaCollection, watchedMoviesFinal, recentActivityThreshold)
     } catch (error) {
         console.error("[alActivity] -- Error fetching recent activity:", error);
-        recentActivity = []; // Set to null if there's an error
+        recentActivity = cache.recentActivity || []; // Set to null if there's an error
+        recentActivity = allRecentActivity(recentActivity, mangaCollection, watchedMoviesFinal, recentActivityThreshold)
     }
 
     return await {

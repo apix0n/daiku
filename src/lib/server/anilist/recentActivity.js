@@ -31,8 +31,6 @@ async function getRecentActivityData(userId, threshold) {
     return response.data.Page.activities;
 }
 
-let recentActivityCache = [];
-
 async function recentActivity(userRecentActivityData) {
     const allRecentActivity = userRecentActivityData;
 
@@ -64,10 +62,8 @@ async function recentActivity(userRecentActivityData) {
 export async function fetchRecentActivity(userId, threshold) {
     try {
         const recentActivityData = await getRecentActivityData(userId, threshold);
-        recentActivityCache = recentActivity(recentActivityData);
-        return recentActivityCache;
+        return recentActivity(recentActivityData);
     } catch (error) {
-        console.error('Error fetching recent activity data:', error);
-        return recentActivityCache.length > 0 ? recentActivityCache : [];
+        throw new Error('Error fetching recent activity data:', error);
     }
 }
