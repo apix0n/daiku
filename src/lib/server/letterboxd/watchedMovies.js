@@ -1,5 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { XMLParser } from 'fast-xml-parser';
+import he from 'he'; // to decode html entities (film title)
 
 export async function fetchWatchedMovies(username) {
     const watchedMovies = [];
@@ -14,7 +15,7 @@ export async function fetchWatchedMovies(username) {
         let filmTitle, coverSrc, runtime;
 
         if (tmdbId) {
-            filmTitle = item['letterboxd:filmTitle'];
+            filmTitle = he.decode(item['letterboxd:filmTitle']); // decode title to replace html entities
             const summary = item['description'];
             const imgSrcRegex = /<img\s+src="([^"]+)"/;
             const match = imgSrcRegex.exec(summary);
