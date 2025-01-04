@@ -58,6 +58,7 @@ export async function getUserId(username) {
 }
 
 let posterOverrides = {};
+let cacheTimestamp = null;
 
 export async function loadPosterOverrides() {
     const cacheDuration = 24 * 60 * 60 * 1000; // 1 day in milliseconds
