@@ -1,7 +1,5 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 
-let posterOverrides = {};
-
 async function getRecentActivityData(userId, threshold) {
     const query = `
     query MediaList($userId: Int, $createdAtGreater: Int) {

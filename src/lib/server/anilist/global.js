@@ -60,11 +60,23 @@ export async function getUserId(username) {
 let posterOverrides = {};
 
 export async function loadPosterOverrides() {
+    const cacheDuration = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+
+    if (posterOverrides && (Date.now() - cacheTimestamp < cacheDuration)) {
+        return posterOverrides;
+    }
+
     try {
         const response = await fetch(posterOverrideUrl);
         posterOverrides = await response.json();
+        cacheTimestamp = Date.now();
+        return posterOverrides;
     } catch (error) {
-        console.error('Error loading poster overrides:', error);
+        if (posterOverrides) {
+            return posterOverrides;
+        } else {
+            return {};
+        }
     }
 }
 

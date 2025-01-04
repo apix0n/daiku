@@ -1,7 +1,5 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 
-let posterOverrides = {};
-
 async function getUserAnimeData(username) {
     const query = `
     query ($userName: String) {

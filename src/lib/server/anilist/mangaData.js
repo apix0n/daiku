@@ -1,7 +1,5 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 
-let posterOverrides = {};
-
 export async function getUserMangaData(username, sortOption = 'UPDATED_TIME_DESC') {
     const query = `
     query ($userName: String, $sort: [MediaListSort]) {
