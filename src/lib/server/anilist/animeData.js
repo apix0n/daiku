@@ -1,5 +1,7 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
- 
+
+let posterOverrides = {};
+
 async function getUserAnimeData(username) {
     const query = `
     query ($userName: String) {
@@ -40,6 +42,7 @@ async function getUserAnimeData(username) {
             }
         }
     }`;
+    await anilistGlobal.loadPosterOverrides();
     return await anilistGlobal.fetchGraphQL(query, { userName: username });
 }
 
@@ -63,6 +66,7 @@ function watchedAnime(userAnimeData) {
             media.startedAt.month = media.startedAt.month ?? media.completedAt?.month ?? null;
             media.startedAt.day = media.startedAt.day ?? media.completedAt?.day ?? null;
         }
+        anilistGlobal.applyPosterOverrides(media.media);
     });
 
     allWatchedAnime.sort((a, b) => {
@@ -98,6 +102,10 @@ function currentAnime(userAnimeData) {
             return !duplicate;
         }); // Filter out duplicates (same media in multiple lists)
 
+    allCurrentAnime.forEach(media => {
+        anilistGlobal.applyPosterOverrides(media.media);
+    });
+
     return allCurrentAnime.map(entry => ({
         title: entry.media.title.english || entry.media.title.romaji,
         mediaType: "anime",
@@ -124,6 +132,10 @@ function droppedAnime(userAnimeData) {
             seen.add(entry.media.id);
             return !duplicate;
         }); // Filter out duplicates (same media in multiple lists)
+
+    allDroppedAnime.forEach(media => {
+        anilistGlobal.applyPosterOverrides(media.media);
+    });
 
     return allDroppedAnime.map(entry => ({
         title: entry.media.title.english || entry.media.title.romaji,

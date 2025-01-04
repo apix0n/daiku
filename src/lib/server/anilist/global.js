@@ -1,5 +1,6 @@
 export const apiUrl = 'https://graphql.anilist.co';
 export const siteUrl = 'https://anilist.co'
+export const posterOverrideUrl = "https://raw.githubusercontent.com/apix0n/anilist-alternative-posters/refs/heads/covers/posters.json"
 
 export async function fetchGraphQL(query, variables) {
     // const controller = new AbortController();
@@ -54,4 +55,22 @@ export async function getUserId(username) {
     const response = await fetchGraphQL(query, { name: username });
     // if (!response.ok) throw new Error("HTTP error " + response.status);
     return response.data.User.id;
+}
+
+let posterOverrides = {};
+
+export async function loadPosterOverrides() {
+    try {
+        const response = await fetch(posterOverrideUrl);
+        posterOverrides = await response.json();
+    } catch (error) {
+        console.error('Error loading poster overrides:', error);
+    }
+}
+
+export function applyPosterOverrides(media) {
+    if (posterOverrides[media.id]) {
+        media.coverImage.large = `${posterOverrideUrl}/${posterOverrides[media.id]}`;
+        media.coverImage.medium = `${posterOverrideUrl}/${posterOverrides[media.id]}`;
+    }
 }

@@ -1,5 +1,7 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 
+let posterOverrides = {};
+
 export async function getPlannedAnime(username) {
     const query = `
     query ($userName: String) {
@@ -33,6 +35,7 @@ export async function getPlannedAnime(username) {
             }
         }
     }`;
+    await anilistGlobal.loadPosterOverrides();
     return await anilistGlobal.fetchGraphQL(query, { userName: username });
 }
 
@@ -68,13 +71,18 @@ export async function getPlannedManga(username) {
             }
         }
     }`;
+    await anilistGlobal.loadPosterOverrides();
     return await anilistGlobal.fetchGraphQL(query, { userName: username });
 }
 
 export function plannedAnime(userPlannedAnime) {
     const allCurrentAnime = userPlannedAnime.data.MediaListCollection.lists
         .filter(list => !list.isCustomList) // Filter out custom lists
-        .flatMap(list => list.entries) 
+        .flatMap(list => list.entries);
+
+    allCurrentAnime.forEach(media => {
+        anilistGlobal.applyPosterOverrides(media.media);
+    });
 
     return allCurrentAnime.map(entry => ({
         title: entry.media.title.english || entry.media.title.romaji,
@@ -93,7 +101,11 @@ export function plannedAnime(userPlannedAnime) {
 export function plannedManga(userPlannedManga) {
     const allCurrentAnime = userPlannedManga.data.MediaListCollection.lists
         .filter(list => !list.isCustomList) // Filter out custom lists
-        .flatMap(list => list.entries) 
+        .flatMap(list => list.entries);
+
+    allCurrentAnime.forEach(media => {
+        anilistGlobal.applyPosterOverrides(media.media);
+    });
 
     return allCurrentAnime.map(entry => ({
         title: entry.media.title.english || entry.media.title.romaji,

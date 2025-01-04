@@ -1,5 +1,7 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 
+let posterOverrides = {};
+
 export async function getUserMangaData(username, sortOption = 'UPDATED_TIME_DESC') {
     const query = `
     query ($userName: String, $sort: [MediaListSort]) {
@@ -41,6 +43,7 @@ export async function getUserMangaData(username, sortOption = 'UPDATED_TIME_DESC
             }
         }
     }`;
+    await anilistGlobal.loadPosterOverrides();
     return await anilistGlobal.fetchGraphQL(query, { userName: username, sort: sortOption });
 }
 
@@ -63,6 +66,7 @@ function readManga(userMangaData) {
             media.startedAt.month = media.startedAt.month ?? media.completedAt?.month ?? null;
             media.startedAt.day = media.startedAt.day ?? media.completedAt?.day ?? null;
         }
+        anilistGlobal.applyPosterOverrides(media.media);
     });
 
     allReadManga.sort((a, b) => {
@@ -97,6 +101,10 @@ function readingManga(userMangaData) {
             return !duplicate;
         }); // Filter out duplicates (same media in multiple lists)
 
+    allCurrentManga.forEach(media => {
+        anilistGlobal.applyPosterOverrides(media.media);
+    });
+
     return allCurrentManga.map(entry => ({
         title: entry.media.title.english || entry.media.title.romaji,
         mediaType: "manga",
@@ -124,6 +132,10 @@ function droppedManga(userMangaData) {
             seen.add(entry.media.id);
             return !duplicate;
         }); // Filter out duplicates (same media in multiple lists)
+
+    allDroppedManga.forEach(media => {
+        anilistGlobal.applyPosterOverrides(media.media);
+    });
 
     return allDroppedManga.map(entry => ({
         title: entry.media.title.english || entry.media.title.romaji,

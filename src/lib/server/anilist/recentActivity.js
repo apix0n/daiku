@@ -1,5 +1,7 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 
+let posterOverrides = {};
+
 async function getRecentActivityData(userId, threshold) {
     const query = `
     query MediaList($userId: Int, $createdAtGreater: Int) {
@@ -27,6 +29,7 @@ async function getRecentActivityData(userId, threshold) {
             }
         }
     }`;
+    await anilistGlobal.loadPosterOverrides();
     const response = await anilistGlobal.fetchGraphQL(query, { userId: userId, createdAtGreater: threshold });
     return response.data.Page.activities;
 }
@@ -46,6 +49,7 @@ async function recentActivity(userRecentActivityData) {
             if (`${activity.progress}`.includes('-')) {
                 messagePrefix += 's';
             } // Add 's' if multiple episodes/chapters 
+            anilistGlobal.applyPosterOverrides(activity.media);
             return {
                 date: new Date(activity.createdAt * 1000).toISOString(),
                 mediaTitle: activity.media.title.english || activity.media.title.romaji,
@@ -54,7 +58,7 @@ async function recentActivity(userRecentActivityData) {
                 activityProgress: activityProgress,
                 messageRoot: activityProgress === null && activityProgress === "Completed rewatch" ? null : 'of',
                 mediaLink: `${anilistGlobal.siteUrl}/${mediaType}/${activity.media.id}`,
-                coverSrc: activity.media.coverImage.medium || activity.media.coverImage.large || activity.media.coverImage.extraLarge
+                coverSrc: activity.media.coverImage.medium,
             };
         });
 }
