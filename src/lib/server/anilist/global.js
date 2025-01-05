@@ -1,6 +1,6 @@
 export const apiUrl = 'https://graphql.anilist.co';
 export const siteUrl = 'https://anilist.co'
-export const posterOverrideUrl = "https://raw.githubusercontent.com/apix0n/anilist-alternative-posters/refs/heads/covers/posters.json"
+export const posterOverrideUrl = "https://raw.githubusercontent.com/apix0n/daiku-alternatives/refs/heads/alternatives/overrides.json"
 
 export async function fetchGraphQL(query, variables) {
     // const controller = new AbortController();
@@ -82,8 +82,21 @@ export async function loadPosterOverrides() {
 }
 
 export function applyPosterOverrides(media) {
-    if (posterOverrides[media.id]) {
-        media.coverImage.large = `${posterOverrideUrl}/${posterOverrides[media.id]}`;
-        media.coverImage.medium = `${posterOverrideUrl}/${posterOverrides[media.id]}`;
+    const override = posterOverrides[media.id];
+    if (override) {
+        if (override.covers) {
+            if (override.covers.large) {
+                media.coverImage.large = `${posterOverrideUrl}/${override.covers.large}`;
+            }
+            if (override.covers.medium) {
+                media.coverImage.medium = `${posterOverrideUrl}/${override.covers.medium}`;
+            }
+            if (override.covers.small) {
+                media.coverImage.small = `${posterOverrideUrl}/${override.covers.small}`;
+            }
+        }
+        if (override.title) {
+            media.title.english = override.title;
+        }
     }
 }

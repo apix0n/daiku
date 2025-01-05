@@ -180,7 +180,7 @@
     .close {
         all: unset;
         position: absolute;
-        top: 10px;
+        top: 0;
         right: 10px;
         font-size: 24px;
         cursor: pointer;
@@ -238,7 +238,7 @@
     }
 
     .torelease img {
-        filter: grayscale(75%);
+        filter: grayscale(40%);
     }
 
     .torelease::before {
@@ -249,7 +249,7 @@
         z-index: 1;
         color: var(--white);
         background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(3px);
+        backdrop-filter: blur(2px);
         border-radius: 2px;
         display: flex;
         justify-content: center;
@@ -265,7 +265,6 @@
     }
 
     .torelease.nocover img {
-        filter: grayscale(100%);
         border-radius: 3px;
     }
 
