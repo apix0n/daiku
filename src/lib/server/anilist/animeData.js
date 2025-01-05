@@ -21,6 +21,9 @@ async function getUserAnimeData(username, sortOption = 'UPDATED_TIME_DESC') {
                             color
                             large
                         }
+                        nextAiringEpisode {
+                            airingAt
+                        }
                     }
                     score(format: POINT_10)
                     progress
@@ -117,6 +120,7 @@ function currentAnime(userAnimeData) {
         mediaLink: anilistGlobal.siteUrl + "/anime/" + entry.media.id,
         coverLink: entry.media.coverImage.large,
         accentColor: entry.media.coverImage.color,
+        airingAt: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : null,
     }));
 }
 

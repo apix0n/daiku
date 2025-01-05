@@ -3,6 +3,7 @@
     import { formatDateLocale } from '$lib/formatDateLocale.js';
     import Rewatch from '../../../components/icons/Rewatch.svelte';
     import UpdatedTime from '../../../components/UpdatedTime.svelte';
+	import { getRelativeTime } from '$lib/getRelativeTime'
 
     export let data
     const { current, watched, updatedAt } = data.animeData;
@@ -16,6 +17,11 @@
   {#each current as anime}
     {#if anime.status !== "NOT_YET_RELEASED" && anime.episodesProgress > 0 && anime.episodesProgress !== anime.episodesNumber} <!-- avoid displaying unreleased, finished or not started anime -->
       <div class="element" class:releasing={anime.status === 'RELEASING'} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--accentColor: ${anime.accentColor + cssHexAccentOpacity}` : ''}">
+        {#if anime.status === "RELEASING"}
+          <div class="informations top">
+            <span class="next-episode">next episode {getRelativeTime(new Date(anime.airingAt * 1000))}</span>
+          </div>
+        {/if}
         <div class="informations">
           <div class="upper">
             <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}</a>
@@ -81,3 +87,14 @@
 </div>
 
 <UpdatedTime date={updatedAt} service="AniList"/>
+
+<style>
+  #current .next-episode {
+    display: revert;
+    width: 100%;
+    text-align: center;
+    text-shadow: 0 0 10px var(--black);
+    overflow: unset;
+    font-size: .8em;
+  }
+</style>
