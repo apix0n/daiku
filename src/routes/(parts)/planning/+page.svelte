@@ -18,15 +18,18 @@
            <div class="upper">
              <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}</a>
             </div>
-            {#if anime.episodesNumber == 1 && anime.episodesDuration !== null}
-            <span class="episodes-info">{anime.episodesDuration} min.</span>
-            {:else if anime.episodesNumber !== null && anime.episodesDuration !== null}
-            <span class="episodes-info">{anime.episodesNumber} episode{anime.episodesNumber > 1 ? 's' : ''} × {anime.episodesDuration} min.</span>
-            {/if}
             {#if anime.status == "NOT_YET_RELEASED" && anime.startDate != null}
-            <span class="episodes-info">releases {planningListFormatDate(anime.startDate)}</span>
-          {:else if anime.status == "NOT_YET_RELEASED" && anime.startDate == null}
-            <span class="episodes-info">announced</span>
+              <span class="episodes-info">{planningListFormatDate(anime.startDate)}</span>
+            {:else if anime.status == "NOT_YET_RELEASED" && anime.startDate == null}
+              <span class="episodes-info">announced</span>
+            {:else if anime.status == "RELEASING" || anime.status == "FINISHED"}
+              {#if anime.episodesNumber == 1 && anime.episodesDuration !== null}
+                <span class="episodes-info">{anime.episodesDuration} min.</span>
+              {:else if anime.episodesNumber !== null && anime.episodesDuration !== null}
+                <span class="episodes-info">{anime.episodesNumber} episode{anime.episodesNumber > 1 ? 's' : ''} × {anime.episodesDuration} min.</span>
+              {:else}
+                <span class="episodes-info">releasing</span>
+              {/if}
             {/if}
           </div>
         </div>
@@ -69,7 +72,7 @@
               <span class="episodes-info">{anime.episodesNumber > 1 ? `${anime.episodesNumber} parts × ` : ''}{anime.episodesDuration} min.</span>
             {/if}
             {#if anime.status == "NOT_YET_RELEASED" && anime.startDate != null}
-            <span class="episodes-info">releases {planningListFormatDate(anime.startDate)}</span>
+            <span class="episodes-info">releases {`${planningListFormatDate(anime.startDate)}`.slice(7)}</span> <!-- remove the 'starts ' portion of the string -->
           {:else if anime.status == "NOT_YET_RELEASED" && anime.startDate == null}
             <span class="episodes-info">announced</span>
             {/if}
