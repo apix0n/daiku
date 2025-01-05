@@ -4,6 +4,11 @@ import { getTmdbInfos } from "./getTmdbInfos.js";
 export async function replaceByTmdb(movieList) {
     const updatedMovieList = [];
     for (const movie of movieList.watched) {
+        if (!movie.tmdbId) {
+            console.log(`Movie ID is undefined for movie:`, movie.title);
+            updatedMovieList.push(movie);
+            continue;
+        }
         try {
             const { titre, poster, runtime } = await getTmdbInfos(movie.tmdbId);
             updatedMovieList.push({
@@ -14,7 +19,7 @@ export async function replaceByTmdb(movieList) {
             });
         } catch (error) {
             console.error(`Failed to fetch TMDB info for movie ID ${movie.tmdbId}:`, error);
-            if (error.includes("status: 401")) {
+            if (error.message.includes("status: 401")) {
                 console.error('Received 401 Unauthorized error, stopping the loop.');
                 break;
             }

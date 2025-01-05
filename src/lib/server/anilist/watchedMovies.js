@@ -17,6 +17,7 @@ async function getUserWatchedAnime(username) {
                             native
                         }
                         format
+                        episodes
                         duration
                         id
                         coverImage {
@@ -108,7 +109,7 @@ async function watchedMovies(userMovieData) {
             title: entry.media.title.english || entry.media.title.romaji,
             mediaType: "movie",
             sourceList: "anilist",
-            movieRuntime: entry.media.duration,
+            movieRuntime: entry.media.episodes * entry.media.duration || null,
             coverLink: entry.media.coverImage.large,
             finishedDate: anilistGlobal.formatDate(entry.completedAt),
             rating: entry.score,

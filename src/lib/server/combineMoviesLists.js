@@ -6,6 +6,11 @@ export function combineMoviesLists(watchedMovies, watchedAnimeMovies) {
         const movieIndex = watchedMovies.watched.findIndex((movie) => anime.tmdbId === movie.tmdbId);
 
         if (movieIndex !== -1) {
+            const movie = watchedMovies.watched[movieIndex];
+            if (anime.finishedDate && movie.finishedDate && anime.finishedDate !== movie.finishedDate) {
+                // Add both movies to the list
+                newWatchedAnime.push(anime);
+            }
             return;
         } else {
             for (let movie of watchedMovies.watched) {
