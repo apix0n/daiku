@@ -42,16 +42,28 @@
         }, 0);
     }, 0);
 
-    $: seriesWithNext = collection
+    $: seriesWithNext = collection // TODO: sort mangas with possessions (to complete) at the top
         .filter(manga => manga.editions.some(edition => edition.next.length > 0)) // filter out series without next volumes
-        .sort((a, b) => { // sort series with only non-released volumes at the bottom
+        .sort((a, b) => { // sort series with only non-released volumes then no cover at the bottom
             const aHasOnlyReleaseDate = a.editions.every(edition => 
                 edition.next.every(volume => volume.releaseDate != null)
             );
             const bHasOnlyReleaseDate = b.editions.every(edition => 
                 edition.next.every(volume => volume.releaseDate != null)
             );
-            return aHasOnlyReleaseDate - bHasOnlyReleaseDate;
+
+            const aHasOnlyNoCover = a.editions.every(edition => 
+                edition.next.every(volume => volume.noCover)
+            );
+            const bHasOnlyNoCover = b.editions.every(edition => 
+                edition.next.every(volume => volume.noCover)
+            );
+
+            if (aHasOnlyReleaseDate !== bHasOnlyReleaseDate) {
+                return aHasOnlyReleaseDate - bHasOnlyReleaseDate;
+            }
+
+            return aHasOnlyNoCover - bHasOnlyNoCover;
         });
 </script>
 
