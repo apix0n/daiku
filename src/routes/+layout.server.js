@@ -127,7 +127,7 @@ export async function load({ fetch }) {
         }
     }
 
-    if (cache.watchedAnimeMovies && (now - new Date(cache.anilistMoviesTimestamp) < anilistCacheExpiration)) {
+    if (cache.watchedAnimeMovies && (now - new Date(cache.anilistMoviesTimestamp) < letterboxdCacheExpiration)) {
         console.log("[alMovies] ---- served cached data -----");
         watchedAnimeMovies = cache.watchedAnimeMovies;
     } else {
