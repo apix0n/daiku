@@ -86,13 +86,13 @@ export function applyPosterOverrides(media) {
     if (override) {
         if (override.covers) {
             if (override.covers.large) {
-                media.coverImage.large = `${posterOverrideUrl}/${override.covers.large}`;
+                media.coverImage.extraLarge = `${posterOverrideUrl}/${override.covers.large}`;
             }
             if (override.covers.medium) {
-                media.coverImage.medium = `${posterOverrideUrl}/${override.covers.medium}`;
+                media.coverImage.large = `${posterOverrideUrl}/${override.covers.medium}`;
             }
             if (override.covers.small) {
-                media.coverImage.small = `${posterOverrideUrl}/${override.covers.small}`;
+                media.coverImage.medium = `${posterOverrideUrl}/${override.covers.small}`;
             }
         }
         if (override.title) {
