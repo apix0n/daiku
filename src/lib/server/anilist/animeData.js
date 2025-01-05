@@ -41,7 +41,7 @@ async function getUserAnimeData(username, sortOption = 'UPDATED_TIME_DESC') {
         }
     }`;
     await anilistGlobal.loadPosterOverrides();
-    return await anilistGlobal.fetchGraphQL(query, { userName: username });
+    return await anilistGlobal.fetchGraphQL(query, { userName: username, sort: sortOption });
 }
 
 function watchedAnime(userAnimeData) {
