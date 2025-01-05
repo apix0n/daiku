@@ -1,6 +1,6 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 
-export async function getUserMangaData(username, sortOption = 'UPDATED_TIME_DESC') {
+async function getUserMangaData(username, sortOption = 'UPDATED_TIME_DESC') {
     const query = `
     query ($userName: String, $sort: [MediaListSort]) {
         MediaListCollection(userName: $userName, type: MANGA, status_not: PLANNING, sort: $sort) {
@@ -154,7 +154,7 @@ function droppedManga(userMangaData) {
 export async function fetchMangaData(username) {
     try {
         const readUserData = await getUserMangaData(username, 'FINISHED_ON_DESC'); // For read manga
-        const userData = await getUserMangaData(username, 'UPDATED_TIME_DESC'); // For other statuses
+        const userData = await getUserMangaData(username); // For other statuses
         return {
             updatedAt: new Date().toISOString(),
             current: readingManga(userData),

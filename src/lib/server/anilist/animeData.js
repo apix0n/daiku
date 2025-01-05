@@ -1,9 +1,9 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 
-async function getUserAnimeData(username) {
+async function getUserAnimeData(username, sortOption = 'UPDATED_TIME_DESC') {
     const query = `
-    query ($userName: String) {
-        MediaListCollection(userName: $userName, type: ANIME, status_not: PLANNING, sort: UPDATED_TIME_DESC) {
+    query ($userName: String, $sort: [MediaListSort]) {
+        MediaListCollection(userName: $userName, type: ANIME, status_not: PLANNING, sort: $sort) {
             lists {
                 entries {
                     media {
@@ -15,8 +15,8 @@ async function getUserAnimeData(username) {
                         format
                         episodes
                         duration
-                        status
                         id
+                        status
                         coverImage {
                             color
                             large
@@ -25,6 +25,7 @@ async function getUserAnimeData(username) {
                     score(format: POINT_10)
                     progress
                     status
+                    repeat
                     startedAt {
                         year
                         month
@@ -35,7 +36,6 @@ async function getUserAnimeData(username) {
                         month
                         day
                     }
-                    repeat
                 }
             }
         }
@@ -152,11 +152,12 @@ function droppedAnime(userAnimeData) {
 
 export async function fetchAnimeData(username) {
     try {
+        const watchedUserData = await getUserAnimeData(username, 'FINISHED_ON_DESC');
         const userData = await getUserAnimeData(username);
         return {
             updatedAt: new Date().toISOString(),
             current: currentAnime(userData),
-            watched: watchedAnime(userData),
+            watched: watchedAnime(watchedUserData),
             dropped: droppedAnime(userData),
         };
     } catch (error) {
