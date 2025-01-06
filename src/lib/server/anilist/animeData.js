@@ -23,6 +23,7 @@ async function getUserAnimeData(username, sortOption = 'UPDATED_TIME_DESC') {
                         }
                         nextAiringEpisode {
                             airingAt
+                            episode
                         }
                     }
                     score(format: POINT_10)
@@ -120,7 +121,8 @@ function currentAnime(userAnimeData) {
         mediaLink: anilistGlobal.siteUrl + "/anime/" + entry.media.id,
         coverLink: entry.media.coverImage.large,
         accentColor: entry.media.coverImage.color,
-        airingAt: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : null,
+        airingAt: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined,
+        nextAiringEpisode: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode + (entry.media.airingEpisodesOffset || 0) : undefined,
     }));
 }
 
@@ -151,6 +153,8 @@ function droppedAnime(userAnimeData) {
         mediaLink: anilistGlobal.siteUrl + "/anime/" + entry.media.id,
         coverLink: entry.media.coverImage.large,
         accentColor: entry.media.coverImage.color,
+        airingAt: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined,
+        nextAiringEpisode: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode + (entry.media.airingEpisodesOffset || 0) : undefined,
     }));
 }
 

@@ -98,5 +98,8 @@ export function applyPosterOverrides(media) {
         if (override.title) {
             media.title.english = override.title;
         }
+        if (override.airingEpisodesOffset) {
+            media.airingEpisodesOffset = override.airingEpisodesOffset;
+        }
     }
 }

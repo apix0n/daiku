@@ -18,6 +18,11 @@
   {#each dropped as anime}
     {#if anime.userStatus === "DROPPED" && anime.status !== "NOT_YET_RELEASED" && anime.episodesProgress > 0}
       <div class="element" class:releasing={anime.status === 'RELEASING'} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--accentColor: ${anime.accentColor + cssHexAccentOpacity}` : ''}">
+        {#if anime.status === "RELEASING"} <!-- for airing/releasing anime -->
+          <div class="informations top">
+            <span class="next-episode">episode {anime.nextAiringEpisode} {getRelativeTime(new Date(anime.airingAt * 1000))}</span>
+          </div>
+        {/if}
         <div class="informations">
           <div class="upper">
             <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}</a>

@@ -1,12 +1,13 @@
 <script>
-    import { ratingStars } from '$lib/ratingStars.js';
-    import { planningListFormatDate } from '$lib/anilist/global.js';
-    import UpdatedTime from '../../../components/UpdatedTime.svelte';
+  import { ratingStars } from '$lib/ratingStars.js';
+  import { planningListFormatDate } from '$lib/anilist/global.js';
+  import UpdatedTime from '../../../components/UpdatedTime.svelte';
+	import { getRelativeTime } from '$lib/getRelativeTime'
 
-    export let data;
-    const { anime, manga, updatedAt } = data.plannedData;
-    const cssHexAccentOpacity = "80";
-    let isChecked = false;
+  export let data;
+  const { anime, manga, updatedAt } = data.plannedData;
+  const cssHexAccentOpacity = "80";
+  let isChecked = false;
 </script>
 
 <h2>anime <span>· {anime.filter(a => a.type !== "MOVIE").length} planned</span></h2>
@@ -14,6 +15,11 @@
 <div id="anime" class="elements-wrapper">
   {#each anime.filter(a => a.type !== "MOVIE") as anime}
        <div class="element" class:releasing={anime.status == "RELEASING" || anime.status == "NOT_YET_RELEASED"} class:notyet={anime.status == "NOT_YET_RELEASED"} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--accentColor: ${anime.accentColor + cssHexAccentOpacity}` : ''}">
+        {#if anime.status === "RELEASING"} <!-- for airing/releasing anime -->
+          <div class="informations top">
+            <span class="next-episode">episode {anime.nextAiringEpisode} {getRelativeTime(new Date(anime.airingAt * 1000))}</span>
+          </div>
+        {/if}
          <div class="informations">
            <div class="upper">
              <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}</a>

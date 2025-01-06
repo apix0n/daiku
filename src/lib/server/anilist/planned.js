@@ -27,9 +27,12 @@ export async function getPlannedAnime(username) {
                             day
                         }
                         format
+                        nextAiringEpisode {
+                            airingAt
+                            episode
+                        }
                     }
                 }
-                isCustomList
             }
         }
     }`;
@@ -74,9 +77,14 @@ export async function getPlannedManga(username) {
 }
 
 export function plannedAnime(userPlannedAnime) {
+    const seen = new Set();
     const allCurrentAnime = userPlannedAnime.data.MediaListCollection.lists
-        .filter(list => !list.isCustomList) // Filter out custom lists
-        .flatMap(list => list.entries);
+        .flatMap(list => list.entries)
+        .filter(entry => {
+            const duplicate = seen.has(entry.media.id);
+            seen.add(entry.media.id);
+            return !duplicate;
+        }); // Filter out duplicates (same media in multiple lists)
 
     allCurrentAnime.forEach(media => {
         anilistGlobal.applyPosterOverrides(media.media);
@@ -93,13 +101,20 @@ export function plannedAnime(userPlannedAnime) {
         startDate: anilistGlobal.planningFormatDate(entry.media.startDate),
         coverLink: entry.media.coverImage.large,
         accentColor: entry.media.coverImage.color,
+        airingAt: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined,
+        nextAiringEpisode: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode + (entry.media.airingEpisodesOffset || 0) : undefined,
     }));
 }
 
 export function plannedManga(userPlannedManga) {
+    const seen = new Set();
     const allCurrentAnime = userPlannedManga.data.MediaListCollection.lists
-        .filter(list => !list.isCustomList) // Filter out custom lists
-        .flatMap(list => list.entries);
+        .flatMap(list => list.entries)
+        .filter(entry => {
+            const duplicate = seen.has(entry.media.id);
+            seen.add(entry.media.id);
+            return !duplicate;
+        }); // Filter out duplicates (same media in multiple lists)
 
     allCurrentAnime.forEach(media => {
         anilistGlobal.applyPosterOverrides(media.media);
