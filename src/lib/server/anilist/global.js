@@ -1,6 +1,6 @@
 export const apiUrl = 'https://graphql.anilist.co';
 export const siteUrl = 'https://anilist.co'
-export const posterOverrideUrl = "https://raw.githubusercontent.com/apix0n/daiku-alternatives/refs/heads/alternatives/overrides.json"
+export const posterOverrideUrl = "https://raw.githubusercontent.com/apix0n/daiku-alternatives/refs/heads/alternatives/anilist/overrides.json"
 
 export async function fetchGraphQL(query, variables) {
     // const controller = new AbortController();
