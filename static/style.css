@@ -18,6 +18,7 @@
     --notyet-releasing: #f29633;
     --element-width: 200px;
     --border-radius: 1em;
+    --scrollbar-radius: 8px;
     --fonts-monospace: "Ubuntu Mono", Consolas, Menlo, Monaco, "Lucida Console, Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
     color-scheme: light;
 }
@@ -39,17 +40,30 @@
 ::-webkit-scrollbar {
     width: 15px;
     background: var(--background-2);
-    border-radius: 19px;
+}
+
+::-webkit-scrollbar:vertical {
+    border-radius: 0 calc(var(--scrollbar-radius) - 1px) calc(var(--scrollbar-radius) - 1px) 0;
+}
+
+::-webkit-scrollbar:horizontal {
+    border-radius: 0 0 calc(var(--scrollbar-radius) - 1px) calc(var(--scrollbar-radius) - 1px);
 }
 
 ::-webkit-scrollbar-thumb {
     background-color: var(--background-3);
-    border-radius: 20px;
+    border-radius: var(--scrollbar-radius);
     border: 4px solid var(--background-2);
 }
 
 ::-webkit-scrollbar-thumb:hover {
     background-color: var(--background-4);
+}
+
+@supports not selector(::-webkit-scrollbar) {
+    html {
+        scrollbar-color: var(--background-3-hover) var(--background-2);
+    }
 }
 
 ::selection {
@@ -236,6 +250,14 @@ pre {
 .elements-wrapper#current .start-date .rewatched {
     top: .2em;
     position: relative;
+}
+
+.elements-wrapper#watched:not(.watched-movies-wrapper) .element .informations:not(.top) .more {
+    display: none;
+}
+
+.elements-wrapper#watched:not(.watched-movies-wrapper) .element:hover .informations:not(.top) .more {
+    display: revert;
 }
 
 .informations>.episodes-info {

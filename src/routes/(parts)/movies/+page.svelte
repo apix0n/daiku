@@ -11,7 +11,7 @@
 
 <h2>watched <span>· {watched.length} movies</span></h2>
 
-<div id="watched" class="elements-wrapper">
+<div id="watched" class="elements-wrapper watched-movies-wrapper">
   {#each watched as movie}
       <div class="element" style:background-image="url({movie.coverLink})">
         {#if movie.rating !== 0 || movie.rewatch}
