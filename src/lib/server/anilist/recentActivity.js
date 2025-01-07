@@ -21,6 +21,7 @@ async function getRecentActivityData(userId, threshold) {
                         id
                         type
                         format
+                        episodes
                     }
                     status
                 }
@@ -40,9 +41,9 @@ async function recentActivity(userRecentActivityData) {
         .map(activity => {
             const mediaType = activity.media.type === 'ANIME' ? 'anime' : 'manga';
             let messagePrefix = `${activity.status}`.charAt(0).toUpperCase() + `${activity.status}`.slice(1) // Upper case first letter
-            if (messagePrefix === "Rewatched") { // rewatched to "completed rewatching"
-                messagePrefix = "Completed rewatch";
-            }
+            messagePrefix = messagePrefix === "Rewatched" ? messagePrefix = "Finished rewatching" : messagePrefix
+            messagePrefix = messagePrefix === "Completed" && activity.media.episodes !== 1 ? messagePrefix = "Watched last episode and finished watching" : messagePrefix
+            messagePrefix = messagePrefix === "Completed" && activity.media.episodes === 1 ? messagePrefix = "Watched" : messagePrefix
             let activityProgress = messagePrefix !== "Dropped" && messagePrefix !== "Completed rewatch" ? activity.progress : null;
             if (`${activity.progress}`.includes('-')) {
                 messagePrefix += 's';
@@ -54,7 +55,7 @@ async function recentActivity(userRecentActivityData) {
                 mediaType: mediaType,
                 messagePrefix: messagePrefix,
                 activityProgress: activityProgress,
-                messageRoot: activityProgress === null && activityProgress === "Completed rewatch" ? null : 'of',
+                messageRoot: activityProgress === null ? null : 'of',
                 mediaLink: `${anilistGlobal.siteUrl}/${mediaType}/${activity.media.id}`,
                 coverSrc: activity.media.coverImage.medium,
             };

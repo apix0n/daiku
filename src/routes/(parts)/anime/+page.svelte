@@ -38,7 +38,7 @@
                 <span class="start-date">{formatDateLocale(anime.startedDate).toLocaleDateString()}</span>
               </div>
             {/if}
-            <span class="episodes-info">{anime.episodesProgress}/{anime.episodesNumber}</span>
+            <span class="episodes-info">{anime.episodesProgress}/{anime.episodesNumber !== null ? anime.episodesNumber : anime.nextAiringEpisode - 1}</span>
           </div>
         </div>
       </div>
