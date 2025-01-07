@@ -233,14 +233,6 @@ pre {
     color: var(--grey);
 }
 
-.elements-wrapper .next-episode {
-    width: 100%;
-    text-align: center;
-    text-shadow: 0 0 5px var(--black);
-    overflow: unset;
-    font-size: .8em;
-}
-
 .elements-wrapper#current .start-date .rewatched {
     top: .2em;
     position: relative;

@@ -1,5 +1,6 @@
 <script>
     import { ratingStars } from '$lib/ratingStars.js';
+	import NextAiringEpisode from '../../../../components/NextAiringEpisode.svelte'
     import NoEntriesMessage from '../../../../components/NoEntriesMessage.svelte';
     import UpdatedTime from '../../../../components/UpdatedTime.svelte';
 
@@ -20,7 +21,7 @@
       <div class="element" class:releasing={anime.status === 'RELEASING'} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--accentColor: ${anime.accentColor + cssHexAccentOpacity}` : ''}">
         {#if anime.status === "RELEASING"} <!-- for airing/releasing anime -->
           <div class="informations top">
-            <span class="next-episode">episode {anime.nextAiringEpisode} {getRelativeTime(new Date(anime.airingAt * 1000))}</span>
+            <NextAiringEpisode nextAiringEpisode={anime.nextAiringEpisode} airingAt={anime.airingAt} />
           </div>
         {/if}
         <div class="informations">

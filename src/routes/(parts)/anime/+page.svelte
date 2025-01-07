@@ -4,6 +4,7 @@
     import Rewatch from '../../../components/icons/Rewatch.svelte';
     import UpdatedTime from '../../../components/UpdatedTime.svelte';
 	import { getRelativeTime } from '$lib/getRelativeTime'
+	import NextAiringEpisode from '../../../components/NextAiringEpisode.svelte'
 
     export let data
     const { current, watched, updatedAt } = data.animeData;
@@ -19,7 +20,7 @@
       <div class="element" class:releasing={anime.status === 'RELEASING'} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--accentColor: ${anime.accentColor + cssHexAccentOpacity}` : ''}">
         {#if anime.status === "RELEASING" && anime.nextAiringEpisode - 1 === anime.episodesProgress} <!-- for airing/releasing anime, only show next episode in ... label if the user's is up to-date -->
           <div class="informations top">
-            <span class="next-episode">episode {anime.nextAiringEpisode} {getRelativeTime(new Date(anime.airingAt * 1000))}</span>
+            <NextAiringEpisode nextAiringEpisode={anime.nextAiringEpisode} airingAt={anime.airingAt} />
           </div>
         {/if}
         <div class="informations">
