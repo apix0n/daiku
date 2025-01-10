@@ -235,7 +235,7 @@ pre {
     align-items: center;
     padding: 0px;
     /* font-size: .8em; */
-    width: 100%;
+    /* width: 100%; */
     justify-content: space-between;
 }
 
@@ -272,8 +272,11 @@ pre {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 0px;
+    padding: 0 .3em;
     align-self: stretch;
+    background: #17171752;
+    border-radius: .5em;
+    backdrop-filter: blur(3px);
 }
 
 .more:has(> :last-child:nth-child(1)) {
