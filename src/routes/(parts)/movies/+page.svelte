@@ -25,14 +25,12 @@
             <a class="media-title" href={movie.link} target="_blank">{movie.title}</a>
           </div>
           <div class="more">
-            <div class="dates">
               {#if movie.movieRuntime != null}
                 <span class="episodes-info">{movie.movieRuntime} min.</span>
               {/if}
               {#if movie.finishedDate }
                 <span class="finish-date">{formatDateLocale(movie.finishedDate).toLocaleDateString()}</span>
               {/if}
-            </div>
           </div>
         </div>
       </div>
