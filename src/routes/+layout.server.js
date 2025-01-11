@@ -40,7 +40,7 @@ export async function load({ fetch }) {
     // Check if anilistUserId is cached
     if (!cache.anilistUserId) {
         cache.anilistUserId = await getUserId(anilistUsername);
-        if (redis) await redis.set(cacheKey, cache);
+        if (redis) await redis.set('cache', cache);
     }
     const anilistUserId = cache.anilistUserId;
 
@@ -63,7 +63,7 @@ export async function load({ fetch }) {
                 cache.mangaData = mangaData;
                 cache.plannedData = plannedData;
                 cache.anilistTimestamp = now;
-                if (redis) await redis.set(cacheKey, cache);
+                if (redis) await redis.set('cache', cache);
             }
         } catch (error) {
             console.error('Error fetching anilist data:', error);
@@ -90,7 +90,7 @@ export async function load({ fetch }) {
                 console.log("[mangacollec] - fetched & cached new data -----");
                 cache.mangaCollection = mangaCollection;
                 cache.mangacollecTimestamp = now;
-                if (redis) await redis.set(cacheKey, cache);
+                if (redis) await redis.set('cache', cache);
             }
         } catch (error) {
             console.error('Error fetching mangacollec data:', error);
@@ -114,7 +114,7 @@ export async function load({ fetch }) {
                 console.log("[letterboxd] -- fetched & cached new data -----");
                 cache.watchedMovies = watchedMovies;
                 cache.letterboxdTimestamp = now;
-                if (redis) await redis.set(cacheKey, cache);
+                if (redis) await redis.set('cache', cache);
             }
         } catch (error) {
             console.error('Error fetching letterboxd data:', error);
@@ -138,7 +138,7 @@ export async function load({ fetch }) {
                 console.log("[alMovies] ---- fetched & cached new data -----");
                 cache.watchedAnimeMovies = watchedAnimeMovies;
                 cache.anilistMoviesTimestamp = now;
-                if (redis) await redis.set(cacheKey, cache);
+                if (redis) await redis.set('cache', cache);
             }
         } catch (error) {
             console.error('Error fetching anilist movie data:', error);
@@ -165,7 +165,7 @@ export async function load({ fetch }) {
         recentActivity = await fetchRecentActivity(anilistUserId, recentActivityThreshold);
         cache.recentActivity = recentActivity;
         console.log("[alActivity] -- fetched recent activity -----")
-        if (redis) await redis.set(cacheKey, cache);
+        if (redis) await redis.set('cache', cache);
         recentActivity = allRecentActivity(recentActivity, mangaCollection, watchedMoviesFinal, recentActivityThreshold)
     } catch (error) {
         console.error("[alActivity] -- Error fetching recent activity:", error);
