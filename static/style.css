@@ -115,7 +115,7 @@ h2:first-of-type {
 h2 span {
     font-size: 1rem;
     font-weight: 400;
-    color: var(--text-2);
+    color: var(--app-accent);
     position: relative;
     top: .1em;
 }
@@ -277,6 +277,7 @@ pre {
     background: #17171752;
     border-radius: .5em;
     backdrop-filter: blur(3px);
+    border: 1px solid var(--accentColor, #4848488a);
 }
 
 .more:has(> :last-child:nth-child(1)) {
@@ -539,7 +540,7 @@ label {
 }
 
 .element.ova::after {
-    border: 2px pink solid;
+    border: 2px var(--app-accent) solid;
 }
 
 .navbtns>a>svg {

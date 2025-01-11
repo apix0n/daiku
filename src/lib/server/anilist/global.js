@@ -101,5 +101,8 @@ export function applyPosterOverrides(media) {
         if (override.airingEpisodesOffset) {
             media.airingEpisodesOffset = override.airingEpisodesOffset;
         }
+        if (override.accentColor) {
+            media.coverImage.color = override.accentColor;
+        }
     }
 }
