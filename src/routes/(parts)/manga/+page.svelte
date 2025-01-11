@@ -58,7 +58,7 @@
     <div id="watched" class="elements-wrapper">
       {#each read as manga}
         {#if manga.status !== "NOT_YET_RELEASED" }
-          <div class="element" class:ova={manga.chapterCount <= 4} class:visible={isChecked && manga.chapterCount <= 4} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ? `--accentColor: ${manga.accentColor + cssHexAccentOpacity}` : ''}">
+          <div class="element" class:ova={manga.chapterCount <= 4 && !manga.volumesCount} class:visible={isChecked && manga.chapterCount <= 4} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ? `--accentColor: ${manga.accentColor + cssHexAccentOpacity}` : ''}">
             {#if manga.rating !== 0 || manga.reread !== 0}
               <div class="informations top">
                 {#if manga.reread !== 0}<Rewatch Number={manga.reread}/>{/if}
