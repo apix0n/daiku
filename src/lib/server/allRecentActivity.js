@@ -17,7 +17,7 @@ export function allRecentActivity(anilistData, mangaCollection, watchedMovies, r
                                 messagePrefix: "Added volume",
                                 activityProgress: volume.numeroTome,
                                 messageRoot: "of",
-                                messageSuffix: ` (${edition.titreEdition}) to manga collection`,
+                                messageSuffix: `${edition.titreEdition !== "Edition simple" ? ` (${edition.titreEdition})` : ' '} to manga collection`,
                                 coverSrc: volume.coverLink
                             }
                             recentlyAddedToCollection.push(activity)

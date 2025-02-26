@@ -256,7 +256,7 @@
     .torelease::before {
         content: attr(releaseDate);
         position: absolute;
-        height: calc(100% - 1rem * 1.2 - 5px + 1px); /* 1rem * 1.2 is the height of the span, 5px is the gap, 1px is idk else it looked weird */
+        height: calc(100% - 1rem * 1.2 - 5px); /* 1rem * 1.2 is the height of the span, 5px is the gap */
         width: 100%;
         z-index: 1;
         color: var(--white);

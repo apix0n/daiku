@@ -10,7 +10,16 @@
 </svg>
 
 <style>
+    svg {
+        height: 1rem;
+        margin-left: .25em;
+        top: .05rem;
+        position: relative;
+    }
+
     text {
         text-anchor: middle;
+        font-size: .8em;
+        font-weight: 400;
     }
 </style>

@@ -3,6 +3,8 @@
     import { ratingStars } from '$lib/ratingStars.js';
     import Rewatch from '../../../components/icons/Rewatch.svelte';
     import UpdatedTime from '../../../components/UpdatedTime.svelte';
+    import { getRelativeTime } from '$lib/getRelativeTime';
+	import RelativeTimeInfo from '../../../components/RelativeTimeInfo.svelte'
 
     export let data
     const { current, read, updatedAt } = data.mangaData;
@@ -20,7 +22,12 @@
   <div id="current" class="elements-wrapper">
     {#each current as manga}
         {#if manga.status !== "NOT_YET_RELEASED" && manga.chaptersProgress > 0}
-          <div class="element" class:releasing={manga.status === 'RELEASING'} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ? `--accentColor: ${manga.accentColor + cssHexAccentOpacity}` : ''}">
+          <div class="element" class:releasing={manga.status === 'RELEASING'} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ? `--tAccentColor: ${manga.accentColor + cssHexAccentOpacity}; --accentColor: ${manga.accentColor}` : ''}">
+            {#if manga.status === "RELEASING"}
+              <div class="informations top" class:toCatchUp={manga.chaptersProgress < manga.lastChapter.number}>
+                <RelativeTimeInfo number={manga.lastChapter.number} timestamp={Math.floor(manga.lastChapter.timestamp / 1000)} mediaType="chapter" />
+              </div>
+            {/if}
             <div class="informations">
               <div class="upper">
                 <a class="media-title" href="{manga.mediaLink}" target="_blank">{manga.title}</a>
@@ -58,16 +65,15 @@
     <div id="watched" class="elements-wrapper">
       {#each read as manga}
         {#if manga.status !== "NOT_YET_RELEASED" }
-          <div class="element" class:ova={manga.chapterCount <= 4 && !manga.volumesCount} class:visible={isChecked && manga.chapterCount <= 4} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ? `--accentColor: ${manga.accentColor + cssHexAccentOpacity}` : ''}">
-            {#if manga.rating !== 0 || manga.reread !== 0}
+          <div class="element" class:ova={manga.chapterCount <= 4 && !manga.volumesCount} class:visible={isChecked && manga.chapterCount <= 4} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ? `--tAccentColor: ${manga.accentColor + cssHexAccentOpacity}; --accentColor: ${manga.accentColor}` : ''}">
+            {#if manga.rating !== 0}
               <div class="informations top">
-                {#if manga.reread !== 0}<Rewatch Number={manga.reread}/>{/if}
                 <span class="rating">{@html ratingStars(manga.rating)}</span>
               </div>
             {/if}
             <div class="informations">
               <div class="upper">
-                <a class="media-title" href="{manga.mediaLink}" target="_blank">{manga.title}</a>
+                <a class="media-title" href="{manga.mediaLink}" target="_blank">{manga.title}{#if manga.reread !== 0}<Rewatch Number={manga.reread}/>{/if}</a>
               </div>
               {#if manga.chapterCount !== null || manga.volumesCount !== null}
                  <span class="episodes-info">{manga.chapterCount !== null ? `${manga.chapterCount} chapter${manga.chapterCount > 1 ? 's' : ''}` : ''}{manga.chapterCount !== null && manga.volumesCount !== null ? ' · ' : ''}{manga.volumesCount !== null ? `${manga.volumesCount} volume${manga.volumesCount > 1 ? 's' : ''}` : ''}</span>
@@ -106,25 +112,6 @@
 
         #current .element .media-title {
           font-size: 1.1em;
-        }
-    }
-
-    @media screen and (max-width: 600px) {
-        .elements-wrapper#current .element {
-            --element-width: 110px;
-        }
-
-        .elements-wrapper#current .dates,
-        .elements-wrapper#current .informations>.episodes-info {
-            display: none;
-        }
-
-        .elements-wrapper#current .more {
-            justify-content: center;
-        }
-
-        .elements-wrapper#current .informations {
-            padding: 2em .3em .7em;
         }
     }
 </style>

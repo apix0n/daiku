@@ -10,36 +10,14 @@
 </script>
 
 {#if dropped.length !== 0}
-{#if dropped.filter(manga => manga.userStatus === "DROPPED").length !== 0}
-  <h2>dropped <span>· {dropped.filter(anime => anime.userStatus === "DROPPED").length} anime</span></h2>
-  <div id="dropped" class="elements-wrapper">
-  {#each dropped as manga}
-      {#if manga.userStatus === "DROPPED" && manga.status !== "NOT_YET_RELEASED" && manga.chaptersProgress > 0}
-      <div class="element" class:releasing={manga.status === 'RELEASING'} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ?  `--accentColor: ${manga.accentColor + cssHexAccentOpacity}` : ''}">
-        <div class="informations">
-          <div class="upper">
-              <a class="media-title" href="{manga.mediaLink}" target="_blank">{manga.title}</a>
-            </div>
-            {#if manga.chapterCount !== null || manga.volumesCount !== null}
-              <span class="episodes-info">{manga.chapterCount !== null ? `${manga.chapterCount} chapter${manga.chapterCount > 1 ? 's' : ''}` : ''}{manga.chapterCount   !== null && manga.volumesCount !== null ? ' · ' : ''}{manga.volumesCount !== null ? `${manga.volumesCount} volume${manga.volumesCount > 1 ? 's' : ''}` :  ''}</span>
-              {/if}
-              <div class="more">
-                <span class="episodes-info">dropped after chap. {manga.chaptersProgress}</span>
-              </div>
-            </div>
-          </div>
-          {/if}
-          {/each}
-        </div>
-  {/if}
-  
-  {#if dropped.filter(manga => manga.userStatus === "PAUSED").length !== 0}
+
+{#if dropped.filter(manga => manga.userStatus === "PAUSED").length !== 0}
   <h2>paused <span>· {dropped.filter(manga => manga.userStatus === "PAUSED").length} manga</span></h2>
 
   <div id="paused" class="elements-wrapper">
     {#each dropped as manga}
       {#if manga.userStatus === "PAUSED" && manga.status !== "NOT_YET_RELEASED" && manga.chaptersProgress > 0}
-        <div class="element" class:releasing={manga.status === 'RELEASING'} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ?  `--accentColor: ${manga.accentColor + cssHexAccentOpacity}` : ''}">
+        <div class="element" class:releasing={manga.status === 'RELEASING'} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ? `--tAccentColor: ${manga.accentColor + cssHexAccentOpacity}; --accentColor: ${manga.accentColor}` : ''}">
           <div class="informations">
             <div class="upper">
               <a class="media-title" href="{manga.mediaLink}" target="_blank">{manga.title}</a>
@@ -55,13 +33,36 @@
       {/if}
     {/each}
   </div>
-  <UpdatedTime date={updatedAt} service="AniList"/>
   {/if}
 
-{:else}
+{#if dropped.filter(manga => manga.userStatus === "DROPPED").length !== 0}
+  <h2>dropped <span>· {dropped.filter(manga => manga.userStatus === "DROPPED").length} manga</span></h2>
+  <div id="dropped" class="elements-wrapper">
+  {#each dropped as manga}
+      {#if manga.userStatus === "DROPPED" && manga.status !== "NOT_YET_RELEASED" && manga.chaptersProgress > 0}
+      <div class="element" class:releasing={manga.status === 'RELEASING'} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ? `--tAccentColor: ${manga.accentColor + cssHexAccentOpacity}; --accentColor: ${manga.accentColor}` : ''}">
+        <div class="informations">
+          <div class="upper">
+              <a class="media-title" href="{manga.mediaLink}" target="_blank">{manga.title}</a>
+            </div>
+            {#if manga.chapterCount !== null || manga.volumesCount !== null}
+              <span class="episodes-info">{manga.chapterCount !== null ? `${manga.chapterCount} chapter${manga.chapterCount > 1 ? 's' : ''}` : ''}{manga.chapterCount !== null && manga.volumesCount !== null ? ' · ' : ''}{manga.volumesCount !== null ? `${manga.volumesCount} volume${manga.volumesCount > 1 ? 's' : ''}` :  ''}</span>
+              {/if}
+              <div class="more">
+                <span class="episodes-info">dropped after chap. {manga.chaptersProgress}</span>
+              </div>
+            </div>
+          </div>
+          {/if}
+          {/each}
+        </div>
+  {/if}
+  
+  {:else}
   <NoEntriesMessage updateTime={updatedAt}/>
-{/if}
-
+  {/if}
+  
+  <UpdatedTime date={updatedAt} service="AniList"/>
 
 <style>
     .elements-wrapper .element {

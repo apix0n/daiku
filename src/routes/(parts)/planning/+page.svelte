@@ -3,7 +3,7 @@
   import { planningListFormatDate } from '$lib/anilist/global.js';
   import UpdatedTime from '../../../components/UpdatedTime.svelte';
 	import { getRelativeTime } from '$lib/getRelativeTime'
-	import NextAiringEpisode from '../../../components/NextAiringEpisode.svelte'
+	import RelativeTimeInfo from '../../../components/RelativeTimeInfo.svelte'
 
   export let data;
   const { anime, manga, updatedAt } = data.plannedData;
@@ -18,7 +18,7 @@
        <div class="element" class:releasing={anime.status == "RELEASING" || anime.status == "NOT_YET_RELEASED"} class:notyet={anime.status == "NOT_YET_RELEASED"} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--accentColor: ${anime.accentColor + cssHexAccentOpacity}` : ''}">
         {#if anime.status === "RELEASING"} <!-- for airing/releasing anime -->
           <div class="informations top">
-            <NextAiringEpisode nextAiringEpisode={anime.nextAiringEpisode} airingAt={anime.airingAt} />
+            <RelativeTimeInfo number={anime.nextEpisode.number} timestamp={anime.nextEpisode.timestamp} mediaType="episode" />
           </div>
         {/if}
          <div class="informations">

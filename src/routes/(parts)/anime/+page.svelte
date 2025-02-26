@@ -4,7 +4,7 @@
     import Rewatch from '../../../components/icons/Rewatch.svelte';
     import UpdatedTime from '../../../components/UpdatedTime.svelte';
 	import { getRelativeTime } from '$lib/getRelativeTime'
-	import NextAiringEpisode from '../../../components/NextAiringEpisode.svelte'
+	import RelativeTimeInfo from '../../../components/RelativeTimeInfo.svelte'
 
     export let data
     const { current, watched, updatedAt } = data.animeData;
@@ -17,10 +17,14 @@
 <div id="current" class="elements-wrapper">
   {#each current as anime}
     {#if anime.status !== "NOT_YET_RELEASED" && anime.episodesProgress > 0 && anime.episodesProgress !== anime.episodesNumber} <!-- avoid displaying unreleased, finished or not started anime -->
-      <div class="element" class:releasing={anime.status === 'RELEASING'} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--accentColor: ${anime.accentColor + cssHexAccentOpacity}` : ''}">
-        {#if anime.status === "RELEASING" && anime.nextAiringEpisode - 1 === anime.episodesProgress} <!-- for airing/releasing anime, only show next episode in ... label if the user's is up to-date -->
+      <div class="element" class:releasing={anime.status === 'RELEASING'} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--tAccentColor: ${anime.accentColor + cssHexAccentOpacity}; --accentColor: ${anime.accentColor}` : ''}">
+        {#if anime.status === "RELEASING" && anime.nextEpisode.number - 1 === anime.episodesProgress} <!-- for airing/releasing anime, only show next episode in ... label if the user's is up to-date -->
           <div class="informations top">
-            <NextAiringEpisode nextAiringEpisode={anime.nextAiringEpisode} airingAt={anime.airingAt} />
+            <RelativeTimeInfo number={anime.nextEpisode.number} timestamp={anime.nextEpisode.timestamp} mediaType="episode" />
+          </div>
+        {:else if anime.status === "RELEASING" && anime.episodesProgress > 0 && anime.episodesProgress < anime.episodesNumber}
+          <div class="informations top" class:toCatchUp={anime.episodesProgress < anime.lastEpisode.number}>
+            <RelativeTimeInfo number={anime.lastEpisode.number} timestamp={anime.lastEpisode.timestamp} mediaType="episode" />
           </div>
         {/if}
         <div class="informations">
@@ -54,16 +58,15 @@
 
 <div id="watched" class="elements-wrapper">
   {#each watched as anime}
-  <div class="element" class:ova={anime.episodesNumber <= 2} class:visible={isChecked && anime.episodesNumber <= 2} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--accentColor: ${anime.accentColor + cssHexAccentOpacity}` : ''}">
-    {#if anime.rating !== 0 || anime.rewatch !== 0}
+  <div class="element" class:ova={anime.episodesNumber <= 2} class:visible={isChecked && anime.episodesNumber <= 2} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--tAccentColor: ${anime.accentColor + cssHexAccentOpacity}; --accentColor: ${anime.accentColor}` : ''}">
+    {#if anime.rating !== 0}
           <div class="informations top">
-            {#if anime.rewatch !== 0}<Rewatch Number={anime.rewatch}/>{/if}
             <span class="rating">{@html ratingStars(anime.rating)}</span>
           </div>
         {/if}
         <div class="informations">
           <div class="upper">
-            <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}</a>
+            <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}{#if anime.rewatch !== 0}<Rewatch Number={anime.rewatch}/>{/if}</a>
           </div>
           {#if anime.episodesNumber == 1 && anime.episodesDuration !== null}
             <span class="episodes-info">{anime.episodesDuration} min.</span>

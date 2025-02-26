@@ -69,7 +69,7 @@ export async function fetchMangaCollection(username) {
                     dateAjout: possessedVolumesData[vol.id]
                 }));
 
-            const nextVolumes = volumesInEdition
+            const nextVolumes = edition.title === null ? volumesInEdition
                 .filter(vol => !(vol.id in possessedVolumesData))
                 .map(vol => {
                     return {
@@ -79,7 +79,7 @@ export async function fetchMangaCollection(username) {
                         noCover: !vol.image_url,
                         releaseDate: new Date(vol.release_date) <= new Date() ? null : new Date(vol.release_date)
                     };
-                });
+                }) : [];
 
             const latestDate = possessedVolumes.length ? Math.max(...possessedVolumes.map(v => new Date(v.dateAjout))) : null;
 

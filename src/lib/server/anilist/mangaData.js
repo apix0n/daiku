@@ -1,4 +1,5 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
+import { getLatestChapter } from '$lib/server/malsyncGetLatestChapter.js'
 
 async function getUserMangaData(username, sortOption = 'UPDATED_TIME_DESC') {
     const query = `
@@ -16,6 +17,7 @@ async function getUserMangaData(username, sortOption = 'UPDATED_TIME_DESC') {
                         chapters
                         volumes
                         id
+                        idMal
                         status
                         coverImage {
                             color
@@ -27,6 +29,7 @@ async function getUserMangaData(username, sortOption = 'UPDATED_TIME_DESC') {
                     progressVolumes
                     status
                     repeat
+                    notes
                     startedAt {
                         year
                         month
@@ -88,7 +91,7 @@ function readManga(userMangaData) {
     }));
 }
 
-function readingManga(userMangaData) {
+async function readingManga(userMangaData) {
     const seen = new Set();
     const allCurrentManga = userMangaData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
@@ -99,9 +102,17 @@ function readingManga(userMangaData) {
             return !duplicate;
         }); // Filter out duplicates (same media in multiple lists)
 
-    allCurrentManga.forEach(media => {
+    for (const media of allCurrentManga) {
         anilistGlobal.applyPosterOverrides(media.media);
-    });
+
+        let lang = undefined;
+        const langMatch = media.notes?.match(/lang:([^\s]+)/);
+        if (langMatch) { lang = langMatch[1]; } // Extract language from notes
+        
+        if (media.media.status === "RELEASING") {
+            media.lastChapter = await getLatestChapter(media.media.idMal, lang);
+        }
+    }
 
     return allCurrentManga.map(entry => ({
         title: entry.media.title.english || entry.media.title.romaji,
@@ -114,6 +125,7 @@ function readingManga(userMangaData) {
         startedDate: anilistGlobal.formatDate(entry.startedAt),
         userStatus: entry.status,
         reread: entry.repeat,
+        lastChapter: entry.lastChapter,
         mediaLink: anilistGlobal.siteUrl + "/manga/" + entry.media.id,
         coverLink: entry.media.coverImage.large,
         accentColor: entry.media.coverImage.color,
@@ -157,7 +169,7 @@ export async function fetchMangaData(username) {
         const userData = await getUserMangaData(username); // For other statuses
         return {
             updatedAt: new Date().toISOString(),
-            current: readingManga(userData),
+            current: await readingManga(userData),
             read: readManga(readUserData),
             dropped: droppedManga(userData),
         };

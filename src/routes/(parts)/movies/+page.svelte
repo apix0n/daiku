@@ -16,13 +16,12 @@
       <div class="element" style:background-image="url({movie.coverLink})">
         {#if movie.rating !== 0 || movie.rewatch}
           <div class="informations top">
-            {#if movie.rewatch}<Rewatch/>{/if}
             <span class="rating">{@html ratingStars(movie.rating)}</span>
           </div>
         {/if}
         <div class="informations">
           <div class="upper">
-            <a class="media-title" href={movie.link} target="_blank">{movie.title}</a>
+            <a class="media-title" href={movie.link} target="_blank">{movie.title}{#if movie.rewatch}<Rewatch/>{/if}</a>
           </div>
           <div class="more">
               {#if movie.movieRuntime != null}
