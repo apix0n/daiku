@@ -13,10 +13,11 @@ export async function getLatestChapter(malMangaId, lang="fr") {
                 timestamp: langEntry.lastEp.timestamp
             } 
         } else {
-            throw new Error('Aucune entrée trouvée');
+            console.error('Aucune entrée trouvée');
+            return null;
         }
     } catch (error) {
         console.error('Erreur lors de la récupération du dernier chapitre:', error);
-        throw error;
+        return null;
     }
 }

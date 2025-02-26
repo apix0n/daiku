@@ -23,7 +23,7 @@
     {#each current as manga}
         {#if manga.status !== "NOT_YET_RELEASED" && manga.chaptersProgress > 0}
           <div class="element" class:releasing={manga.status === 'RELEASING'} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ? `--tAccentColor: ${manga.accentColor + cssHexAccentOpacity}; --accentColor: ${manga.accentColor}` : ''}">
-            {#if manga.status === "RELEASING"}
+            {#if manga.status === "RELEASING" && manga.lastChapter !== null}
               <div class="informations top" class:toCatchUp={manga.chaptersProgress < manga.lastChapter.number}>
                 <RelativeTimeInfo number={manga.lastChapter.number} timestamp={Math.floor(manga.lastChapter.timestamp / 1000)} mediaType="chapter" />
               </div>
