@@ -108,7 +108,7 @@ async function currentAnime(userAnimeData) {
     for (const media of allCurrentAnime) {
         anilistGlobal.applyPosterOverrides(media.media);
         if (media.media.status === "RELEASING") {
-            media.lastEpisode = await getPrecedingEpisode(media.media.id, media.media.nextAiringEpisode.episode);
+            media.lastEpisode = await getPrecedingEpisode(media.media.id, media.media.nextAiringEpisode.episode, media.media.airingEpisodesOffset);
         }
     };
 
