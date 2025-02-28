@@ -104,5 +104,9 @@ export function applyPosterOverrides(media) {
         if (override.accentColor) {
             media.coverImage.color = override.accentColor;
         }
+        if (override.releaseTime) {
+            media.nextEpisode.timestamp = Math.floor(new Date(media.nextEpisode.timestamp * 1000).setUTCHours(override.releaseTime[0], override.releaseTime[1] || 0) / 1000);
+            media.lastEpisode.timestamp = Math.floor(new Date(media.lastEpisode.timestamp * 1000).setUTCHours(override.releaseTime[0], override.releaseTime[1] || 0) / 1000)
+        }
     }
 }
