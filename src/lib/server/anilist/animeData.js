@@ -106,10 +106,10 @@ async function currentAnime(userAnimeData) {
         }); // Filter out duplicates (same media in multiple lists)
 
     for (const media of allCurrentAnime) {
-        anilistGlobal.applyPosterOverrides(media.media);
         if (media.media.status === "RELEASING") {
-            media.lastEpisode = await getPrecedingEpisode(media.media.id, media.media.nextAiringEpisode.episode, media.media.airingEpisodesOffset);
+            media.media.lastEpisode = await getPrecedingEpisode(media.media.id, media.media.nextAiringEpisode.episode);
         }
+        anilistGlobal.applyPosterOverrides(media.media);
     };
 
     return allCurrentAnime.map(entry => ({
@@ -125,9 +125,9 @@ async function currentAnime(userAnimeData) {
         mediaLink: anilistGlobal.siteUrl + "/anime/" + entry.media.id,
         coverLink: entry.media.coverImage.large,
         accentColor: entry.media.coverImage.color,
-        lastEpisode: entry.lastEpisode,
+        lastEpisode: entry.media.lastEpisode,
         nextEpisode: {
-            number: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode + (entry.media.airingEpisodesOffset || 0) : undefined,
+            number: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode : undefined,
             timestamp: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined
         }
     }));
@@ -162,7 +162,7 @@ function droppedAnime(userAnimeData) {
         accentColor: entry.media.coverImage.color,
         airingAt: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined,
         nextEpisode: {
-            number: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode + (entry.media.airingEpisodesOffset || 0) : undefined,
+            number: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode : undefined,
             timestamp: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined
         }
     }));

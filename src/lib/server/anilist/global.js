@@ -99,14 +99,21 @@ export function applyPosterOverrides(media) {
             media.title.english = override.title;
         }
         if (override.airingEpisodesOffset) {
-            media.airingEpisodesOffset = override.airingEpisodesOffset;
+            if (media.nextAiringEpisode) {
+                media.nextAiringEpisode.episode += override.airingEpisodesOffset;
+            }
+            if (media.lastEpisode) {
+                media.lastEpisode.number += override.airingEpisodesOffset;
+            }
         }
         if (override.accentColor) {
             media.coverImage.color = override.accentColor;
         }
-        if (override.releaseTime) {
-            media.nextEpisode.timestamp = Math.floor(new Date(media.nextEpisode.timestamp * 1000).setUTCHours(override.releaseTime[0], override.releaseTime[1] || 0) / 1000);
-            media.lastEpisode.timestamp = Math.floor(new Date(media.lastEpisode.timestamp * 1000).setUTCHours(override.releaseTime[0], override.releaseTime[1] || 0) / 1000)
+        if (override.releaseTime && media.nextAiringEpisode) {
+            media.nextAiringEpisode.airingAt = Math.floor(new Date(media.nextAiringEpisode.airingAt * 1000).setUTCHours(override.releaseTime[0], override.releaseTime[1] || 0) / 1000);
+        }
+        if (override.releaseTime && media.lastEpisode) {
+            media.lastEpisode.timestamp = Math.floor(new Date(media.lastEpisode.timestamp * 1000).setUTCHours(override.releaseTime[0], override.releaseTime[1] || 0) / 1000);
         }
     }
 }

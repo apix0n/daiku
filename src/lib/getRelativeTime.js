@@ -7,11 +7,18 @@ export function getRelativeTime(date, unit = 'day') {
         const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
         return rtf.format(-diffInDays, 'day');
     } else if (unit === 'hour') {
-        let diffInHours = Math.floor(diff / (1000 * 60 * 60));
+        let diffInHours = Math.floor(new Date(now - targetDate) / (1000 * 60 * 60));
         if (diffInHours === 0) {
             diffInHours = 1;
         }
         const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'always' });
         return rtf.format(-diffInHours, 'hour');
+    } else if (unit === 'minute') {
+        let diffInMinutes = Math.floor(new Date(now - targetDate) / (1000 * 60));
+        if (diffInMinutes === 0) {
+            diffInMinutes = 1;
+        }
+        const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'always' });
+        return rtf.format(-diffInMinutes, 'minute');
     }
 }

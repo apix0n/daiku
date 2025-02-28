@@ -7,6 +7,8 @@
     let timestampDate = getRelativeTime(new Date(timestamp * 1000));
     if (timestampDate === "today" && timestamp > Date.now() / 1000) {
         timestampDate = `today at ${new Date(timestamp * 1000).toLocaleTimeString([], { timeStyle: 'short' })}`
+    } else if (timestampDate === "today" && timestamp - Date.now() / 1000 > -(60 * 60)) {
+        timestampDate = `${getRelativeTime(new Date(timestamp * 1000), 'minute')}`
     } else if (timestampDate === "today" && timestamp < Date.now() / 1000) {
         timestampDate = `${getRelativeTime(new Date(timestamp * 1000), 'hour')}`
     }
