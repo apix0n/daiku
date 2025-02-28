@@ -89,3 +89,14 @@
 </div>
 
 <UpdatedTime date={updatedAt} service="AniList"/>
+
+<style>
+  .element.releasing.notyet {
+    opacity: .25;
+    transition: all .2s ease-in-out;
+  }
+
+  .element.releasing.notyet:hover {
+    opacity: 1;
+  }
+</style>

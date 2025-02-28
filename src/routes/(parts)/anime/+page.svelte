@@ -3,8 +3,7 @@
     import { formatDateLocale } from '$lib/formatDateLocale.js';
     import Rewatch from '../../../components/icons/Rewatch.svelte';
     import UpdatedTime from '../../../components/UpdatedTime.svelte';
-	import { getRelativeTime } from '$lib/getRelativeTime'
-	import RelativeTimeInfo from '../../../components/RelativeTimeInfo.svelte'
+	  import RelativeTimeInfo from '../../../components/RelativeTimeInfo.svelte'
 
     export let data
     const { current, watched, updatedAt } = data.animeData;
