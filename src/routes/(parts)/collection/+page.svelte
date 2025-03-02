@@ -21,7 +21,7 @@
 <div class="manga-list">
     {#each seriesWithPossessions as manga}
         <div class="manga">
-            <h2>{manga.titre}</h2>
+            <h2>{manga.titre}{#if manga.typeLivre}<span class="series-info">{manga.typeLivre}</span>{/if}</h2>
             {#each manga.editions as edition}
             {#if edition.possessions.length > 0}
             <div class="edition">
@@ -55,3 +55,20 @@
 </div>
 
 <UpdatedTime date={updatedAt} service="Mangacollec"/>
+
+<style>
+    :global{
+        .series-info {
+            font-size: .85em;
+            font-weight: normal;
+            margin-left: 0.3em;
+            color: var(--text-2);
+            position: revert;
+        }
+
+        .series-info::before {
+            content: '·';
+            margin-right: 0.3em;
+        }
+    }
+</style>

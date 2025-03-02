@@ -71,7 +71,7 @@
 <div class="manga-list">
     {#each seriesWithNext as manga}
         <div class="manga">
-            <h2>{manga.titre}</h2>
+            <h2>{manga.titre}{#if manga.typeLivre}<span class="series-info">{manga.typeLivre}</span>{/if}</h2>
             {#each manga.editions as edition}
             {#if edition.next.length > 0}
             <div class="edition">

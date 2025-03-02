@@ -1,6 +1,6 @@
 import { updated } from "$app/state";
 
-const ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0";
+const ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0";
 
 async function getToken() {
     const tokenUrl = 'https://api.mangacollec.com/oauth/token';
@@ -40,8 +40,23 @@ async function getCollec(user) {
     return await response.json();
 }
 
+async function getTypes() {
+    const url = 'https://api.mangacollec.com/v1/types';
+    const headers = {
+        "User-Agent": ua,
+        "authorization": await getToken(),
+        "Origin": "https://www.mangacollec.com",
+    };
+
+    const response = await fetch(url, { headers });
+    return await response.json();
+}
+
 export async function fetchMangaCollection(username) {
-    const collectionJson = await getCollec(username);
+    const [collectionJson, types] = await Promise.all([
+        getCollec(username),
+        getTypes()
+    ]);
 
     const possessedVolumesData = Object.fromEntries(
         collectionJson.possessions.map(possession => [possession.volume_id, possession.created_at])
@@ -94,11 +109,18 @@ export async function fetchMangaCollection(username) {
             };
         }).filter(ed => ed.possessions.length || ed.next.length);
 
-        return {
+        const typeInfo = types.find(t => t.id === serie.type_id);
+        const result = {
             titre: serie.title,
             editions: editionsData,
             dateDernierAjout: Math.max(...editionsData.map(ed => ed.dateDernierAjout))
         };
+
+        if (typeInfo) {
+            result.typeLivre = typeInfo.title;
+        }
+
+        return result;
     }).filter(serie => serie.editions.length);
 
     mangaCollectionData.sort((a, b) => b.dateDernierAjout - a.dateDernierAjout); // sort by latest addition date (if has possession)
