@@ -11,9 +11,6 @@
     const cssHexAccentOpacity = "80";
 
     let isChecked = false;
-    // as a test, go through the manga list and change every manga.reread to random values from 0 to 10
-    current.forEach(manga => manga.reread = Math.floor(Math.random() * 11));
-    read.forEach(manga => manga.reread = Math.floor(Math.random() * 11));
 </script>
 
 {#if current.length !== 0}
