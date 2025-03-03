@@ -11,6 +11,9 @@
     const cssHexAccentOpacity = "80";
 
     let isChecked = false;
+    // as a test, go through the manga list and change every manga.reread to random values from 0 to 10
+    current.forEach(manga => manga.reread = Math.floor(Math.random() * 11));
+    read.forEach(manga => manga.reread = Math.floor(Math.random() * 11));
 </script>
 
 {#if current.length !== 0}
@@ -73,10 +76,10 @@
             {/if}
             <div class="informations">
               <div class="upper">
-                <a class="media-title" href="{manga.mediaLink}" target="_blank">{manga.title}{#if manga.reread !== 0}<Rewatch Number={manga.reread}/>{/if}</a>
+                <a class="media-title" href="{manga.mediaLink}" target="_blank">{manga.title}</a>
               </div>
               {#if manga.chapterCount !== null || manga.volumesCount !== null}
-                 <span class="episodes-info">{manga.chapterCount !== null ? `${manga.chapterCount} chapter${manga.chapterCount > 1 ? 's' : ''}` : ''}{manga.chapterCount !== null && manga.volumesCount !== null ? ' · ' : ''}{manga.volumesCount !== null ? `${manga.volumesCount} volume${manga.volumesCount > 1 ? 's' : ''}` : ''}</span>
+                 <span class="episodes-info">{manga.chapterCount !== null ? `${manga.chapterCount} ${!manga.reread ? `chapter${manga.chapterCount > 1 ? 's' : ''}` : "chap."}` : ''}{manga.chapterCount !== null && manga.volumesCount !== null ? ' · ' : ''}{manga.volumesCount !== null ? `${manga.volumesCount} ${!manga.reread ? `volume${manga.volumesCount > 1 ? 's' : ''}` : "vol." }` : ''} {#if manga.reread}<Rewatch Number={manga.reread}/>{/if}</span>
               {/if}
               <div class="more">
                 {#if manga.startedDate == manga.finishedDate && manga.startedDate != null}

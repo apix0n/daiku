@@ -65,12 +65,12 @@
         {/if}
         <div class="informations">
           <div class="upper">
-            <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}{#if anime.rewatch !== 0}<Rewatch Number={anime.rewatch}/>{/if}</a>
+            <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}</a>
           </div>
           {#if anime.episodesNumber == 1 && anime.episodesDuration !== null}
             <span class="episodes-info">{anime.episodesDuration} min.</span>
             {:else if anime.episodesNumber !== null && anime.episodesDuration !== null}
-            <span class="episodes-info">{anime.episodesNumber} episode{anime.episodesNumber > 1 ? 's' : ''} × {anime.episodesDuration} min.</span>
+            <span class="episodes-info">{anime.episodesNumber} {!anime.rewatch ? `episode${anime.episodesNumber > 1 ? 's' : ''}` : "ep."} × {anime.episodesDuration} min. {#if anime.rewatch !== 0}<Rewatch Number={anime.rewatch}/>{/if}</span>
             {/if}
             <div class="more">
               {#if anime.startedDate == anime.finishedDate && anime.startedDate != null}

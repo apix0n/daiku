@@ -11,15 +11,22 @@
 
 <style>
     svg {
-        height: 1rem;
-        margin-left: .25em;
-        top: .05rem;
+        height: 1.1em;
+        margin-left: 0em;
+        top: .08rem;
         position: relative;
     }
 
     text {
         text-anchor: middle;
-        font-size: .8em;
+        font-size: 1rem;
         font-weight: 400;
+    }
+
+    :global(.media-title svg) {
+        height: 1em;
+        margin-left: .25em;
+        top: .08rem;
+        position: relative;
     }
 </style>
