@@ -102,10 +102,10 @@ export function plannedAnime(userPlannedAnime) {
         coverLink: entry.media.coverImage.large,
         accentColor: entry.media.coverImage.color,
         airingAt: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined,
-        nextEpisode: {
-            number: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode + (entry.media.airingEpisodesOffset || 0) : undefined,
+        nextEpisode: entry.media.nextAiringEpisode ? {
+            number: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode : undefined,
             timestamp: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined
-        }
+        } : undefined
     }));
 }
 

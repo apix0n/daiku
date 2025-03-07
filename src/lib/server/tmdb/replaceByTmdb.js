@@ -1,6 +1,8 @@
 import { updated } from "$app/state";
 import { getTmdbInfos } from "./getTmdbInfos.js";
-const posterOverrideUrl = "https://raw.githubusercontent.com/apix0n/daiku-alternatives/refs/heads/alternatives/tmdb/overrides.json"
+
+import { ALTERNATIVES_BASE_URL } from "$env/static/private";
+export let alternativesUrl = `${ALTERNATIVES_BASE_URL}/tmdb`;
 
 export async function replaceByTmdb(movieList) {
     await loadPosterOverrides(); // Load poster overrides at the start
@@ -47,7 +49,7 @@ export async function loadPosterOverrides() {
     }
 
     try {
-        const response = await fetch(posterOverrideUrl);
+        const response = await fetch(alternativesUrl + '/overrides.json');
         posterOverrides = await response.json();
         cacheTimestamp = Date.now();
         return posterOverrides;
@@ -65,7 +67,7 @@ export function applyPosterOverrides(media) {
     if (override) {
         if (override.covers) {
             if (override.covers.medium) {
-                media.coverLink = `${posterOverrideUrl}/${override.covers.medium}`;
+                media.coverLink = `${alternativesUrl}/${override.covers.medium}`;
             }
         }
         if (override.title) {

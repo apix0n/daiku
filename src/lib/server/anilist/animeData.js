@@ -126,10 +126,10 @@ async function currentAnime(userAnimeData) {
         coverLink: entry.media.coverImage.large,
         accentColor: entry.media.coverImage.color,
         lastEpisode: entry.media.lastEpisode,
-        nextEpisode: {
+        nextEpisode: entry.media.nextAiringEpisode ? {
             number: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode : undefined,
             timestamp: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined
-        }
+        } : undefined
     }));
 }
 
