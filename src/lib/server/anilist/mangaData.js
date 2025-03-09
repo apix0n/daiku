@@ -1,10 +1,10 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
-import { getLatestChapter } from '$lib/server/malsyncGetLatestChapter.js'
+import { config } from '../config';
 
-async function getUserMangaData(username, sortOption = 'UPDATED_TIME_DESC') {
+async function getUserMangaData(userId, sortOption = 'UPDATED_TIME_DESC') {
     const query = `
-    query ($userName: String, $sort: [MediaListSort]) {
-        MediaListCollection(userName: $userName, type: MANGA, status_not: PLANNING, sort: $sort) {
+    query ($userId: Int, $sort: [MediaListSort]) {
+        MediaListCollection(userId: $userId, type: MANGA, status_not: PLANNING, sort: $sort) {
             lists {
                 entries {
                     media {
@@ -45,7 +45,7 @@ async function getUserMangaData(username, sortOption = 'UPDATED_TIME_DESC') {
         }
     }`;
     await anilistGlobal.loadPosterOverrides();
-    return await anilistGlobal.fetchGraphQL(query, { userName: username, sort: sortOption });
+    return await anilistGlobal.fetchGraphQL(query, { userId: userId, sort: sortOption });
 }
 
 function readManga(userMangaData) {
@@ -105,13 +105,9 @@ async function readingManga(userMangaData) {
     for (const media of allCurrentManga) {
         anilistGlobal.applyPosterOverrides(media.media);
 
-        let lang = undefined;
-        const langMatch = media.notes?.match(/lang:([^\s]+)/);
-        if (langMatch) { lang = langMatch[1]; } // Extract language from notes
-        
-        if (media.media.status === "RELEASING") {
-            media.lastChapter = await getLatestChapter(media.media.idMal, lang);
-        }
+        let readingLang = undefined;
+        const langMatch = media.notes?.match(new RegExp(config.mangaLangRegex));
+        if (langMatch) { readingLang = langMatch[1]; media.daikuReadingLang = readingLang } // Extract language from notes
     }
 
     return allCurrentManga.map(entry => ({
@@ -125,17 +121,18 @@ async function readingManga(userMangaData) {
         startedDate: anilistGlobal.formatDate(entry.startedAt),
         userStatus: entry.status,
         reread: entry.repeat,
-        lastChapter: entry.lastChapter,
         mediaLink: anilistGlobal.siteUrl + "/manga/" + entry.media.id,
         coverLink: entry.media.coverImage.large,
         accentColor: entry.media.coverImage.color,
+        malId: entry.media.idMal,
+        readingLang: entry.daikuReadingLang ? entry.daikuReadingLang : undefined
     }));
 }
 
 function droppedManga(userMangaData) {
     const seen = new Set();
     const allDroppedManga = userMangaData.data.MediaListCollection.lists
-        .flatMap(list => list.entries) 
+        .flatMap(list => list.entries)
         .filter(entry => entry.status === "DROPPED" || entry.status === "PAUSED") // Keep only dropped and paused entries
         .filter(entry => {
             const duplicate = seen.has(entry.media.id);
@@ -163,10 +160,10 @@ function droppedManga(userMangaData) {
     }));
 }
 
-export async function fetchMangaData(username) {
+export async function fetchMangaData(userId) {
     try {
-        const readUserData = await getUserMangaData(username, 'FINISHED_ON_DESC'); // For read manga
-        const userData = await getUserMangaData(username); // For other statuses
+        const readUserData = await getUserMangaData(userId, 'FINISHED_ON_DESC'); // For read manga
+        const userData = await getUserMangaData(userId); // For other statuses
         return {
             updatedAt: new Date().toISOString(),
             current: await readingManga(userData),

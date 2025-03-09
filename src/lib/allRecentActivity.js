@@ -1,7 +1,7 @@
 import { formatDateLocale } from "$lib/formatDateLocale";
 
 export function allRecentActivity(anilistData, mangaCollection, watchedMovies, recentActivityThreshold) {
-    let recentActivity = [...anilistData];
+    let recentActivity = [...anilistData] || [];
     let recentlyAddedToCollection = [];
 
     mangaCollection.collection.forEach(serie => {
@@ -51,7 +51,7 @@ export function allRecentActivity(anilistData, mangaCollection, watchedMovies, r
     // Trier par date, les plus récents en premier
     recentActivity.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    console.log("[recentAct] --- created recent activity list -----")
+    console.log("[created recent activity list]")
 
     return recentActivity;
 }

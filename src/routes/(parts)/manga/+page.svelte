@@ -4,7 +4,7 @@
     import Rewatch from '../../../components/icons/Rewatch.svelte';
     import UpdatedTime from '../../../components/UpdatedTime.svelte';
     import { getRelativeTime } from '$lib/getRelativeTime';
-	import RelativeTimeInfo from '../../../components/RelativeTimeInfo.svelte'
+	import RelativeTimeInfo from '../../../components/cards/top/RelativeTimeInfo.svelte'
 
     export let data
     const { current, read, updatedAt } = data.mangaData;
@@ -23,7 +23,7 @@
     {#each current as manga}
         {#if manga.status !== "NOT_YET_RELEASED" && manga.chaptersProgress > 0}
           <div class="element" class:releasing={manga.status === 'RELEASING'} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ? `--tAccentColor: ${manga.accentColor + cssHexAccentOpacity}; --accentColor: ${manga.accentColor}` : ''}">
-            {#if manga.status === "RELEASING" && manga.lastChapter !== null}
+            {#if manga.status === "RELEASING" && manga.lastChapter && manga.chaptersProgress <= manga.lastChapter.number }
               <div class="informations top" class:toCatchUp={manga.chaptersProgress < manga.lastChapter.number}>
                 <RelativeTimeInfo number={manga.lastChapter.number} timestamp={Math.floor(manga.lastChapter.timestamp / 1000)} mediaType="chapter" />
               </div>
@@ -103,15 +103,5 @@
     .elements-wrapper .element {
         --border-radius: .8em;
         height: calc(var(--element-width) * 1.425);
-    }
-
-    @media screen and (max-width: 1200px) {
-        .elements-wrapper .element {
-            --element-width: 150px;
-        }
-
-        #current .element .media-title {
-          font-size: 1.1em;
-        }
     }
 </style>

@@ -21,10 +21,12 @@
         const hours = Math.floor((minutes % 1440) / 60);
         return { days, hours };
     }
+
+    import { _ } from "svelte-i18n"
 </script>
 
 <div class="watchtime">
-    <h2>watch time</h2>
+    <h2>{$_("watchTime")}</h2>
     <svg viewBox="0 0 36 36" class="circular-chart">
         <path class="circle bg"
           stroke-dasharray="100"
@@ -38,9 +40,9 @@
           a 15.9155 15.9155 0 0 1 0 31.831
           a 15.9155 15.9155 0 0 1 0 -31.831"
       />
-      <text x="18" y="14" class="percentage">{convertToDaysHours(totalWatchTime).days} days</text>
-      <text x="18" y="20" class="percentage anime">{convertToDaysHours(animeWatchTime).days} days anime</text>
-      <text x="18" y="24" class="percentage movie">{convertToDaysHours(movieWatchTime).days} days movies</text>
+      <text x="18" y="14" class="percentage">{convertToDaysHours(totalWatchTime).days} {$_('days')}</text>
+      <text x="18" y="20" class="percentage anime">{convertToDaysHours(animeWatchTime).days} {$_('days')} {$_('mainTitles.anime')}</text>
+      <text x="18" y="24" class="percentage movie">{convertToDaysHours(movieWatchTime).days} {$_('days')} {$_('mainTitles.movies')}</text>
     </svg>
 </div>
 

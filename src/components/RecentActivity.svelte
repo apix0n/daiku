@@ -3,6 +3,10 @@
     import { getRelativeTime } from "$lib/getRelativeTime";
 
     export let data;
+    import { _, locale as localeStore } from "svelte-i18n"
+    import { get } from "svelte/store";
+
+    const locale = get(localeStore)
 
     function concatenateWithSpace(...values) {
         return values.filter(value => value !== null && value !== undefined).join(' ');
@@ -24,16 +28,16 @@
 </script>
 
 <div class="recent-activity">
-    <h2>recent activity</h2>
+    <h2>{$_("recentActivity")}</h2>
     {#each Object.keys(groupedActivities) as date}
         <div class="day-group">
-            <span title={new Date(date).toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}>{getRelativeTime(date)}</span>
+            <span title={new Date(date).toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}>{getRelativeTime(locale, date)}</span>
             {#each groupedActivities[date] as activity}
                 <div>
                     <img src={activity.coverSrc} alt="">
                     <span class="message">{concatenateWithSpace(activity.messagePrefix, activity.activityProgress, activity.messageRoot)} <a href={activity.mediaLink} target="_blank">{activity.mediaTitle}</a>{activity.messageSuffix}.</span>
                     {#if activity.mediaType !== "movie"}
-                        <span class="hour" title={new Date(activity.date).toLocaleString()}>{new Date(activity.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span class="hour" title={new Date(activity.date).toLocaleString(locale)}>{new Date(activity.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     {/if}
                 </div>
             {/each}

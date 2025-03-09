@@ -1,9 +1,9 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 
-export async function getPlannedAnime(username) {
+export async function getPlannedAnime(userId) {
     const query = `
-    query ($userName: String) {
-        MediaListCollection(userName: $userName, type: ANIME, status: PLANNING, sort: UPDATED_TIME_DESC) {
+    query ($userId: Int) {
+        MediaListCollection(userId: $userId, type: ANIME, status: PLANNING, sort: UPDATED_TIME_DESC) {
             lists {
                 entries {
                     media {
@@ -37,13 +37,13 @@ export async function getPlannedAnime(username) {
         }
     }`;
     await anilistGlobal.loadPosterOverrides();
-    return await anilistGlobal.fetchGraphQL(query, { userName: username });
+    return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
-export async function getPlannedManga(username) {
+export async function getPlannedManga(userId) {
     const query = `
-    query ($userName: String) {
-        MediaListCollection(userName: $userName, type: MANGA, status: PLANNING, sort: UPDATED_TIME_DESC) {
+    query ($userId: Int) {
+        MediaListCollection(userId: $userId, type: MANGA, status: PLANNING, sort: UPDATED_TIME_DESC) {
             lists {
                 entries {
                     media {
@@ -73,7 +73,7 @@ export async function getPlannedManga(username) {
         }
     }`;
     await anilistGlobal.loadPosterOverrides();
-    return await anilistGlobal.fetchGraphQL(query, { userName: username });
+    return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
 export function plannedAnime(userPlannedAnime) {
@@ -136,10 +136,10 @@ export function plannedManga(userPlannedManga) {
     }));
 }
 
-export async function fetchPlannedData(username) {
+export async function fetchPlannedData(userId) {
     try {
-        const plannedAnimeData = await getPlannedAnime(username);
-        const plannedMangaData = await getPlannedManga(username);
+        const plannedAnimeData = await getPlannedAnime(userId);
+        const plannedMangaData = await getPlannedManga(userId);
 
         return {
             updatedAt: new Date().toISOString(),

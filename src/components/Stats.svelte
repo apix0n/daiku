@@ -1,23 +1,24 @@
 <script>
     export let data;
+    import { _ } from "svelte-i18n"
 </script>
 
 <div class="statistics">
-    <h2>stats</h2>
+    <h2>{$_("stats")}</h2>
     <div class="parent">
         <!-- 1 2 3 -->
         <!-- 4 5 6 -->
         <div>
             <span class="highlight">{data.animeData.watched.length}</span>
-            <span>watched anime</span>
+            <span>{$_('watchedAnime')}</span>
         </div>
         <div>
             <span class="highlight">{data.watchedMovies.watched.length}</span>
-            <span>watched movies</span>
+            <span>{$_('watchedMovies')}</span>
         </div>
         <div>
             <span class="highlight">{data.mangaData.read.length}</span>
-            <span>read manga</span>
+            <span>{$_('readManga')}</span>
         </div>
         <div>
             <span class="highlight">
@@ -27,7 +28,7 @@
                     }, 0);
                 }, 0)}
             </span>
-            <span>watched episodes</span>
+            <span>{$_('watchedEpisodes')}</span>
         </div>
         <div>
             <span class="highlight">
@@ -37,7 +38,7 @@
                     }, 0);
                 }, 0)}
             </span>
-            <span>owned volumes</span>
+            <span>{$_('ownedVolumes')}</span>
         </div>
         <div>
             <span class="highlight">
@@ -47,7 +48,7 @@
                     }, 0);
                 }, 0)}
             </span>
-            <span>chapters read</span>
+            <span>{$_('chaptersRead')}</span>
         </div>
     </div>
 </div>

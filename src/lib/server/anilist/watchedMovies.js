@@ -4,10 +4,10 @@ import { getTmdbInfos } from '$lib/server/tmdb/getTmdbInfos.js';
 let cachedAnimeIdsFile = null;
 let cacheTimestamp = null;
 
-async function getUserWatchedAnime(username) {
+async function getUserWatchedAnime(userId) {
     const query = `
-    query ($userName: String) {
-        MediaListCollection(userName: $userName, type: ANIME, status: COMPLETED, sort: UPDATED_TIME_DESC) {
+    query ($userId: Int) {
+        MediaListCollection(userId: $userId, type: ANIME, status: COMPLETED, sort: UPDATED_TIME_DESC) {
             lists {
                 entries {
                     media {
@@ -36,7 +36,7 @@ async function getUserWatchedAnime(username) {
             }
         }
     }`;
-    return await anilistGlobal.fetchGraphQL(query, { userName: username });
+    return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
 async function getAnimeIdsFile() {
@@ -120,15 +120,15 @@ async function watchedMovies(userMovieData) {
     }));
 }
 
-export async function fetchWatchedAnimeMovies(username) {
+export async function fetchWatchedAnimeMovies(userId) {
     try {
-        const userData = await getUserWatchedAnime(username);
+        const userData = await getUserWatchedAnime(userId);
         return {
             updatedAt: new Date().toISOString(),
             watched: await watchedMovies(userData),
         };
     } catch (error) {
         console.error('Error fetching movie data:', error);
-        throw error;
+        return [];
     }
 }

@@ -1,6 +1,6 @@
 <script>
     import { ratingStars } from '$lib/ratingStars.js';
-	import RelativeTimeInfo from '../../../../components/RelativeTimeInfo.svelte'
+	import RelativeTimeInfo from '../../../../components/cards/top/RelativeTimeInfo.svelte'
     import NoEntriesMessage from '../../../../components/NoEntriesMessage.svelte';
     import UpdatedTime from '../../../../components/UpdatedTime.svelte';
 

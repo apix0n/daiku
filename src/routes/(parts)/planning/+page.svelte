@@ -3,7 +3,7 @@
   import { planningListFormatDate } from '$lib/anilist/global.js';
   import UpdatedTime from '../../../components/UpdatedTime.svelte';
 	import { getRelativeTime } from '$lib/getRelativeTime'
-	import RelativeTimeInfo from '../../../components/RelativeTimeInfo.svelte'
+	import RelativeTimeInfo from '../../../components/cards/top/RelativeTimeInfo.svelte'
 
   export let data;
   const { anime, manga, updatedAt } = data.plannedData;

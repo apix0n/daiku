@@ -1,0 +1,32 @@
+{
+  "home": "accueil",
+  "stats": "statistiques",
+  "watchTime": "temps de visionnage",
+  "recentActivity": "activité récente",
+  "watchingNumber": "en regarde {n}",
+  "watchedNumber": "en a regardé {n}",
+  "readingNumber": "en lit {n}",
+  "volumesCount": "{n} tomes",
+  "seriesCount": "{n} séries",
+  "mainTitles": {
+    "anime": "anime",
+    "manga": "manga",
+    "movies": "films",
+    "planned": "à voir",
+    "mangaCollection": "collection de manga"
+  },
+  "chaptersRead": "chapitres lus",
+  "ownedVolumes": "tomes possédés",
+  "readManga": "mangas lus",
+  "watchedAnime": "animes regardés",
+  "watchedEpisodes": "épisodes regardés",
+  "watchedMovies": "films regardés",
+  "-currentLang": "français",
+  "days": "jours",
+  "Nepisodes": "{n} épisodes",
+  "NminutesShort": "{n} min.",
+  "currentlyWatching": "en cours de visionnage",
+  "episodeNumberN": "épisode {n}",
+  "watched": "regardés",
+  "specialsOVAsToggle": "Afficher les épisodes spéciaux/OVA"
+}

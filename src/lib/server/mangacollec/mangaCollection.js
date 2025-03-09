@@ -1,4 +1,5 @@
 import { updated } from "$app/state";
+import { ALTERNATIVES_BASE_URL } from "$env/static/private";
 
 const ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0";
 
@@ -52,11 +53,64 @@ async function getTypes() {
     return await response.json();
 }
 
+async function getOverrides() {
+    let overrides
+    try {
+        overrides = await (await fetch(ALTERNATIVES_BASE_URL + "/mangacollec.json")).json();
+    } catch (error) {
+        console.error("Erreur lors du chargement des overrides:", error);
+        overrides = { series: {}, editions: {} }; // Valeur par défaut
+    }
+    return overrides
+}
+
+function applyOverrides(collection, overrides) {
+    if (!overrides) {
+        console.warn("Pas d'overrides disponibles");
+        return collection;
+    }
+
+    collection.editions.forEach(edition => {
+        const editionOverride = overrides.editions[edition.id];
+        if (editionOverride) {
+            if (editionOverride.series) {
+                const originalSeries = collection.series.find(s => s.id === edition.series_id);
+                const linkedSeries = collection.series.find(s => s.id === editionOverride.series);
+
+                if (!edition.title) {
+                    if (linkedSeries) {
+                        edition.title = originalSeries.title;
+                        edition.type_id = originalSeries.type_id !== linkedSeries.type_id ? originalSeries.type_id : undefined;
+                    }
+                    if (edition.title.includes(linkedSeries.title)) {
+                        edition.title = edition.title.replace(linkedSeries.title, "").trim()
+                    }
+                }
+                edition.series_id = editionOverride.series;
+            }
+        }
+    })
+
+    collection.series.forEach(series => {
+        const seriesOverride = overrides.series[series.id];
+        if (seriesOverride) {
+            if (seriesOverride.title) {
+                series.title = seriesOverride.title;
+            }
+        }
+    });
+
+    return collection;
+}
+
 export async function fetchMangaCollection(username) {
-    const [collectionJson, types] = await Promise.all([
+    let [collectionJson, types] = await Promise.all([
         getCollec(username),
         getTypes()
     ]);
+
+    let overrides = await getOverrides();
+    collectionJson = applyOverrides(collectionJson, overrides)
 
     const possessedVolumesData = Object.fromEntries(
         collectionJson.possessions.map(possession => [possession.volume_id, possession.created_at])
@@ -78,6 +132,7 @@ export async function fetchMangaCollection(username) {
             const possessedVolumes = volumesInEdition
                 .filter(vol => vol.id in possessedVolumesData)
                 .map(vol => ({
+                    titre: vol.title || `Tome ${vol.number}`,
                     numeroTome: vol.number,
                     isbn: vol.isbn,
                     coverLink: toAmazonThumbnailLink(vol.image_url),
@@ -100,6 +155,7 @@ export async function fetchMangaCollection(username) {
 
             return {
                 titreEdition: edition.title || "Edition simple",
+                typeLivre: edition.type_id ? types.find(t => t.id === edition.type_id).title : undefined,
                 nombreVolumesParus: volumesInEdition.filter(vol => new Date(vol.release_date) <= new Date()).length,
                 nombreVolumesEdition: edition.volumes_count,
                 nombreVolumesTotal: edition.last_volume_number,

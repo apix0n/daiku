@@ -24,9 +24,9 @@
     }
 
     :global(.media-title svg) {
-        height: 1em;
+        height: .8em;
         margin-left: .25em;
-        top: .08rem;
+        top: .05rem;
         position: relative;
     }
 </style>

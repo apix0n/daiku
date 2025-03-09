@@ -1,10 +1,10 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 import { getPrecedingEpisode } from './getPrecedingEpisode';
 
-async function getUserAnimeData(username, sortOption = 'UPDATED_TIME_DESC') {
+async function getUserAnimeData(userId, sortOption = 'UPDATED_TIME_DESC') {
     const query = `
-    query ($userName: String, $sort: [MediaListSort]) {
-        MediaListCollection(userName: $userName, type: ANIME, status_not: PLANNING, sort: $sort) {
+    query ($userId: Int, $sort: [MediaListSort]) {
+        MediaListCollection(userId: $userId, type: ANIME, status_not: PLANNING, sort: $sort) {
             lists {
                 entries {
                     media {
@@ -46,7 +46,7 @@ async function getUserAnimeData(username, sortOption = 'UPDATED_TIME_DESC') {
         }
     }`;
     await anilistGlobal.loadPosterOverrides();
-    return await anilistGlobal.fetchGraphQL(query, { userName: username, sort: sortOption });
+    return await anilistGlobal.fetchGraphQL(query, { userId: userId, sort: sortOption });
 }
 
 function watchedAnime(userAnimeData) {
@@ -106,9 +106,14 @@ async function currentAnime(userAnimeData) {
         }); // Filter out duplicates (same media in multiple lists)
 
     for (const media of allCurrentAnime) {
-        if (media.media.status === "RELEASING") {
-            media.media.lastEpisode = await getPrecedingEpisode(media.media.id, media.media.nextAiringEpisode.episode);
-        }
+        try {
+            if (media.media.status === "RELEASING" && media.media.nextAiringEpisode?.episode) {
+                media.media.lastEpisode = await getPrecedingEpisode(media.media.id, media.media.nextAiringEpisode.episode);
+                if (media.media.lastEpisode.number > media.media.nextAiringEpisode?.episode) {
+                    media.media.lastEpisode = undefined
+                }
+            }
+        } catch {}
         anilistGlobal.applyPosterOverrides(media.media);
     };
 
@@ -168,10 +173,10 @@ function droppedAnime(userAnimeData) {
     }));
 }
 
-export async function fetchAnimeData(username) {
+export async function fetchAnimeData(userId) {
     try {
-        const watchedUserData = await getUserAnimeData(username, 'FINISHED_ON_DESC');
-        const userData = await getUserAnimeData(username);
+        const watchedUserData = await getUserAnimeData(userId, 'FINISHED_ON_DESC');
+        const userData = await getUserAnimeData(userId);
         return {
             updatedAt: new Date().toISOString(),
             current: await currentAnime(userData),

@@ -1,91 +1,70 @@
 <script>
-    import { ratingStars } from '$lib/ratingStars.js';
-    import { formatDateLocale } from '$lib/formatDateLocale.js';
-    import Rewatch from '../../../components/icons/Rewatch.svelte';
     import UpdatedTime from '../../../components/UpdatedTime.svelte';
-	  import RelativeTimeInfo from '../../../components/RelativeTimeInfo.svelte'
+
+    import BaseCard from '../../../components/cards/BaseCard.svelte';
+    import Informations from '../../../components/cards/bottom/Informations.svelte';
+    import DateProgess from '../../../components/cards/bottom/DateProgess.svelte'
+    import Rating from '../../../components/cards/top/Rating.svelte';
+    import AnimeInfo from '../../../components/cards/bottom/AnimeInfo.svelte';
+    import RelativeTimeInfo from '../../../components/cards/top/RelativeTimeInfo.svelte';
 
     export let data
     const { current, watched, updatedAt } = data.animeData;
-    const cssHexAccentOpacity = "80";
     let isChecked = false;
+
+    import {_} from "svelte-i18n"
+	import Dates from '../../../components/cards/bottom/Dates.svelte'
 </script>
 
-<h2>currently watching <span>· {current.length} anime</span></h2>
+<h2>{$_('currentlyWatching')} <span>· {current.length} {$_("mainTitles.anime")}</span></h2>
 
 <div id="current" class="elements-wrapper">
   {#each current as anime}
     {#if anime.status !== "NOT_YET_RELEASED" && anime.episodesProgress > 0 && anime.episodesProgress !== anime.episodesNumber} <!-- avoid displaying unreleased, finished or not started anime -->
-      <div class="element" class:releasing={anime.status === 'RELEASING'} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--tAccentColor: ${anime.accentColor + cssHexAccentOpacity}; --accentColor: ${anime.accentColor}` : ''}">
-        {#if anime.status === "RELEASING" && anime.nextEpisode.number - 1 === anime.episodesProgress} <!-- for airing/releasing anime, only show next episode in ... label if the user's is up to-date -->
-          <div class="informations top">
-            <RelativeTimeInfo number={anime.nextEpisode.number} timestamp={anime.nextEpisode.timestamp} mediaType="episode" />
-          </div>
-        {:else if anime.status === "RELEASING" && anime.episodesProgress > 0 && anime.episodesProgress < anime.episodesNumber}
-          <div class="informations top" class:toCatchUp={anime.episodesProgress < anime.lastEpisode.number}>
-            <RelativeTimeInfo number={anime.lastEpisode.number} timestamp={anime.lastEpisode.timestamp} mediaType="episode" />
-          </div>
-        {/if}
-        <div class="informations">
-          <div class="upper">
-            <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}</a>
-          </div>
-          <span class="episodes-info">{anime.episodesNumber !== null ? anime.episodesNumber : '?'} episodes × {anime.episodesDuration} min.</span>
-          <div class="more">
-            {#if anime.userStatus === "REPEATING"}
-              <div class="dates">
-                <div class="start-date"><Rewatch/> rewatching</div>
-              </div>
-            {:else if anime.startedDate !== null}
-              <div class="dates">
-                <span class="start-date">{formatDateLocale(anime.startedDate).toLocaleDateString()}</span>
-              </div>
-            {/if}
-            <span class="episodes-info">{anime.episodesNumber !== null ? `${anime.episodesProgress}/${anime.episodesNumber}` : `at ep.${anime.episodesProgress}`}</span>
-          </div>
-        </div>
-      </div>
+    
+    <BaseCard accent={anime.accentColor} background={anime.coverLink} status={anime.status}>
+      <!-- top -->
+      {#if anime.status === "RELEASING" && anime.nextEpisode && anime.nextEpisode?.number - 1 === anime.episodesProgress} <!-- for airing/releasing anime, only show next episode in ... label if the user's is up to-date -->
+        <RelativeTimeInfo number={anime.nextEpisode.number} timestamp={anime.nextEpisode.timestamp} mediaType={anime.mediaType} />
+      {:else if anime.status === "RELEASING" && anime.lastEpisode && anime.episodesProgress > 0 && anime.episodesProgress < anime.episodesNumber && anime.lastEpisode.number - anime.episodesProgress <= 2}
+        <RelativeTimeInfo number={anime.lastEpisode.number} timestamp={anime.lastEpisode.timestamp} mediaType={anime.mediaType} />
+      {:else if anime.status === "RELEASING" && anime.nextEpisode && anime.nextEpisode.number - anime.episodesProgress > 50 }
+        <RelativeTimeInfo number={anime.nextEpisode.number} timestamp={anime.nextEpisode.timestamp} mediaType={anime.mediaType} />
+      {/if}
+
+      <!-- bottom -->
+      <Informations title={anime.title} link={anime.mediaLink}>
+        <AnimeInfo number={anime.episodesNumber} duration={anime.episodesDuration} rewatch={anime.rewatch}/>
+        <DateProgess userStatus={anime.userStatus} startDate={anime.startedDate} progress={anime.episodesProgress} total={anime.episodesNumber} media={anime.mediaType}/>
+      </Informations>
+    </BaseCard>
+
     {/if}
   {/each}
 </div>
 
 <h2>
-  watched
-  <span>· {watched.filter(anime => anime.episodesNumber > 2).length} anime & {watched.filter(anime => anime.episodesNumber <= 2).length} specials</span>
-  <div class="checkboxdiv"><input type="checkbox" id="toggle" bind:checked={isChecked}><label for="toggle" class="toggle-label">Show specials/OVAs</label></div>
+  {$_("watched")}
+  <span>· {watched.filter(anime => anime.episodesNumber > 2).length} {$_("mainTitles.anime")} & {watched.filter(anime => anime.episodesNumber <= 2).length} {$_("specials")}</span>
+  <div class="checkboxdiv"><input type="checkbox" id="toggle" bind:checked={isChecked}><label for="toggle" class="toggle-label">{$_('specialsOVAsToggle')}</label></div>
 </h2>
 
 <div id="watched" class="elements-wrapper">
   {#each watched as anime}
-  <div class="element" class:ova={anime.episodesNumber <= 2} class:visible={isChecked && anime.episodesNumber <= 2} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--tAccentColor: ${anime.accentColor + cssHexAccentOpacity}; --accentColor: ${anime.accentColor}` : ''}">
-    {#if anime.rating !== 0}
-          <div class="informations top">
-            <span class="rating">{@html ratingStars(anime.rating)}</span>
-          </div>
-        {/if}
-        <div class="informations">
-          <div class="upper">
-            <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}</a>
-          </div>
-          {#if anime.episodesNumber == 1 && anime.episodesDuration !== null}
-            <span class="episodes-info">{anime.episodesDuration} min.</span>
-            {:else if anime.episodesNumber !== null && anime.episodesDuration !== null}
-            <span class="episodes-info">{anime.episodesNumber} {!anime.rewatch ? `episode${anime.episodesNumber > 1 ? 's' : ''}` : "ep."} × {anime.episodesDuration} min. {#if anime.rewatch !== 0}<Rewatch Number={anime.rewatch}/>{/if}</span>
-            {/if}
-            <div class="more">
-              {#if anime.startedDate == anime.finishedDate && anime.startedDate != null}
-              <div class="dates">
-                <span class="finish-date">{formatDateLocale(anime.finishedDate).toLocaleDateString()}</span>
-              </div>
-              {:else if anime.startedDate != null && anime.finishedDate != null}
-                <div class="dates">
-                  <span class="start-date">{formatDateLocale(anime.startedDate).toLocaleDateString()}</span>
-                  <span class="finish-date">{formatDateLocale(anime.finishedDate).toLocaleDateString()}</span>
-                </div>
-              {/if}
-            </div>
-          </div>
-      </div>
+
+  <BaseCard accent={anime.accentColor} background={anime.coverLink} ova={anime.episodesNumber <= 2} bind:visible={isChecked}>
+    <!-- top -->
+    {#if anime.rating}
+      <Rating value={anime.rating}/>
+    {/if}
+
+    <!-- bottom -->
+     <Informations title={anime.title} link={anime.mediaLink}>
+       <AnimeInfo number={anime.episodesNumber} duration={anime.episodesDuration} rewatch={anime.rewatch}/>
+       <Dates start={anime.startedDate} end={anime.finishedDate} />
+    </Informations>
+  </BaseCard>
+
   {/each}
 </div>
 

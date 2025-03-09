@@ -1,0 +1,33 @@
+{
+  "home": "ana sayfa",
+  "recentActivity": "son etkinlik",
+  "stats": "istatistikler",
+  "watchTime": "izlenme süresi",
+  "mainTitles": {
+    "anime": "anime",
+    "manga": "manga",
+    "mangaCollection": "manga koleksiyonu",
+    "movies": "film",
+    "planned": "planlanan"
+  },
+  "readingNumber": "okunuyor: {n}",
+  "seriesCount": "{n} seriler",
+  "volumesCount": "{n} ciltler",
+  "watchedNumber": "izledi: {n}",
+  "watchingNumber": "izleniyor: {n}",
+  "chaptersRead": "okunan bölümler",
+  "ownedVolumes": "sahip olunan ciltler",
+  "readManga": "okunan mangalar",
+  "watchedAnime": "izlenen animeler",
+  "watchedEpisodes": "izlenen bölümler",
+  "watchedMovies": "izlenen filmler",
+  "-currentLang": "türkçe",
+  "days": "günler",
+  "currentlyWatching": "şu anda izliyor",
+  "Nepisodes": "{n} bölüm",
+  "NminutesShort": "{n} dk.",
+  "episodeNumberN": "bölüm {n}",
+  "watched": "izlenen",
+  "specialsOVAsToggle": "Özel bölümleri/OVA'ları göster",
+  "NepisodesShort": "{n} böl."
+}

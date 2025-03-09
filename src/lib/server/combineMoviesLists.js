@@ -31,7 +31,7 @@ export function combineMoviesLists(watchedMovies, watchedAnimeMovies) {
     const combinedWatchedMovies = watchedMovies.watched.concat(newWatchedAnime);
     combinedWatchedMovies.sort((a, b) => new Date(b.finishedDate) - new Date(a.finishedDate));
 
-    console.log("[boxd&al] ----- combined movies lists -----")
+    console.log("[combined movie lists]")
     return {
         boxdUpdatedAt: watchedMovies.updatedAt,
         alUpdatedAt: watchedAnimeMovies.updatedAt,

@@ -1,37 +1,32 @@
 <script>
     import UpdatedTime from '../../../components/UpdatedTime.svelte';
+    import { seriesWithPossessions, totalVolumes } from '$lib/mangacollec/calculations';
 
     export let data
     const { collection, updatedAt } = data.mangaCollection;
     
     // Calculer le nombre total de volumes possédés
-    $: totalVolumes = collection.reduce((total, manga) => {
-        return total + manga.editions.reduce((editionTotal, edition) => {
-            return editionTotal + edition.possessions.length;
-        }, 0);
-    }, 0);
+    $: nbTotalVolumes = totalVolumes(collection);
 
     // Calculer le nombre de séries avec des possessions
-    $: seriesWithPossessions = collection.filter(manga => 
-        manga.editions.some(edition => edition.possessions.length > 0)
-    );
+    $: nbSeriesWithPossessions = seriesWithPossessions(collection);
 </script>
 
-<h2>collection<span>· {totalVolumes} tomes sur {seriesWithPossessions.length} séries</span></h2>
+<h2>collection<span>· {nbTotalVolumes} tomes sur {nbSeriesWithPossessions.length} séries</span></h2>
 <div class="manga-list">
-    {#each seriesWithPossessions as manga}
+    {#each nbSeriesWithPossessions as manga}
         <div class="manga">
             <h2>{manga.titre}{#if manga.typeLivre}<span class="series-info">{manga.typeLivre}</span>{/if}</h2>
             {#each manga.editions as edition}
             {#if edition.possessions.length > 0}
             <div class="edition">
                 <div class="edition-info">
-                    <h3>{edition.titreEdition}</h3>
+                    <h3>{edition.titreEdition}{#if edition.typeLivre}<span class="series-info">{edition.typeLivre}</span>{/if}</h3>
                     <span class="volume-info possessed">{edition.possessions.length}/{edition.nombreVolumesParus}</span>
                     {#if edition.possessions.length == edition.nombreVolumesTotal}
                         <span class="volume-info possessed">collection terminée</span>
                     {/if}
-                    {#if edition.nombreVolumesEdition - edition.nombreVolumesParus > 0 || edition.nombreVolumesTotal - edition.nombreVolumesParus > 0}
+                    {#if edition.nombreVolumesEdition - edition.nombreVolumesParus > 0 || edition.nombreVolumesTotal - edition.nombreVolumesParus > 0 && edition.title === "Edition simple"}
                         <span class="volume-info">
                             {edition.nombreVolumesTotal - edition.nombreVolumesParus > 0 ? `${edition.nombreVolumesTotal - edition.nombreVolumesParus} annoncé${edition.nombreVolumesTotal - edition.nombreVolumesParus > 1 ? 's' : ''}` : ''}
                             {edition.nombreVolumesTotal - edition.nombreVolumesParus > 0 && edition.nombreVolumesEdition - edition.nombreVolumesParus ? ' · ' : '' }  <!-- Add a separator if both conditions are true -->
@@ -43,7 +38,7 @@
                     {#each edition.possessions as possession}
                     <div class="possession">
                         <img src={possession.coverLink} alt={`Cover of volume ${possession.numeroTome}`} class="cover" />
-                        <span>Tome {possession.numeroTome}</span>
+                        <span>{possession.titre}</span>
                     </div>
                     {/each}
                 </div>
@@ -55,20 +50,3 @@
 </div>
 
 <UpdatedTime date={updatedAt} service="Mangacollec"/>
-
-<style>
-    :global{
-        .series-info {
-            font-size: .85em;
-            font-weight: normal;
-            margin-left: 0.3em;
-            color: var(--text-2);
-            position: revert;
-        }
-
-        .series-info::before {
-            content: '·';
-            margin-right: 0.3em;
-        }
-    }
-</style>

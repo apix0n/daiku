@@ -69,10 +69,4 @@
         --border-radius: .8em;
         height: calc(var(--element-width) * 1.425);
     }
-
-    @media screen and (max-width: 1200px) {
-        .elements-wrapper .element {
-            --element-width: 150px;
-        }
-    }
 </style>

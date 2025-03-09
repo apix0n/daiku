@@ -10,39 +10,59 @@ export async function fetchWatchedMovies(username) {
 
     let parsedFeed = new XMLParser().parse(feedText);
 
-    for (const item of parsedFeed.rss.channel.item) {
-        const tmdbId = parseInt(item['tmdb:movieId']); 
-        let filmTitle, coverSrc, runtime;
+    if (parsedFeed?.rss?.channel?.item) {
+        for (const item of parsedFeed.rss.channel.item) {
+            const tmdbId = parseInt(item['tmdb:movieId']);
+            let filmTitle, coverSrc, runtime, review, reviewIsSpoiler;
 
-        if (tmdbId) {
-            filmTitle = he.decode(item['letterboxd:filmTitle']); // decode title to replace html entities
-            const summary = item['description'];
-            const imgSrcRegex = /<img\s+src="([^"]+)"/;
-            const match = imgSrcRegex.exec(summary);
-            coverSrc = match ? match[1] : null;
-            runtime = null;
-        } else {
-            continue
+            const finishedDate = item['letterboxd:watchedDate'];
+            const mediaType = 'movie';
+            const rating = Math.round(parseFloat(item['letterboxd:memberRating'] ?? 0) * 2);
+            const isRewatch = item['letterboxd:rewatch'] === 'Yes';
+            const reviewLink = item.link;
+
+            if (tmdbId) {
+                filmTitle = he.decode(item['letterboxd:filmTitle']); // decode title to replace html entities
+                const summary = item['description'];
+                const imgSrcRegex = /<img\s+src="([^"]+)"/;
+                const match = imgSrcRegex.exec(summary);
+
+                review = summary.match(/<\/p>\s(.*<\/p>)\s/)[1];
+                if (review.includes('<p><em>This review may contain spoilers.</em></p> ')) {
+                    review = review.replace('<p><em>This review may contain spoilers.</em></p> ', "")
+                    reviewIsSpoiler = true
+                }
+                const formattedDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
+                    .formatToParts(new Date(finishedDate))
+                    .reduce((str, part) => {
+                        if (part.type === 'year') return str.trim() + ', ' + part.value; // Add a comma before the year
+                        return part.type !== 'literal' ? str + part.value + ' ' : str;
+                    }, '')
+                    .trim();
+                if (review === (`<p>Watched on ${formattedDate}.</p>`)) {
+                    review = undefined
+                }
+                coverSrc = match ? match[1] : null;
+                runtime = null;
+            } else {
+                continue
+            }
+
+            watchedMovies.push({
+                title: filmTitle,
+                mediaType: mediaType,
+                sourceList: "letterboxd",
+                movieRuntime: runtime,
+                coverLink: coverSrc,
+                finishedDate: finishedDate,
+                rating: rating,
+                review: review,
+                reviewIsSpoiler: reviewIsSpoiler,
+                rewatch: isRewatch,
+                link: reviewLink,
+                tmdbId: tmdbId,
+            });
         }
-
-        const finishedDate = item['letterboxd:watchedDate'];
-        const mediaType = 'movie';
-        const rating = Math.round(parseFloat(item['letterboxd:memberRating'] ?? 0) * 2);
-        const isRewatch = item['letterboxd:rewatch'] === 'Yes';
-        const reviewLink = item.link;
-
-        watchedMovies.push({
-            title: filmTitle,
-            mediaType: mediaType,
-            sourceList: "letterboxd",
-            movieRuntime: runtime,
-            coverLink: coverSrc,
-            finishedDate: finishedDate,
-            rating: rating,
-            rewatch: isRewatch,
-            link: reviewLink,
-            tmdbId: tmdbId,
-        });
     }
 
     return {
