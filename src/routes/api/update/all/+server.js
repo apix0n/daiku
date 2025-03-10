@@ -1,8 +1,16 @@
 import { json } from "@sveltejs/kit"
+import { parse as parseCookie } from 'cookie'
 
 export async function GET({ request, url }) {
     const baseUrl = url.origin;
-    console.log(baseUrl)
+
+    const cookies = parseCookie(request.headers.get('cookie') || '');
+    const forwardedCookies = ['_vercel_jwt'];
+
+    const cookieHeader = forwardedCookies
+        .filter(name => cookies[name])
+        .map(name => `${name}=${cookies[name]}`)
+        .join('; ');
 
     const endpoints = [
         "/api/update/anilist/anime",
@@ -15,8 +23,11 @@ export async function GET({ request, url }) {
 
     const results = await Promise.allSettled(
         endpoints.map(async endpoint => {
-            console.log(baseUrl + endpoint);
-            const response = await fetch(baseUrl + endpoint);
+            const response = await fetch(baseUrl + endpoint, {
+                headers: {
+                    'Cookie': cookieHeader
+                }
+            });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
