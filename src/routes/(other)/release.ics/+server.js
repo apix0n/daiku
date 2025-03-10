@@ -1,17 +1,32 @@
 import ical from 'ical-generator';
+import { config } from '$lib/server/config';
+
+console.log("release.ics | initialised cache")
+const cache = {
+    maxTimestamp: null,
+    data: null
+}
 
 export async function GET({ request, url }) {
-    const host = request.headers.get('host'); 
-    const protocol = url.protocol || 'http:'
-    const baseUrl = protocol + "//" + host;
+    const time = Date.now()
 
-    const animeUrl = `${baseUrl}/api/get/anilist/anime`;
-    const planningUrl = `${baseUrl}/api/get/anilist/planning`;
-    const mangaCollectionUrl = `${baseUrl}/api/get/mangacollec`;
+    if ((cache.maxTimestamp && cache.data) && time < cache.maxTimestamp) {
+        console.log("release.ics | found & served cache")
+        return new Response(cache.data, {
+            headers: {
+                'content-type': 'text/calendar',
+            }
+        });
+    }
+
+    const baseUrl = url.origin;
+    const animeUrl = baseUrl + "/api/get/anilist/anime";
+    const planningUrl = baseUrl + "/api/get/anilist/planning";
+    const mangaCollectionUrl = baseUrl + "/api/get/mangacollec";;
 
     let cal = ical({
         name: 'daiku',
-        description: `calendar subscription for my airing anime, planning anime and releasing manga volumes. from daiku (${host})`,
+        description: `calendar subscription for my airing anime, planning anime and releasing manga volumes. from daiku (${url.host})`,
         prodId: {
             company: 'apix',
             product: 'daiku',
@@ -85,10 +100,15 @@ export async function GET({ request, url }) {
         })
     })
 
+    if (!cache.data || new Date(cache.data.updatedAt) < time) {
+        cache.maxTimestamp = time + (config.apiCacheTime * 1000);
+        cache.data = cal.toString();
+    }
+    console.log("release.ics | updated & served from cache")
+
     return new Response(cal.toString(), {
         headers: {
             'content-type': 'text/calendar',
-            'cache-control': 'public, s-maxage=21600, stale-while-revalidate',
         }
     });
 }

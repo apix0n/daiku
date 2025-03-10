@@ -1,9 +1,7 @@
 import { json } from "@sveltejs/kit"
 
 export async function GET({ request, url }) {
-    const host = request.headers.get('host');
-    const protocol = url.protocol || 'http:'
-    const baseUrl = protocol + "//" + host
+    const baseUrl = url.origin;
 
     const endpoints = [
         "/api/update/anilist/anime",
