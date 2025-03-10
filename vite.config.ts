@@ -6,7 +6,6 @@ export default defineConfig({
 	plugins: [
 		sveltekit(),
 		SvelteKitPWA({
-			registerType: 'autoUpdate',
 			devOptions: {
 				enabled: true
 			}

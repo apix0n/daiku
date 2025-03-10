@@ -1,38 +1,34 @@
 <script>
     export let data;
-    import { ratingStars } from '$lib/ratingStars.js';
-    import { formatDateLocale } from '$lib/formatDateLocale.js';
-    import Rewatch from '../../../components/icons/Rewatch.svelte';
     import UpdatedTime from '../../../components/UpdatedTime.svelte';
 
+    import BaseCard from '../../../components/cards/BaseCard.svelte';
+    import Rating from '../../../components/cards/top/Rating.svelte';
+    import Informations from '../../../components/cards/bottom/Informations.svelte';
+    import RuntimeDate from '../../../components/cards/bottom/RuntimeDate.svelte';
+
     const { watched, boxdUpdatedAt, alUpdatedAt } = data.watchedMovies;
-    const cssHexAccentOpacity = "80";
+
+    import { _ } from 'svelte-i18n';
 </script>
 
-<h2>watched <span>· {watched.length} movies</span></h2>
+<h2>{$_("watched")} <span>· {watched.length} movies</span></h2>
 
 <div id="watched" class="elements-wrapper watched-movies-wrapper">
   {#each watched as movie}
-      <div class="element" style:background-image="url({movie.coverLink})">
-        {#if movie.rating !== 0 || movie.rewatch}
-          <div class="informations top">
-            <span class="rating">{@html ratingStars(movie.rating)}</span>
-          </div>
-        {/if}
-        <div class="informations">
-          <div class="upper">
-            <a class="media-title" href={movie.link} target="_blank">{movie.title}{#if movie.rewatch}<Rewatch/>{/if}</a>
-          </div>
-          <div class="more">
-              {#if movie.movieRuntime != null}
-                <span class="episodes-info">{movie.movieRuntime} min.</span>
-              {/if}
-              {#if movie.finishedDate }
-                <span class="finish-date">{formatDateLocale(movie.finishedDate).toLocaleDateString()}</span>
-              {/if}
-          </div>
-        </div>
-      </div>
+  
+  <BaseCard background={movie.coverLink}>
+    <!-- top -->
+    {#if movie.rating > 0}
+      <Rating value={movie.rating} />
+    {/if}
+
+    <!-- bottom -->
+    <Informations title={movie.title} link={movie.link} rewatch={movie.rewatch}>
+      <RuntimeDate runtime={movie.movieRuntime} watchedDate={movie.finishedDate}/>
+    </Informations>
+  </BaseCard>
+
   {/each}
 </div>
 

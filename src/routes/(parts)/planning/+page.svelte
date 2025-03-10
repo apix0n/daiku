@@ -1,14 +1,11 @@
 <script>
-  import { planningListFormatDate } from '$lib/anilist/global.js';
-  import UpdatedTime from '../../../components/UpdatedTime.svelte';
-	import { getRelativeTime } from '$lib/getRelativeTime'
-	import RelativeTimeInfo from '../../../components/cards/top/RelativeTimeInfo.svelte'
-
   import BaseCard from '../../../components/cards/BaseCard.svelte'
   import Informations from '../../../components/cards/bottom/Informations.svelte';
   import AnimeInfo from '../../../components/cards/bottom/AnimeInfo.svelte';
 	import MangaInfo from '../../../components/cards/bottom/MangaInfo.svelte'
   import PlanningRelease from '../../../components/cards/bottom/PlanningRelease.svelte';
+  import UpdatedTime from '../../../components/UpdatedTime.svelte';
+	import RelativeTimeInfo from '../../../components/cards/top/RelativeTimeInfo.svelte'
   
   export let data;
   const { anime, manga, updatedAt } = data.plannedData;
@@ -76,21 +73,24 @@
 
 <div id="movie" class="elements-wrapper elements-planned">
   {#each anime.filter(a => a.type === "MOVIE") as anime}
-       <div class="element" class:releasing={anime.status == "NOT_YET_RELEASED"} class:notyet={anime.status == "NOT_YET_RELEASED"} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--accentColor: ${anime.accentColor}` : ''}">
-         <div class="informations">
-           <div class="upper">
-             <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}</a>
-            </div>
-            {#if anime.episodesDuration}
-              <span class="episodes-info">{anime.episodesNumber > 1 ? `${anime.episodesNumber} parts × ` : ''}{anime.episodesDuration} min.</span>
-            {/if}
-            {#if anime.status == "NOT_YET_RELEASED" && anime.startDate != null}
-            <span class="episodes-info">releases {`${planningListFormatDate(anime.startDate)}`.slice(7)}</span> <!-- remove the 'starts ' portion of the string -->
-          {:else if anime.status == "NOT_YET_RELEASED" && anime.startDate == null}
-            <span class="episodes-info">announced</span>
-            {/if}
-          </div>
-        </div>
+
+    <BaseCard accent={anime.accentColor} background={anime.coverLink} status={anime.status}>
+      <!-- bottom -->
+      <Informations title={anime.title} link={anime.mediaLink}>
+        {#if anime.status == "NOT_YET_RELEASED" && anime.startDate != null}
+          <PlanningRelease dateString={anime.startDate}/>
+        {:else if anime.status == "NOT_YET_RELEASED" && anime.startDate == null}
+          <PlanningRelease status={anime.status}/>
+        {:else if anime.status == "RELEASING" || anime.status == "FINISHED"}
+          {#if anime.episodesNumber || anime.episodesDuration}
+            <AnimeInfo number={anime.episodesNumber} duration={anime.episodesDuration}/>
+          {:else}
+            <PlanningRelease status={anime.status}/>
+          {/if}
+        {/if}
+      </Informations>
+    </BaseCard>
+
   {/each}
 </div>
 

@@ -29,9 +29,31 @@
   "episodeNumberN": "épisode {n}",
   "watched": "regardés",
   "specialsOVAsToggle": "Afficher les épisodes spéciaux/OVA",
+  "specialsOneShotsToggle": "Afficher les one-shot/chapitres spéciaux",
   "Nchapters": "{n, plural, =1 {1 chapitre} other {# chapitres}}",
   "Nvolumes": "{n, plural, =1 {1 tome} other {# tomes}}",
+  "Nanime": "{n} anime",
+  "Nspecials": "{n} spéciaux",
   "chapterNumberN": "chapitre {n}",
   "NepisodesShort": "{n} ép.",
-  "announced": "annoncé"
+  "announced": "annoncé",
+  "currentlyReading": "en train de lire",
+  "read": "lus",
+  "rewatching": "re-regarde",
+  "rereading": "relecture",
+  "droppedChapN": "abandonné après le chap. {n}",
+  "droppedEpN": "abandonné après l'ép. {n}",
+  "pausedChapN": "arrêté au chap. {n}",
+  "pausedEpN": "arrêté à l'ép. {n}",
+  "todayAt": "aujourd'hui à {time}",
+  "paused": "arrêté / en pause",
+  "dropped": "abandonné",
+  "releasingDate": {
+    "inDateN": "sort en {n}",
+    "onDateN": "commence le {n}",
+    "onDayN": "commence le {n}"
+  },
+  "updatedFromServiceAt": "mise à jour depuis {service} à",
+  "releasing": "en diffusion",
+  "specials": "spéciaux"
 }

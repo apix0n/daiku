@@ -7,16 +7,17 @@
     import Rating from '../../../components/cards/top/Rating.svelte';
     import AnimeInfo from '../../../components/cards/bottom/AnimeInfo.svelte';
     import RelativeTimeInfo from '../../../components/cards/top/RelativeTimeInfo.svelte';
+    import Dates from '../../../components/cards/bottom/Dates.svelte'
 
     export let data
     const { current, watched, updatedAt } = data.animeData;
     let isChecked = false;
 
     import {_} from "svelte-i18n"
-	import Dates from '../../../components/cards/bottom/Dates.svelte'
 </script>
 
-<h2>{$_('currentlyWatching')} <span>· {current.length} {$_("mainTitles.anime")}</span></h2>
+{#if current}
+<h2>{$_('currentlyWatching')} <span>· {$_("Nanime", { values: { n : current.length }})}</span></h2>
 
 <div id="current" class="elements-wrapper">
   {#each current as anime}
@@ -42,10 +43,13 @@
     {/if}
   {/each}
 </div>
+{/if}
 
+
+{#if watched}
 <h2>
   {$_("watched")}
-  <span>· {watched.filter(anime => anime.episodesNumber > 2).length} {$_("mainTitles.anime")} & {watched.filter(anime => anime.episodesNumber <= 2).length} {$_("specials")}</span>
+  <span>· {$_("Nanime", { values: { n: watched.filter(anime => anime.episodesNumber > 2).length }})} & {$_("Nspecials", { values: { n: watched.filter(anime => anime.episodesNumber <= 2).length }})}</span>
   <div class="checkboxdiv"><input type="checkbox" id="toggle" bind:checked={isChecked}><label for="toggle" class="toggle-label">{$_('specialsOVAsToggle')}</label></div>
 </h2>
 
@@ -67,5 +71,6 @@
 
   {/each}
 </div>
+{/if}
 
 <UpdatedTime date={updatedAt} service="AniList"/>

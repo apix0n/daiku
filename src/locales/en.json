@@ -7,7 +7,7 @@
   "watchingNumber": "watching {n}",
   "watchedNumber": "watched {n}",
   "readingNumber": "reading {n}",
-  "volumesCount": "{n} volumes",
+  "volumesCount": "{n, plural, =1 {1 volume} other {# volumes}}",
   "seriesCount": "{n} series",
   "mainTitles": {
     "anime": "anime",
@@ -27,7 +27,7 @@
   "currentlyReading": "currently reading",
   "episodeNumberN": "episode {n}",
   "chapterNumberN": "chapter {n}",
-  "Nepisodes": "{n} episodes",
+  "Nepisodes": "{n, plural, =1 {1 episode} other {# episodes}}",
   "NepisodesShort": "{n} ep.",
   "NminutesShort": "{n} min.",
   "specials": "specials",
@@ -49,5 +49,11 @@
     "inDateN": "releases in {n}",
     "onDateN": "starts {n}",
     "onDayN": "starts the {n}"
-  }
+  },
+  "specialsOneShotsToggle": "Show one-shots/specials",
+  "dropped": "dropped",
+  "paused": "paused",
+  "Nanime": "{n} anime",
+  "updatedFromServiceAt": "updated from {service} at",
+  "Nspecials": "{n} specials"
 }

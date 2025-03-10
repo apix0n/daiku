@@ -17,7 +17,7 @@
 {#if dropped.length > 0}
 
 {#if dropped.filter(anime => anime.userStatus === "PAUSED").length > 0}
-<h2>paused <span>· {dropped.filter(anime => anime.userStatus === "PAUSED").length} anime</span></h2>
+<h2>{$_("paused")} <span>· {$_("Nanime", { values: { n : dropped.filter(anime => anime.userStatus === "PAUSED").length }})}</span></h2>
 
 <div id="paused" class="elements-wrapper">
   {#each dropped as anime}
@@ -42,7 +42,7 @@
 {/if}
 
 {#if dropped.filter(anime => anime.userStatus === "DROPPED").length !== 0}
-<h2>dropped <span>· {dropped.filter(anime => anime.userStatus === "DROPPED").length} anime</span></h2>
+<h2>{$_("dropped")} <span>· {$_("Nanime", { values: { n : dropped.filter(anime => anime.userStatus === "DROPPED").length }})}</span></h2>
 
 <div id="dropped" class="elements-wrapper">
   {#each dropped as anime}

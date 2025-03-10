@@ -15,7 +15,6 @@
     let isChecked = false;
 
     import { _ } from 'svelte-i18n';
-	import { scale } from 'svelte/transition'
 </script>
 
 {#if current.length !== 0}
@@ -30,7 +29,7 @@
 
         <BaseCard accent={manga.accentColor} background={manga.coverLink} status={manga.status}>
           <!-- top -->
-          {#if manga.status === "RELEASING" && manga.lastChapter && manga.chaptersProgress <= manga.lastChapter.number }
+          {#if manga.status === "RELEASING" && manga.lastChapter && manga.chaptersProgress <= manga.lastChapter.number && manga.lastChapter.number - manga.chaptersProgress < 20 }
             <RelativeTimeInfo number={manga.lastChapter.number} timestamp={Math.floor(manga.lastChapter.timestamp / 1000)} mediaType={manga.mediaType} catchUp={manga.chaptersProgress < manga.lastChapter.number} />
           {/if}
 
@@ -51,7 +50,7 @@
     <h2>
       {$_("read")}
       <span>· {read.filter(manga => manga.chapterCount > 4).length} manga & {read.filter(manga => manga.chapterCount <= 4).length} specials</span>
-      <div class="checkboxdiv"><input type="checkbox" id="toggle" bind:checked={isChecked}><label for="toggle" class="toggle-label">Show one-shots/specials</label></div>
+      <div class="checkboxdiv"><input type="checkbox" id="toggle" bind:checked={isChecked}><label for="toggle" class="toggle-label">{$_("specialsOneShotsToggle")}</label></div>
     </h2>
     
     <div id="watched" class="elements-wrapper elements-manga">

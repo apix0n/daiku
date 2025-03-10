@@ -1,13 +1,14 @@
 <script>
-    export let date;
-    export let prefix;
-    export let service;
-    export let margin;
+    export let date, service, margin;
+
+    import { _, locale as localeStore } from "svelte-i18n";
+    import { get } from "svelte/store";
+    let locale = get(localeStore)
 </script>
 
 <div class="updated-time" class:margin0={margin == 0}>
-    <span>{prefix ? `${prefix} ` : ""}updated {service ? `from ${service} ` : ""}at</span>
-    <span>{new Date(date).toLocaleString()}</span>
+    <span>{$_("updatedFromServiceAt", { values: { service: service }})}</span>
+    <span>{new Date(date).toLocaleString(locale)}</span>
 </div>
 
 <style>

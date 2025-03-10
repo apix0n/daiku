@@ -18,6 +18,10 @@ const config = {
 		},
 		env: {
 			publicPrefix: "DAIKU_"
+		},
+		prerender: {
+			crawl: false,
+			entries: []
 		}
 	}
 };

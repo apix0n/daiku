@@ -35,5 +35,13 @@
   "Nchapters": "{n} bölüm",
   "Nvolumes": "{n} cilt",
   "chapterNumberN": "bölüm {n}",
-  "todayAt": "bugün saat {time}'de"
+  "todayAt": "bugün saat {time}'de",
+  "announced": "duyuruldu",
+  "Nanime": "{n} anime",
+  "releasingDate": {
+    "inDateN": "{n} tarihinde çıkıyor",
+    "onDateN": "{n}’de başlıyor",
+    "onDayN": "{n} gününde başlıyor"
+  },
+  "updatedFromServiceAt": "{service} tarafından güncellendi"
 }

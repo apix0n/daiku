@@ -1,6 +1,5 @@
 /** @type {import('./$types').PageServerLoad} */
 
-import { version } from '$app/environment';
 import { combineMoviesLists } from "$lib/server/combineMoviesLists";
 import { allRecentActivity } from "$lib/allRecentActivity";
 

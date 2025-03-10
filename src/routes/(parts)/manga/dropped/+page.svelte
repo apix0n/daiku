@@ -17,7 +17,7 @@
 {#if dropped.length > 0}
 
 {#if dropped.filter(manga => manga.userStatus === "PAUSED").length > 0}
-  <h2>paused <span>· {dropped.filter(manga => manga.userStatus === "PAUSED").length} manga</span></h2>
+  <h2>{$_("paused")} <span>· {dropped.filter(manga => manga.userStatus === "PAUSED").length} manga</span></h2>
 
   <div id="paused" class="elements-wrapper elements-manga">
     {#each dropped as manga}
@@ -37,7 +37,7 @@
   {/if}
 
 {#if dropped.filter(manga => manga.userStatus === "DROPPED").length !== 0}
-  <h2>dropped <span>· {dropped.filter(manga => manga.userStatus === "DROPPED").length} manga</span></h2>
+  <h2>{$_("dropped")} <span>· {dropped.filter(manga => manga.userStatus === "DROPPED").length} manga</span></h2>
   <div id="dropped" class="elements-wrapper elements-manga">
   {#each dropped as manga}
       {#if manga.userStatus === "DROPPED" && manga.status !== "NOT_YET_RELEASED" && manga.chaptersProgress > 0}

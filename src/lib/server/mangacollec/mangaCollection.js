@@ -6,6 +6,7 @@ const ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 async function getToken() {
     const tokenUrl = 'https://api.mangacollec.com/oauth/token';
 
+    // extracted from the https://www.mangacollec.com/client.[auto].js file
     const tokenReqVariables = {
         client_id: "38fee110b53a75af6cc72f6fb66fa504fc6241e566788f4b2f5b21c25ba2fefb",
         client_secret: "060658630f7d199c19ab1cf34ed4e50935c748267e318a24e048d6ab45871da2",
