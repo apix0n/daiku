@@ -1,76 +1,82 @@
 <script>
-  import { ratingStars } from '$lib/ratingStars.js';
   import { planningListFormatDate } from '$lib/anilist/global.js';
   import UpdatedTime from '../../../components/UpdatedTime.svelte';
 	import { getRelativeTime } from '$lib/getRelativeTime'
 	import RelativeTimeInfo from '../../../components/cards/top/RelativeTimeInfo.svelte'
 
+  import BaseCard from '../../../components/cards/BaseCard.svelte'
+  import Informations from '../../../components/cards/bottom/Informations.svelte';
+  import AnimeInfo from '../../../components/cards/bottom/AnimeInfo.svelte';
+	import MangaInfo from '../../../components/cards/bottom/MangaInfo.svelte'
+  import PlanningRelease from '../../../components/cards/bottom/PlanningRelease.svelte';
+  
   export let data;
   const { anime, manga, updatedAt } = data.plannedData;
-  const cssHexAccentOpacity = "80";
-  let isChecked = false;
+
+  import { _, locale as localeStore } from 'svelte-i18n';
 </script>
 
 <h2>anime <span>· {anime.filter(a => a.type !== "MOVIE").length} planned</span></h2>
 
-<div id="anime" class="elements-wrapper">
+<div id="anime" class="elements-wrapper elements-planned">
   {#each anime.filter(a => a.type !== "MOVIE") as anime}
-       <div class="element" class:releasing={anime.status == "RELEASING" || anime.status == "NOT_YET_RELEASED"} class:notyet={anime.status == "NOT_YET_RELEASED"} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--accentColor: ${anime.accentColor + cssHexAccentOpacity}` : ''}">
-        {#if anime.status === "RELEASING"} <!-- for airing/releasing anime -->
-          <div class="informations top">
-            <RelativeTimeInfo number={anime.nextEpisode.number} timestamp={anime.nextEpisode.timestamp} mediaType="episode" />
-          </div>
+
+    <BaseCard accent={anime.accentColor} background={anime.coverLink} status={anime.status}>
+      <!-- top -->
+      {#if anime.status === "RELEASING"} <!-- for airing/releasing anime -->
+        <RelativeTimeInfo number={anime.nextEpisode.number} timestamp={anime.nextEpisode.timestamp} mediaType={anime.mediaType} />
+      {/if}
+
+      <!-- bottom -->
+      <Informations title={anime.title} link={anime.mediaLink}>
+        {#if anime.status == "NOT_YET_RELEASED" && anime.startDate != null}
+          <PlanningRelease dateString={anime.startDate}/>
+        {:else if anime.status == "NOT_YET_RELEASED" && anime.startDate == null}
+          <PlanningRelease status={anime.status}/>
+        {:else if anime.status == "RELEASING" || anime.status == "FINISHED"}
+          {#if anime.episodesNumber || anime.episodesDuration}
+            <AnimeInfo number={anime.episodesNumber} duration={anime.episodesDuration}/>
+          {:else}
+            <PlanningRelease status={anime.status}/>
+          {/if}
         {/if}
-         <div class="informations">
-           <div class="upper">
-             <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}</a>
-            </div>
-            {#if anime.status == "NOT_YET_RELEASED" && anime.startDate != null}
-              <span class="episodes-info">{planningListFormatDate(anime.startDate)}</span>
-            {:else if anime.status == "NOT_YET_RELEASED" && anime.startDate == null}
-              <span class="episodes-info">announced</span>
-            {:else if anime.status == "RELEASING" || anime.status == "FINISHED"}
-              {#if anime.episodesNumber == 1 && anime.episodesDuration !== null}
-                <span class="episodes-info">{anime.episodesDuration} min.</span>
-              {:else if anime.episodesNumber !== null && anime.episodesDuration !== null}
-                <span class="episodes-info">{anime.episodesNumber} episode{anime.episodesNumber > 1 ? 's' : ''} × {anime.episodesDuration} min.</span>
-              {:else}
-                <span class="episodes-info">releasing</span>
-              {/if}
-            {/if}
-          </div>
-        </div>
+      </Informations>
+    </BaseCard>
+
   {/each}
 </div>
 
 <h2>manga <span>· {manga.length} planned</span></h2>
 
-<div id="watched" class="elements-wrapper">
+<div id="watched" class="elements-wrapper elements-planned elements-manga">
   {#each manga as manga}
-      <div class="element" class:releasing={manga.status == "RELEASING" || manga.status == "NOT_YET_RELEASED"} class:notyet={manga.status == "NOT_YET_RELEASED"} style:background-image="url({manga.coverLink})" style="{manga.accentColor !== null ? `--accentColor: ${manga.accentColor + cssHexAccentOpacity}` : ''}">
-        <div class="informations">
-          <div class="upper">
-            <a class="media-title" href="{manga.mediaLink}" target="_blank">{manga.title}</a>
-          </div>
-          {#if manga.chapterCount !== null || manga.volumesCount !== null}
-            <span class="episodes-info">{manga.chapterCount !== null ? `${manga.chapterCount} chapter${manga.chapterCount > 1 ? 's' : ''}` : ''}{manga.chapterCount !== null && manga.volumesCount !== null ? ' · ' : ''}{manga.volumesCount !== null ? `${manga.volumesCount} volume${manga.volumesCount > 1 ? 's' : ''}` : ''}</span>
-          {:else if manga.status == "RELEASING"}
-            <span class="episodes-info">releasing</span>
-          {:else if manga.status == "NOT_YET_RELEASED" && manga.startDate != null}
-            <span class="episodes-info">releases {planningListFormatDate(manga.startDate)}</span>
-          {:else if manga.status == "NOT_YET_RELEASED" && manga.startDate == null}
-            <span class="episodes-info">announced</span>
+
+      <BaseCard accent={manga.accentColor} background={manga.coverLink} status={manga.status}>
+
+        <!-- bottom -->
+        <Informations title={manga.title} link={manga.mediaLink}>
+          {#if manga.status === "NOT_YET_RELEASED" && manga.startDate}
+            <PlanningRelease dateString={manga.startDate}/>
+          {:else if manga.status === "NOT_YET_RELEASED" && !manga.startDate}
+            <PlanningRelease status={manga.status}/>
+          {:else if manga.status === "RELEASING" || manga.status === "FINISHED"}
+            {#if manga.chapterCount || manga.volumesCount}
+              <MangaInfo chapters={manga.chapterCount} volumes={manga.volumesCount}/>
+            {:else}
+              <PlanningRelease status={manga.status}/>
+            {/if}
           {/if}
-        </div>
-      </div>
+        </Informations>
+    </BaseCard>
+
   {/each}
 </div>
 
 <h2>anime movies <span>· {anime.filter(a => a.type === "MOVIE").length} planned</span></h2>
 
-<div id="movie" class="elements-wrapper">
+<div id="movie" class="elements-wrapper elements-planned">
   {#each anime.filter(a => a.type === "MOVIE") as anime}
-       <div class="element" class:releasing={anime.status == "NOT_YET_RELEASED"} class:notyet={anime.status == "NOT_YET_RELEASED"} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--accentColor: ${anime.accentColor + cssHexAccentOpacity}` : ''}">
+       <div class="element" class:releasing={anime.status == "NOT_YET_RELEASED"} class:notyet={anime.status == "NOT_YET_RELEASED"} style:background-image="url({anime.coverLink})" style="{anime.accentColor !== null ? `--accentColor: ${anime.accentColor}` : ''}">
          <div class="informations">
            <div class="upper">
              <a class="media-title" href="{anime.mediaLink}" target="_blank">{anime.title}</a>
@@ -89,14 +95,3 @@
 </div>
 
 <UpdatedTime date={updatedAt} service="AniList"/>
-
-<style>
-  .element.releasing.notyet {
-    opacity: .25;
-    transition: all .2s ease-in-out;
-  }
-
-  .element.releasing.notyet:hover {
-    opacity: 1;
-  }
-</style>

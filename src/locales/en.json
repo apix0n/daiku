@@ -42,5 +42,12 @@
   "pausedChapN": "paused at chap. {n}",
   "Nchapters": "{n, plural, =1 {1 chapter} other {# chapters}}",
   "Nvolumes": "{n, plural, =1 {1 volume} other {# volumes}}",
-  "todayAt": "today at {time}"
+  "todayAt": "today at {time}",
+  "announced": "announced",
+  "releasing": "releasing",
+  "releasingDate": {
+    "inDateN": "releases in {n}",
+    "onDateN": "starts {n}",
+    "onDayN": "starts the {n}"
+  }
 }

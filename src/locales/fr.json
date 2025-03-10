@@ -32,5 +32,6 @@
   "Nchapters": "{n, plural, =1 {1 chapitre} other {# chapitres}}",
   "Nvolumes": "{n, plural, =1 {1 tome} other {# tomes}}",
   "chapterNumberN": "chapitre {n}",
-  "NepisodesShort": "{n} ép."
+  "NepisodesShort": "{n} ép.",
+  "announced": "annoncé"
 }

@@ -358,7 +358,8 @@ svg {
         width: auto;
         padding-left: env(safe-area-inset-left);
         padding-right: env(safe-area-inset-right);
-        margin-bottom: calc(76px + 16px + env(safe-area-inset-bottom)); /* To make space for the navbar on mobile */
+        margin-bottom: calc(76px + 16px + env(safe-area-inset-bottom));
+        /* To make space for the navbar on mobile */
     }
 
     h2 {
@@ -619,4 +620,13 @@ h3>.series-info {
 .elements-wrapper.elements-manga .element {
     --border-radius: .8em;
     height: calc(var(--element-width) * 1.425);
+}
+
+.elements-wrapper.elements-planned .element.releasing.notyet {
+    opacity: .35;
+    transition: all .2s ease-in-out;
+}
+
+.elements-wrapper.elements-planned .element.releasing.notyet:hover {
+    opacity: 1;
 }
