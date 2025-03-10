@@ -1,9 +1,9 @@
 <script>
     import { getRelativeTime } from "$lib/getRelativeTime";
     import { get } from "svelte/store"
-    export let timestamp;
-    export let number;
-    export let mediaType;
+    export let timestamp, number, mediaType;
+    
+    export let catchUp = false;
 
     import { _, locale as localeStore } from "svelte-i18n"
     const locale = get(localeStore)
@@ -30,7 +30,7 @@
 
     if (isToday) {
         if (timestamp > Date.now() / 1000) {
-            timestampDate = `today at ${datetimestamp.toLocaleTimeString([], { timeStyle: 'short' })}`;
+            timestampDate = $_("todayAt", { values: { time: datetimestamp.toLocaleTimeString([], { timeStyle: 'short' })}})
         } else if (timestamp - Date.now() / 1000 > -(60 * 60)) {
             timestampDate = getRelativeTime(locale, datetimestamp, 'minute');
         } else {
@@ -39,6 +39,6 @@
     }
 </script>
 
-<div class="informations top">
+<div class="informations top" class:toCatchUp={catchUp}>
     <span class="next-episode" title={datetimestamp.toLocaleString()}>{$_(dict.media, { values: { n: number }})} {timestampDate}</span>
 </div>

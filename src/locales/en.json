@@ -24,6 +24,7 @@
   "chaptersRead": "chapters read",
   "days": "days",
   "currentlyWatching": "currently watching",
+  "currentlyReading": "currently reading",
   "episodeNumberN": "episode {n}",
   "chapterNumberN": "chapter {n}",
   "Nepisodes": "{n} episodes",
@@ -31,9 +32,15 @@
   "NminutesShort": "{n} min.",
   "specials": "specials",
   "watched": "watched",
+  "read": "read",
   "specialsOVAsToggle": "Show specials/OVAs",
   "rewatching": "rewatching",
   "rereading": "re-reading",
   "droppedEpN": "dropped after ep. {n}",
-  "pausedEpN": "paused at ep. {n}"
+  "pausedEpN": "paused at ep. {n}",
+  "droppedChapN": "dropped after chap. {n}",
+  "pausedChapN": "paused at chap. {n}",
+  "Nchapters": "{n, plural, =1 {1 chapter} other {# chapters}}",
+  "Nvolumes": "{n, plural, =1 {1 volume} other {# volumes}}",
+  "todayAt": "today at {time}"
 }

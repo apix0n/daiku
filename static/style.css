@@ -615,3 +615,8 @@ h3>.series-info {
     content: '·';
     margin-right: 0.3em;
 }
+
+.elements-wrapper.elements-manga .element {
+    --border-radius: .8em;
+    height: calc(var(--element-width) * 1.425);
+}

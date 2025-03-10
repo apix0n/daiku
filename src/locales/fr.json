@@ -28,5 +28,9 @@
   "currentlyWatching": "en cours de visionnage",
   "episodeNumberN": "épisode {n}",
   "watched": "regardés",
-  "specialsOVAsToggle": "Afficher les épisodes spéciaux/OVA"
+  "specialsOVAsToggle": "Afficher les épisodes spéciaux/OVA",
+  "Nchapters": "{n, plural, =1 {1 chapitre} other {# chapitres}}",
+  "Nvolumes": "{n, plural, =1 {1 tome} other {# tomes}}",
+  "chapterNumberN": "chapitre {n}",
+  "NepisodesShort": "{n} ép."
 }

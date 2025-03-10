@@ -19,7 +19,7 @@ export const load = async ({ data }) => {
         const updatedManga = await Promise.all(
             data.mangaData.current.map(async (manga) => {
                 if (manga.status === "RELEASING" && manga.malId) {
-                    const lastChapter = await getLatestChapter(manga.malId, manga.lang);
+                    const lastChapter = await getLatestChapter(manga.malId, manga.readingLang);
                     return { ...manga, lastChapter };
                 }
                 return manga;

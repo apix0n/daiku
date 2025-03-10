@@ -24,10 +24,16 @@
   "-currentLang": "türkçe",
   "days": "günler",
   "currentlyWatching": "şu anda izliyor",
+  "currentlyReading": "şu anda okunuyor",
   "Nepisodes": "{n} bölüm",
   "NminutesShort": "{n} dk.",
   "episodeNumberN": "bölüm {n}",
   "watched": "izlenen",
+  "read": "okunan",
   "specialsOVAsToggle": "Özel bölümleri/OVA'ları göster",
-  "NepisodesShort": "{n} böl."
+  "NepisodesShort": "{n} böl.",
+  "Nchapters": "{n} bölüm",
+  "Nvolumes": "{n} cilt",
+  "chapterNumberN": "bölüm {n}",
+  "todayAt": "bugün saat {time}'de"
 }
