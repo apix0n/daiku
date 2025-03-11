@@ -35,6 +35,7 @@ another media dashboard
 | DAIKU_REGEX_MANGA_LANGUAGE | regular expression for the language extraction from user notes on AniList | `lang:([^\s]+)` |
 | DAIKU_APP_ACCENT | defines the main accent color used in the app | `#e8794e` |
 | DAIKU_APP_ACCENT_SECOND | defines the second accent color used in the app | `#62544e` |
+| DAIKU_API_AUTH_KEY_VARIABLE | defines from which environment variable the api authorization key will be set | `undefined` |
 
 ## other credits
 

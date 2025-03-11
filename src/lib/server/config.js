@@ -8,7 +8,8 @@ export let config = {
     alCacheTime: parseInt(env.DAIKU_ANILIST_CACHE_TIME) || 300,
     mangaLangRegex: env.DAIKU_REGEX_MANGA_LANGUAGE ?? "lang:([^\s]+)",
     appAccent: env.DAIKU_APP_ACCENT || "#e8794e",
-    appAccentDark: env.DAIKU_APP_ACCENT_SECOND || "#62544e"
+    appAccentDark: env.DAIKU_APP_ACCENT_SECOND || "#62544e",
+    apiAuthKeyVariable: env.DAIKU_API_AUTH_KEY_VARIABLE || undefined
 };
 
 export let accounts = {
@@ -18,5 +19,6 @@ export let accounts = {
 };
 
 export let secrets = {
-    tmdbApiKey: env.TMDBAPIKEY ?? null
+    tmdbApiKey: env.TMDBAPIKEY ?? null,
+    apiAuthKey: env[config.apiAuthKeyVariable] || undefined
 };

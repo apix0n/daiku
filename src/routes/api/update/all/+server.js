@@ -1,16 +1,16 @@
 import { json } from "@sveltejs/kit"
-import { parse as parseCookie } from 'cookie'
+import { secrets } from "$lib/server/config.js";
+import { createHeaders } from "$lib/server/apiHeaders.js";
 
 export async function GET({ request, url }) {
     const baseUrl = url.origin;
 
-    const cookies = parseCookie(request.headers.get('cookie') || '');
-    const forwardedCookies = ['_vercel_jwt'];
-
-    const cookieHeader = forwardedCookies
-        .filter(name => cookies[name])
-        .map(name => `${name}=${cookies[name]}`)
-        .join('; ');
+    const authHeader = request.headers.get("authorization") 
+    if (!secrets.apiAuthKey || authHeader !== `Bearer ${secrets.apiAuthKey}`) {
+        return json({ success: false, error: "Forbidden" }, {
+            status: 403
+        })
+    }
 
     const endpoints = [
         "/api/update/anilist/anime",
@@ -24,9 +24,7 @@ export async function GET({ request, url }) {
     const results = await Promise.allSettled(
         endpoints.map(async endpoint => {
             const response = await fetch(baseUrl + endpoint, {
-                headers: {
-                    'Cookie': cookieHeader
-                }
+                headers: createHeaders(request.headers)
             });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
