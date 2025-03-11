@@ -1,7 +1,7 @@
 import { fetchAnimeData } from "$lib/server/anilist/animeData";
 import { json } from '@sveltejs/kit';
 import { getValue } from "$lib/server/redisInteractions.js";
-import { config, accounts } from "$lib/server/config.js";
+import { config, accounts, secrets } from "$lib/server/config.js";
 
 console.log("anilist anime | initialised cache")
 const cache = {
@@ -9,7 +9,15 @@ const cache = {
     data: null
 }
 
-export async function GET() {
+export async function GET({ request, url }) {
+    const authHeader = request.headers.get("authorization")
+    if (url.searchParams.has("clear") && (secrets.apiAuthKey && authHeader === `Bearer ${secrets.apiAuthKey}`)) {
+        cache.maxTimestamp = null;
+        cache.data = null;
+        console.log("anilist anime | cleared cache")
+        return json({ cleared: true })
+    }
+
     const time = Date.now()
 
     if ((cache.maxTimestamp && cache.data) && time < cache.maxTimestamp) {

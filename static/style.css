@@ -118,6 +118,12 @@ h2 span {
     top: .1em;
 }
 
+@media screen and (max-height: 700px) {
+    h2 {
+        position: static;
+    }
+}
+
 pre {
     padding: 0.2em 0.4em;
     font-size: .8em;
@@ -132,8 +138,8 @@ pre {
     display: flex;
     /*! flex-direction: column; */
     justify-content: center;
-    /* align-items: center;
-    padding: 0px; */
+    /* align-items: center; */
+    padding: 0 10px;
     gap: 10px;
     /*! width: 300px; */
     /*! height: 450px; */
@@ -377,6 +383,7 @@ svg {
 
 .element.ova {
     display: none;
+    outline: 2px var(--app-accent-dark) solid;
 }
 
 .element.ova.visible {
@@ -516,7 +523,7 @@ svg {
 }
 
 input {
-    accent-color: var(--app-accent);
+    accent-color: var(--app-accent-dark);
 }
 
 label {
@@ -541,10 +548,6 @@ label {
     .checkboxdiv {
         position: unset;
     }
-}
-
-.element.ova {
-    outline: 2px var(--app-accent) solid;
 }
 
 .navbtns>a>svg {

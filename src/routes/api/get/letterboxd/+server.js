@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { getValue } from "$lib/server/redisInteractions";
-import { config } from '$lib/server/config';
+import { config, secrets } from '$lib/server/config';
 
 console.log("letterboxd | initialised cache")
 const cache = {
@@ -8,7 +8,15 @@ const cache = {
     data: null
 }
 
-export async function GET() {
+export async function GET({ request, url }) {
+    const authHeader = request.headers.get("authorization")
+    if (url.searchParams.has("clear") && (secrets.apiAuthKey && authHeader === `Bearer ${secrets.apiAuthKey}`)) {
+        cache.maxTimestamp = null;
+        cache.data = null;
+        console.log("letterboxd | cleared cache")
+        return json({ cleared: true })
+    }
+    
     const time = Date.now()
 
     if ((cache.maxTimestamp && cache.data) && time < cache.maxTimestamp) {

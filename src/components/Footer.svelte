@@ -3,7 +3,7 @@
 </script>
 
 <footer>
-    <a target="_blank">made by apix</a> · {version}
+    <a target="_blank">made by apix</a> <span>·</span> {version}
 </footer>
 
 <style>
@@ -28,7 +28,8 @@
         }
     }
 
-    a[href]:hover {
-        color: var(--app-accent)
+    a[href]:hover, span {
+        color: var(--app-accent);
+        font-weight: 650;
     }
 </style>

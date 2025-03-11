@@ -17,7 +17,7 @@ const config = {
 			name: process.env.NODE_ENV === 'development' ? 'dev' : child_process.execSync('git rev-parse HEAD').toString().trim().slice(0, 7),
 		},
 		env: {
-			publicPrefix: "DAIKU_"
+			publicPrefix: "DAIKU__"
 		},
 		prerender: {
 			crawl: false,
