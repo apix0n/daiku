@@ -1,5 +1,6 @@
 import ical from 'ical-generator';
 import { config } from '$lib/server/config';
+import { createHeaders } from '$lib/server/apiHeaders.js';
 
 console.log("release.ics | initialised cache")
 const cache = {
@@ -22,7 +23,8 @@ export async function GET({ request, url }) {
     const baseUrl = url.origin;
     const animeUrl = baseUrl + "/api/get/anilist/anime";
     const planningUrl = baseUrl + "/api/get/anilist/planning";
-    const mangaCollectionUrl = baseUrl + "/api/get/mangacollec";;
+    const mangaCollectionUrl = baseUrl + "/api/get/mangacollec";
+    const fetchOptions = { headers: createHeaders(request.headers) }
 
     let cal = ical({
         name: 'daiku',
@@ -35,8 +37,12 @@ export async function GET({ request, url }) {
         ttl: 21600
     });
 
-    let animeResponse = await fetch(animeUrl);
-    let animeData = await animeResponse.json();
+    const [animeData, planningData, mangacollecData] = await Promise.all([
+        fetch(animeUrl, fetchOptions).then(res => res.json()),
+        fetch(planningUrl, fetchOptions).then(res => res.json()),
+        fetch(mangaCollectionUrl, fetchOptions).then(res => res.json())
+    ]);
+
     animeData.current.forEach((anime) => {
         if (anime.lastEpisode) {
             cal.createEvent({
@@ -58,8 +64,6 @@ export async function GET({ request, url }) {
         }
     });
 
-    let planningResponse = await fetch(planningUrl);
-    let planningData = await planningResponse.json();
     planningData.anime = planningData.anime.filter(anime =>
         (anime.status === 'NOT_YET_RELEASED' && anime.startDate?.length === 10) ||
         (anime.status === 'RELEASING' && anime.nextEpisode && anime.nextEpisode.number - 1 === 1)
@@ -73,8 +77,6 @@ export async function GET({ request, url }) {
         })
     })
 
-    let mangacollecResponse = await fetch(mangaCollectionUrl);
-    let mangacollecData = await mangacollecResponse.json();
     const now = new Date();
     const sevenDaysAgo = new Date(now);
     sevenDaysAgo.setDate(now.getDate() - 7);
@@ -100,7 +102,7 @@ export async function GET({ request, url }) {
         })
     })
 
-    if (!cache.data || new Date(cache.data.updatedAt) < time) {
+    if (!cache.data || cache.maxTimestamp > time) {
         cache.maxTimestamp = time + (config.apiCacheTime * 1000);
         cache.data = cal.toString();
     }

@@ -13,7 +13,7 @@ export async function GET({ request, url }) {
     }
 
     try {
-        let data = await fetchAnimeData(accounts.anilistId);
+        let data = await fetchAnimeData(accounts.anilistId, false);
         await setValue("anime", data);
         await fetch(url.origin + "/api/get/anilist/anime?clear", {
             headers: createHeaders(request.headers)

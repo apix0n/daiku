@@ -94,7 +94,7 @@ function watchedAnime(userAnimeData) {
     }));
 }
 
-async function currentAnime(userAnimeData) {
+async function currentAnime(userAnimeData, fetchLastEpisode) {
     const seen = new Set();
     const allCurrentAnime = userAnimeData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
@@ -107,7 +107,7 @@ async function currentAnime(userAnimeData) {
 
     for (const media of allCurrentAnime) {
         try {
-            if (media.media.status === "RELEASING" && media.media.nextAiringEpisode?.episode) {
+            if (media.media.status === "RELEASING" && media.media.nextAiringEpisode?.episode && fetchLastEpisode) {
                 media.media.lastEpisode = await getPrecedingEpisode(media.media.id, media.media.nextAiringEpisode.episode);
                 if (media.media.lastEpisode.number > media.media.nextAiringEpisode?.episode) {
                     media.media.lastEpisode = undefined
@@ -173,13 +173,13 @@ function droppedAnime(userAnimeData) {
     }));
 }
 
-export async function fetchAnimeData(userId) {
+export async function fetchAnimeData(userId, fetchLastEpisode=true) {
     try {
         const watchedUserData = await getUserAnimeData(userId, 'FINISHED_ON_DESC');
         const userData = await getUserAnimeData(userId);
         return {
             updatedAt: new Date().toISOString(),
-            current: await currentAnime(userData),
+            current: await currentAnime(userData, fetchLastEpisode),
             watched: watchedAnime(watchedUserData),
             dropped: droppedAnime(userData),
         };
