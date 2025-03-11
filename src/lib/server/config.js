@@ -9,7 +9,8 @@ export let config = {
     mangaLangRegex: env.DAIKU_REGEX_MANGA_LANGUAGE ?? "lang:([^\s]+)",
     appAccent: env.DAIKU_APP_ACCENT || "#e8794e",
     appAccentDark: env.DAIKU_APP_ACCENT_SECOND || "#62544e",
-    apiAuthKeyVariable: env.DAIKU_API_AUTH_KEY_VARIABLE || undefined
+    apiAuthKeyVariable: env.DAIKU_API_AUTH_KEY_VARIABLE || undefined,
+    alternativesBaseUrl: env.DAIKU_ALTERNATIVES_BASE_URL || undefined,
 };
 
 export let accounts = {

@@ -1,8 +1,8 @@
 export const apiUrl = 'https://graphql.anilist.co';
 export const siteUrl = 'https://anilist.co'
 
-import { ALTERNATIVES_BASE_URL } from "$env/static/private";
-export let alternativesUrl = `${ALTERNATIVES_BASE_URL}/anilist`;
+import { config } from "../config";
+export let alternativesUrl = `${config.alternativesBaseUrl}/anilist`;
 
 export async function fetchGraphQL(query, variables) {
     // const controller = new AbortController();

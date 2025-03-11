@@ -1,5 +1,5 @@
 import { updated } from "$app/state";
-import { ALTERNATIVES_BASE_URL } from "$env/static/private";
+import { config } from "../config";
 
 const ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0";
 
@@ -57,7 +57,7 @@ async function getTypes() {
 async function getOverrides() {
     let overrides
     try {
-        overrides = await (await fetch(ALTERNATIVES_BASE_URL + "/mangacollec.json")).json();
+        overrides = await (await fetch(config.alternativesBaseUrl + "/mangacollec.json")).json();
     } catch (error) {
         console.error("Erreur lors du chargement des overrides:", error);
         overrides = { series: {}, editions: {} }; // Valeur par défaut

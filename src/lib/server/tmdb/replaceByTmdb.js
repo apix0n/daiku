@@ -1,8 +1,8 @@
 import { updated } from "$app/state";
 import { getTmdbInfos } from "./getTmdbInfos.js";
 
-import { ALTERNATIVES_BASE_URL } from "$env/static/private";
-export let alternativesUrl = `${ALTERNATIVES_BASE_URL}/tmdb`;
+import { config } from "../config";
+export let alternativesUrl = `${config.alternativesBaseUrl}/tmdb`;
 
 export async function replaceByTmdb(movieList) {
     await loadPosterOverrides(); // Load poster overrides at the start

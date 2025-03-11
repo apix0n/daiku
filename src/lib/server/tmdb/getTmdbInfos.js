@@ -1,6 +1,5 @@
-import { TMDBAPIKEY } from '$env/static/private';
-
-const tmdbApiKey = TMDBAPIKEY;
+import { secrets } from '../config';
+const tmdbApiKey = secrets.tmdbApiKey;
 
 export async function getTmdbInfos(tmdbId) {
     if (!tmdbApiKey) {
