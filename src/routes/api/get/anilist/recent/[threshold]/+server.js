@@ -29,8 +29,6 @@ export async function GET({ params }) {
         return json(recentActivity)
     } catch (error) {
         console.error(error)
-        return json({
-            success: false
-        }, { status: 500 });
+        return json([], { status: 500 });
     }
 }

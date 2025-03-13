@@ -6,7 +6,7 @@
     import DateProgess from '../../../components/cards/bottom/DateProgess.svelte'
     import Rating from '../../../components/cards/top/Rating.svelte';
     import AnimeInfo from '../../../components/cards/bottom/AnimeInfo.svelte';
-    import RelativeTimeInfo from '../../../components/cards/top/RelativeTimeInfo.svelte';
+    import RelativeTimeInfo from '../../../components/cards/top/ReleaseInfo.svelte';
     import Dates from '../../../components/cards/bottom/Dates.svelte'
 
     export let data

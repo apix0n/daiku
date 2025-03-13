@@ -54,12 +54,6 @@
 </div>
 
 <style>
-    h2 {
-        all: unset;
-        font-size: 2rem;
-        font-weight: 500;
-    }
-
     .statistics {
         background: var(--background-2);
 

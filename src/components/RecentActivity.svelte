@@ -47,13 +47,10 @@
 
 <style>
     h2 {
-        all: unset;
-        font-size: 2rem;
-        font-weight: 500;
         position: sticky;
         top: 0;
         background: var(--background-2);
-        margin-bottom: -8px;
+        margin-bottom: -8px !important;
     }
 
     .recent-activity {

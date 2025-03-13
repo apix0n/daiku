@@ -2,7 +2,7 @@
     import BaseCard from '../../../../components/cards/BaseCard.svelte';
     import Informations from '../../../../components/cards/bottom/Informations.svelte';
     import MangaInfo from '../../../../components/cards/bottom/MangaInfo.svelte';
-    import RelativeTimeInfo from '../../../../components/cards/top/RelativeTimeInfo.svelte';
+    import RelativeTimeInfo from '../../../../components/cards/top/ReleaseInfo.svelte';
     import DroppedPaused from '../../../../components/cards/bottom/DroppedPaused.svelte'
 
     import NoEntriesMessage from '../../../../components/NoEntriesMessage.svelte';

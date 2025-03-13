@@ -9,10 +9,10 @@
 	<title>{[...page.url.pathname.split("/").slice(1)].filter(Boolean).join(" - ")} | daiku</title>
 </svelte:head>
 
-<div class="container">
+<div class="container" data-section="parts">
 	<Navbar/>
 	{@render children()}
-	<Footer></Footer>
+	<Footer/>
 </div>
 
 <noscript>

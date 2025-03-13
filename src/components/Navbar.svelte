@@ -1,6 +1,7 @@
 <script>
     import { page } from '$app/state';
 	import { dev } from '$app/environment';
+    import { version } from '$app/environment';
 
 	// Import des icônes
 	import Anime from './icons/Anime.svelte';
@@ -22,11 +23,13 @@
 	<div class="navbtns">
 		<a href="/" aria-label="Back to dashboard"><Back/></a>
 		<span class="sep"></span>
+		<a href="/combined" class:isActive={isActive('/combined')} aria-label="Watched anime & movies"><Anime/></a>
 		<a href="/anime" class:isActive={isActive('/anime')} aria-label="Currently watching & watched anime"><Anime/></a>
 		<a href="/anime/dropped" class:isActive={isActive('/anime/dropped')} aria-label="Dropped & paused anime"><PausedAnime/></a>
 		<a href="/manga" class:isActive={isActive('/manga')} aria-label="Currently reading & read manga"><Book/></a>
 		<a href="/manga/dropped" class:isActive={isActive('/manga/dropped')} aria-label="Dropped & paused manga"><PausedBook/></a>
 		<a href="/collection" class:isActive={isActive('/collection')} aria-label="Manga collection"><Shelf/></a>
+		<a href="/collection/test" class:isActive={isActive('/collection/test')} aria-label="Manga collection"><Shelf/></a>
 		<a href="/collection/next" class:isActive={isActive('/collection/next')} aria-label="Wished manga to complete the collection"><ShelfSparkle/></a>
 		<a href="/movies" class:isActive={isActive('/movies')} aria-label="Last 100 watched movies"><Movie/></a>
 		<a href="/planning" class:isActive={isActive('/planning')} aria-label="To-watch & to-read lists"><CalendarClock/></a>

@@ -27,7 +27,7 @@
   "currentlyReading": "currently reading",
   "episodeNumberN": "episode {n}",
   "chapterNumberN": "chapter {n}",
-  "Nepisodes": "{n, plural, =1 {1 episode} other {# episodes}}",
+  "Nepisodes": "{n, plural, =0 {? episodes} =1 {1 episode} other {# episodes}}",
   "NepisodesShort": "{n} ep.",
   "NminutesShort": "{n} min.",
   "specials": "specials",
@@ -42,11 +42,12 @@
   "pausedChapN": "paused at chap. {n}",
   "Nchapters": "{n, plural, =1 {1 chapter} other {# chapters}}",
   "Nvolumes": "{n, plural, =1 {1 volume} other {# volumes}}",
-  "todayAt": "today at {time}",
+  "todayAt": "at {time}",
   "announced": "announced",
   "releasing": "releasing",
   "releasingDate": {
     "inDateN": "releases in {n}",
+    "soon": "releases soon",
     "onDateN": "starts {n}",
     "onDayN": "starts the {n}"
   },
@@ -55,5 +56,6 @@
   "paused": "paused",
   "Nanime": "{n} anime",
   "updatedFromServiceAt": "updated from {service} at",
-  "Nspecials": "{n} specials"
+  "Nspecials": "{n} specials",
+  "continue": "continue"
 }

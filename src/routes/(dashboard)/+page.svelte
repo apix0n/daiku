@@ -6,13 +6,14 @@
 
     import { totalVolumes, seriesWithPossessions } from '$lib/mangacollec/calculations';
 	import { _ } from 'svelte-i18n';
+	import Continuing from '../../components/Continuing.svelte'
 </script>
 
 <svelte:head>
     <title>daiku</title>
 </svelte:head>
 
-<div class="container">
+<div class="container" data-section="dashboard">
     <div class="header">
         <h1>{$_('home')}</h1>
     </div>
@@ -25,9 +26,10 @@
         <a href="/collection">{$_("mainTitles.mangaCollection")} <span>{$_('volumesCount', { values: { n: totalVolumes(data.mangaCollection.collection) } })} · {$_('seriesCount', { values: { n: seriesWithPossessions(data.mangaCollection.collection).length } })}</span></a>
     </div>
     
-        <RecentActivity data={data} />
-        <Stats data={data} />
-        <WatchTime data={data}/>
+    <Continuing data={data}/>
+    <RecentActivity data={data} />
+    <Stats data={data} />
+    <WatchTime data={data}/>
 </div>
 
 <style>

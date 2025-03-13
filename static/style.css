@@ -90,7 +90,7 @@ body {
 
 h1 {}
 
-h2 {
+.container[data-section="parts"]>h2 {
     background: var(--background-2);
     position: sticky;
     top: 0;
@@ -106,11 +106,11 @@ h2 {
     flex-wrap: wrap;
 }
 
-h2:first-of-type {
+.container[data-section="parts"]>h2:first-of-type {
     margin-top: 0;
 }
 
-h2 span {
+.container[data-section="parts"]>h2 span {
     font-size: 1rem;
     font-weight: 400;
     color: var(--app-accent);
@@ -118,8 +118,14 @@ h2 span {
     top: .1em;
 }
 
+.container[data-section="dashboard"] h2 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin: 0;
+}
+
 @media screen and (max-height: 700px) {
-    h2 {
+    .container[data-section="parts"]>h2 {
         position: static;
     }
 }
@@ -368,7 +374,7 @@ svg {
         /* To make space for the navbar on mobile */
     }
 
-    h2 {
+    .container[data-section="parts"]>h2 {
         margin-left: unset;
         margin-right: unset;
     }
@@ -390,7 +396,8 @@ svg {
     display: flex;
 }
 
-.elements-wrapper .element.releasing::before {
+.elements-wrapper .element.releasing::before,
+.item .releasing::before {
     content: "";
     border-radius: 50%;
     background: var(--releasing);
@@ -402,6 +409,13 @@ svg {
     position: absolute;
     left: -0.4em;
     animation: pulse 2s infinite;
+}
+
+.item .releasing::before {
+    height: .75em;
+    width: .75em;
+    top: -0.2em;
+    left: -0.2em;
 }
 
 .elements-wrapper .element.releasing.notyet::before {
@@ -429,7 +443,8 @@ svg {
 }
 
 @media (prefers-color-scheme: dark) {
-    .elements-wrapper .element.releasing::before {
+    .elements-wrapper .element.releasing::before,
+    .item .releasing::before {
         animation: pulse-dark 2s infinite;
     }
 }
@@ -514,12 +529,7 @@ svg {
 }
 
 .manga-list h2 {
-    margin: revert;
     margin-bottom: 10px;
-    background: revert;
-    border: revert;
-    display: revert;
-    position: revert;
 }
 
 input {
