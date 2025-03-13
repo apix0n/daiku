@@ -37,21 +37,23 @@ $: continuing = {
         <div class="item">
             <div class="infos" class:releasing={item.status === "RELEASING"}>
                 <img src={item.coverLink} alt="Cover of {item.title}">
-                <a href={item.mediaLink} target="_blank">{item.title}</a>
-                {#if item.mediaType === "anime"}
-                    {#if item.status === "RELEASING" && item.episodesProgress + 1 === item.lastEpisode.number}
-                    <span>· <RelativeRelease timestamp={item.lastEpisode.timestamp} mediaType={item.mediaType} number={item.lastEpisode.number} /></span>
-                    {:else}
-                    <span>· {$_("episodeNumberN", { values: { n: item.episodesProgress + 1 }})}</span>
+                <span>
+                    <a href={item.mediaLink} target="_blank">{item.title}</a>
+                    {#if item.mediaType === "anime"}
+                        {#if item.status === "RELEASING" && item.episodesProgress + 1 === item.lastEpisode.number}
+                        · <RelativeRelease timestamp={item.lastEpisode.timestamp} mediaType={item.mediaType} number={item.lastEpisode.number} />
+                        {:else}
+                        · {$_("episodeNumberN", { values: { n: item.episodesProgress + 1 }})}
+                        {/if}
                     {/if}
-                {/if}
-                {#if item.mediaType === "manga"}
-                    {#if item.status === "RELEASING" && item.chaptersProgress + 1 === item.lastChapter?.number}
-                    <span>· <RelativeRelease timestamp={item.lastChapter.timestamp / 1000} mediaType={item.mediaType} number={item.lastChapter.number} /></span>
-                    {:else}
-                        <span>· {$_("chapterNumberN", { values: { n: item.chaptersProgress + 1 }})}</span>
+                    {#if item.mediaType === "manga"}
+                        {#if item.status === "RELEASING" && item.chaptersProgress + 1 === item.lastChapter?.number}
+                        · <RelativeRelease timestamp={item.lastChapter.timestamp / 1000} mediaType={item.mediaType} number={item.lastChapter.number} />
+                        {:else}
+                        · {$_("chapterNumberN", { values: { n: item.chaptersProgress + 1 }})}
+                        {/if}
                     {/if}
-                {/if}
+                </span>
             </div>
             <img class="backdrop" src={item.coverLink} alt="Cover of {item.title}">
         </div>
@@ -66,14 +68,16 @@ $: continuing = {
         <div class="item">
             <div class="infos" class:releasing={item.status === "RELEASING"}>
                 <img src={item.coverLink} alt="Cover of {item.title}">
-                <a href={item.mediaLink} target="_blank">{item.title}</a>
-                {#if item.mediaType === "anime"}
-                    {#if item.status === "FINISHED"}
-                    <span>· {$_("episodeNumberN", { values: { n: item.episodesProgress + 1 }})}</span>
-                    {:else if item.status === "RELEASING"}
-                    <span>· <RelativeRelease timestamp={item.nextEpisode.timestamp} mediaType={item.mediaType} number={item.nextEpisode.number} /></span>
+                <span>
+                    <a href={item.mediaLink} target="_blank">{item.title}</a>
+                    {#if item.mediaType === "anime"}
+                        {#if item.status === "FINISHED"}
+                        · {$_("episodeNumberN", { values: { n: item.episodesProgress + 1 }})}
+                        {:else if item.status === "RELEASING"}
+                        · <RelativeRelease timestamp={item.nextEpisode.timestamp} mediaType={item.mediaType} number={item.nextEpisode.number} />
+                        {/if}
                     {/if}
-                {/if}
+                </span>
             </div>
             <img class="backdrop" src={item.coverLink} alt="Cover of {item.title}">
         </div>
@@ -111,13 +115,13 @@ $: continuing = {
     }
 
     .item {
-        height: 48px;
         width: 100%;
         position: relative;
     }
     
     .infos {
-        height: 100%;
+        /* height: 100%; */
+        min-height: 48px;
         background: rgba(0, 0, 0, 0.55);
         backdrop-filter: blur(10px);
         position: relative;
@@ -139,16 +143,13 @@ $: continuing = {
 
     .item .infos img:not(.backdrop) {
         width: 32px;
-        height: 100%;
+        height: 48px;
         object-fit: cover;
         margin-right: .25em;
     }
 
     .infos a {
         font-weight: 500;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     .infos a:hover {
@@ -156,7 +157,8 @@ $: continuing = {
     }
 
     .infos span {
-        min-width: fit-content;
+        word-wrap: break-word;
+        flex-grow: 1;
     }
 
     .next-label {
