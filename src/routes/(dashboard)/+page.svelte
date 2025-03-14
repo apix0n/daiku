@@ -7,6 +7,7 @@
     import { totalVolumes, seriesWithPossessions } from '$lib/mangacollec/calculations';
 	import { _ } from 'svelte-i18n';
 	import Continuing from '../../components/Continuing.svelte'
+	import Favourites from '../../components/Favourites.svelte'
 </script>
 
 <svelte:head>
@@ -26,9 +27,10 @@
         <a href="/collection">{$_("mainTitles.mangaCollection")} <span>{$_('volumesCount', { values: { n: totalVolumes(data.mangaCollection.collection) } })} · {$_('seriesCount', { values: { n: seriesWithPossessions(data.mangaCollection.collection).length } })}</span></a>
     </div>
     
+    <Favourites data={data} />
     <Continuing data={data}/>
-    <RecentActivity data={data} />
     <Stats data={data} />
+    <RecentActivity data={data} />
     <WatchTime data={data}/>
 </div>
 

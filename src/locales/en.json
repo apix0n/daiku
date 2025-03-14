@@ -57,5 +57,6 @@
   "Nanime": "{n} anime",
   "updatedFromServiceAt": "updated from {service} at",
   "Nspecials": "{n} specials",
-  "continue": "continue"
+  "continue": "continue",
+  "favourites": "favourites"
 }

@@ -45,15 +45,17 @@
   "droppedEpN": "abandonné après l'ép. {n}",
   "pausedChapN": "arrêté au chap. {n}",
   "pausedEpN": "arrêté à l'ép. {n}",
-  "todayAt": "aujourd'hui à {time}",
+  "todayAt": "à {time}",
   "paused": "arrêté / en pause",
   "dropped": "abandonné",
   "releasingDate": {
+    "soon": "sort bientôt",
     "inDateN": "sort en {n}",
     "onDateN": "commence le {n}",
     "onDayN": "commence le {n}"
   },
   "updatedFromServiceAt": "mise à jour depuis {service} à",
   "releasing": "en diffusion",
-  "specials": "spéciaux"
+  "specials": "spéciaux",
+  "continue": "continuer"
 }

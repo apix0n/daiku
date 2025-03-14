@@ -18,7 +18,8 @@ export async function load({ fetch }) {
             mangaCollection,
             watchedMovies,
             watchedAnimeMovies,
-            recentActivityData
+            recentActivityData,
+            favouritesData
         ] = await Promise.all([
             fetch('/api/get/anilist/anime').then(r => r.json()),
             fetch('/api/get/anilist/manga').then(r => r.json()),
@@ -26,7 +27,8 @@ export async function load({ fetch }) {
             fetch('/api/get/mangacollec').then(r => r.json()),
             fetch('/api/get/letterboxd').then(r => r.json()),
             fetch('/api/get/anilist/movies').then(r => r.json()),
-            fetch(`/api/get/anilist/recent/${recentActivityThreshold}`).then(r => r.json())
+            fetch(`/api/get/anilist/recent/${recentActivityThreshold}`).then(r => r.json()),
+            fetch(`/api/get/anilist/favourites`).then(r => r.json())
         ]);
 
         const watchedMoviesFinal = combineMoviesLists(watchedMovies, watchedAnimeMovies);
@@ -39,6 +41,7 @@ export async function load({ fetch }) {
             mangaCollection,
             watchedMovies: watchedMoviesFinal,
             recentActivity,
+            favouritesData
         };
 
     } catch (error) {
@@ -52,6 +55,7 @@ export async function load({ fetch }) {
             mangaCollection: [],
             watchedMovies: [],
             recentActivity: allRecentActivity([], [], [], recentActivityThreshold),
+            favouritesData: [],
         };
     }
 }

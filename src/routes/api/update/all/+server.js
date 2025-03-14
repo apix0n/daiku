@@ -16,6 +16,7 @@ export async function GET({ request, url }) {
         "/api/update/anilist/anime",
         "/api/update/anilist/manga",
         "/api/update/anilist/movies",
+        "/api/update/anilist/favourites",
         "/api/update/anilist/planning",
         "/api/update/letterboxd",
         "/api/update/mangacollec"

@@ -95,19 +95,17 @@ $: continuing = {
         /* gap: 18px; */
 
         /* width: 500px; */
-        height: 292px;
+        height: 325px;
 
         border-radius: 17px;
         overflow-y: auto;
     }
 
     .parent {
-        height: 100%;
         display: flex;
         flex-direction: column;
-        gap: 7px;
+        gap: 8px;
         color: var(--white);
-        /* margin-bottom: 16px; */
     }
 
     .item, .infos, img.backdrop {
@@ -120,7 +118,7 @@ $: continuing = {
     }
     
     .infos {
-        /* height: 100%; */
+        height: calc(100% + 1px);
         min-height: 48px;
         background: rgba(0, 0, 0, 0.55);
         backdrop-filter: blur(10px);
