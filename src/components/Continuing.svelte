@@ -9,7 +9,7 @@ $: continuing = {
         ...(data.animeData?.current || [])
             .filter(anime => 
                 (anime.status === "FINISHED") ||
-                (anime.status === "RELEASING" && anime.lastEpisode && anime.episodesProgress < anime.lastEpisode.number)
+                (anime.status === "RELEASING" && anime.lastEpisode && anime.episodesProgress < anime.lastEpisode.number && anime.lastEpisode?.timestamp < Date.now() / 1000)
             ),
         // Manga to continue    
         ...(data.mangaData?.current || [])
@@ -21,8 +21,18 @@ $: continuing = {
 
     next: (data.animeData?.current || [])
         .filter(anime => 
-            anime.status === "RELEASING" && 
-            anime.nextEpisode?.timestamp && 
+            anime.status === "RELEASING" && (
+                (anime.nextEpisode?.timestamp && anime.nextEpisode.timestamp > Date.now() / 1000) ||
+                (anime.lastEpisode?.timestamp && anime.lastEpisode.timestamp > Date.now() / 1000)
+            )
+        )
+        .map(anime => ({
+            ...anime,
+            nextEpisode: anime.lastEpisode?.timestamp > Date.now() / 1000 ? 
+                anime.lastEpisode : 
+                anime.nextEpisode
+        }))
+        .filter(anime => 
             (new Date(anime.nextEpisode.timestamp * 1000) - Date.now()) < (48 * 60 * 60 * 1000)
         )
         .sort((a, b) => a.nextEpisode.timestamp - b.nextEpisode.timestamp)
@@ -58,7 +68,7 @@ $: continuing = {
             <img class="backdrop" src={item.coverLink} alt="Cover of {item.title}">
         </div>
     {/each}
-    {#if continuing.next}
+    {#if continuing.next.length !== 0}
         <span class="next-label">
             <span class="next-text">{$_("releasingDate.soon")}</span>
             <span class="next-bar"></span>
@@ -191,6 +201,7 @@ $: continuing = {
             width: unset;
             min-height: fit-content;
             max-height: 500px;
+            flex: 0 0 auto;
         }
     }
 </style>

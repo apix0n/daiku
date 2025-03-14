@@ -41,6 +41,7 @@
         display: flex;
         flex-direction: column;
         padding: 0 max(env(safe-area-inset-left), 10px);
+        gap: 8px;
     }
 
     .cards {
@@ -49,14 +50,13 @@
         grid-template-rows: .5fr 1fr;
         grid-column-gap: 15px;
         grid-row-gap: 15px;
-        max-height: 730px;
+        max-height: 600px;
     }
 
-.header { grid-area: 1 / 1 / 2 / 5; } 
+.header { margin: 5em 0; } 
 
 .links {
     display: flex;
-    grid-area: 2 / 1 / 3 / 5;
     gap: 15px;
     text-align: center;
     flex-wrap: wrap;
@@ -88,11 +88,14 @@
     color: var(--text-3);
 }
 
-.div7 { grid-area: 3 / 1 / 4 / 7; } 
-
 @media screen and (max-width: 900px) {
-    .container {
+    .header {
+        margin: 0;
+    }
+
+    .cards {
         display: flex;
+        flex-direction: column;
     }
 
     .links {

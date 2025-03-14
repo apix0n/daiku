@@ -62,12 +62,12 @@
         gap: 18px;
 
         /* width: 359px; */
-        /* height: 558px; */
-
+        
         border-radius: 17px;
         overflow-y: auto;
-
+        
         grid-area: 3 / 4 / 5 / 5;
+        flex: 0 0 auto;
     }
 
     a {
@@ -123,5 +123,11 @@
         width: fit-content;
         background: var(--background-4);
         border-radius: 16px;
+    }
+
+    @media screen and (max-width: 900px) {
+        .recent-activity {
+            max-height: 558px;
+        }
     }
 </style>

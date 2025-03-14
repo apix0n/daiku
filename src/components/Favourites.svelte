@@ -66,7 +66,7 @@
         padding: 8px;
         gap: 8px;
         border-radius: 12px;
-        height: 175px;
+        height: 145px;
         width: 100%;
         overflow-x: auto;
         overflow-y: hidden;
@@ -139,6 +139,7 @@
             min-height: fit-content;
             max-height: 500px;
             padding: 0 8px 8px 8px;
+            flex: 0 0 auto;
         }
         
         .list {

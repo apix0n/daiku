@@ -60,6 +60,7 @@
 
         border-radius: 17px;
         overflow-y: auto;
+        flex: 0 0 auto;
         grid-area: 4 / 3 / 5 / 4;
     }
 

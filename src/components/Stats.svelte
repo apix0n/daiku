@@ -70,6 +70,13 @@
         grid-area: 4 / 2 / 5 / 3;
     }
 
+    @media screen and (max-width: 900px) {
+        .statistics {
+            min-height: fit-content;
+            flex: 0 0 auto;
+        }
+    }
+
     .parent {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
