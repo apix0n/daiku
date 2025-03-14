@@ -124,7 +124,7 @@ h1 {}
     margin: 0;
 }
 
-@media screen and (max-height: 700px) {
+@media screen and (max-height: 600px) {
     .container[data-section="parts"]>h2 {
         position: static;
     }

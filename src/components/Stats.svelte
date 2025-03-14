@@ -63,10 +63,11 @@
         /* gap: 18px; */
 
         /* width: 353px; */
-        height: 292px;
+        /* height: 292px; */
 
         border-radius: 17px;
         overflow-y: auto;
+        grid-area: 4 / 2 / 5 / 3;
     }
 
     .parent {

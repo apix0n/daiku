@@ -95,10 +95,11 @@ $: continuing = {
         /* gap: 18px; */
 
         /* width: 500px; */
-        height: 325px;
+        /* height: 325px; */
 
         border-radius: 17px;
         overflow-y: auto;
+        grid-area: 3 / 2 / 4 / 4;
     }
 
     .parent {
@@ -155,6 +156,7 @@ $: continuing = {
     }
 
     .infos span {
+        padding: .5em 0;
         word-wrap: break-word;
         flex-grow: 1;
     }
@@ -181,5 +183,14 @@ $: continuing = {
         left: 0;
         width: 100%;
         border-top: 2px dashed var(--text-2);
+    }
+
+    @media screen and (max-width: 900px) {
+        .continuing {
+            height: unset;
+            width: unset;
+            min-height: fit-content;
+            max-height: 500px;
+        }
     }
 </style>

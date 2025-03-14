@@ -27,29 +27,36 @@
         <a href="/collection">{$_("mainTitles.mangaCollection")} <span>{$_('volumesCount', { values: { n: totalVolumes(data.mangaCollection.collection) } })} · {$_('seriesCount', { values: { n: seriesWithPossessions(data.mangaCollection.collection).length } })}</span></a>
     </div>
     
-    <Favourites data={data} />
-    <Continuing data={data}/>
-    <Stats data={data} />
-    <RecentActivity data={data} />
-    <WatchTime data={data}/>
+    <div class="cards">
+        <Favourites data={data} />
+        <Continuing data={data}/>
+        <Stats data={data} />
+        <RecentActivity data={data} />
+        <WatchTime data={data}/>
+    </div>
 </div>
 
 <style>
     .container {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        grid-template-rows: 1fr .5fr 5fr;
-        grid-column-gap: 15px;
-        grid-row-gap: 15px; 
+        display: flex;
         flex-direction: column;
         padding: 0 max(env(safe-area-inset-left), 10px);
     }
 
-.header { grid-area: 1 / 1 / 2 / 7; } 
+    .cards {
+        display: grid;
+        grid-template-columns: 1.75fr 1.5fr 1fr 1.25fr;
+        grid-template-rows: .5fr 1fr;
+        grid-column-gap: 15px;
+        grid-row-gap: 15px;
+        max-height: 730px;
+    }
+
+.header { grid-area: 1 / 1 / 2 / 5; } 
 
 .links {
     display: flex;
-    grid-area: 2 / 1 / 3 / 7;
+    grid-area: 2 / 1 / 3 / 5;
     gap: 15px;
     text-align: center;
     flex-wrap: wrap;

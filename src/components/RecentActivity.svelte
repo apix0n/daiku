@@ -62,12 +62,12 @@
         gap: 18px;
 
         /* width: 359px; */
-        height: 558px;
+        /* height: 558px; */
 
         border-radius: 17px;
         overflow-y: auto;
 
-        grid-area: 3 / 5 / 3 / 7;
+        grid-area: 3 / 4 / 5 / 5;
     }
 
     a {

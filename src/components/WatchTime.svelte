@@ -56,10 +56,11 @@
         /* gap: 18px; */
 
         /* width: 353px; */
-        height: 292px;
+        /* height: 292px; */
 
         border-radius: 17px;
         overflow-y: auto;
+        grid-area: 4 / 3 / 5 / 4;
     }
 
 /* https://medium.com/@pppped/how-to-code-a-responsive-circular-percentage-chart-with-svg-and-css-3632f8cd7705 */
