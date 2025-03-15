@@ -19,6 +19,7 @@ export async function GET({ request, url }) {
         "/api/update/anilist/favourites",
         "/api/update/anilist/planning",
         "/api/update/letterboxd",
+        "/api/update/letterboxd/favourites",
         "/api/update/mangacollec"
     ];
 

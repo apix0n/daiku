@@ -19,7 +19,8 @@ export async function load({ fetch }) {
             watchedMovies,
             watchedAnimeMovies,
             recentActivityData,
-            favouritesData
+            alFavouritesData,
+            lbFavouritesData
         ] = await Promise.all([
             fetch('/api/get/anilist/anime').then(r => r.json()),
             fetch('/api/get/anilist/manga').then(r => r.json()),
@@ -28,11 +29,20 @@ export async function load({ fetch }) {
             fetch('/api/get/letterboxd').then(r => r.json()),
             fetch('/api/get/anilist/movies').then(r => r.json()),
             fetch(`/api/get/anilist/recent/${recentActivityThreshold}`).then(r => r.json()),
-            fetch(`/api/get/anilist/favourites`).then(r => r.json())
+            fetch(`/api/get/anilist/favourites`).then(r => r.json()),
+            fetch(`/api/get/letterboxd/favourites`).then(r => r.json())
         ]);
 
         const watchedMoviesFinal = combineMoviesLists(watchedMovies, watchedAnimeMovies);
         const recentActivity = allRecentActivity(recentActivityData, mangaCollection, watchedMoviesFinal, recentActivityThreshold);
+        const favouritesData = {
+            updatedAt: new Date().toISOString(),
+            favourites: [
+                alFavouritesData.favourites[0],
+                lbFavouritesData.favourites[0],
+                ...alFavouritesData.favourites.slice(1),
+            ]
+        };
 
         return {
             animeData,

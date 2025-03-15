@@ -146,4 +146,8 @@
             height: 120px;
         }
     }
+
+    .list:has(> :nth-child(4):last-child) {
+        justify-content: space-evenly;
+    }
 </style>

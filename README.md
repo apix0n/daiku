@@ -11,12 +11,14 @@ another media dashboard
 
 ## data sources
 
-* [AniList](https://anilist.co/) for anime (series, movies) and manga,
+* [AniList](https://anilist.co/) for anime (series, movies), manga and favourites (anime, manga & characters),
 * [MAL-Sync](https://malsync.moe/) API for getting the last released chapter of a manga,
     >  queried client-side, private API
-* [Letterboxd](https://letterboxd.com/) for movies,
-    > through the user RSS feed and limited to 50 entries (counts movies, series & lists)
-* [The Movie Database (TMDB)](https://www.themoviedb.org/) for localised movie titles & clean movie posters,
+* [Letterboxd](https://letterboxd.com/) for movies (+ liked),
+    > movies: through the user diary RSS feed and limited to 50 entries (counts movies, series & lists)
+    > 
+    > likes: parses the Letterboxd user page & respective movie pages
+* [The Movie Database (TMDB)](https://www.themoviedb.org/) for localised movie titles, runtimes & clean movie posters,
 * [Mangacollec](https://www.mangacollec.com/) for the manga library,
     > private API
 * [@apix0n/daiku-alternatives](https://github.com/apix0n/daiku-alternatives) for alternative titles, covers and additional information to override on the media
@@ -40,8 +42,10 @@ another media dashboard
 ## other credits
 
 * loading/progress bar inspiration: [@scosman/sveltekit-navigation-loader](https://github.com/scosman/sveltekit-navigation-loader),
-* RSS feed parser: [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
+* watch time circular chart inspiration: [@sergiopedercini](https://codepen.io/sergiopedercini/pen/jmKdbj),
+* Letterboxd RSS feed parser: [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser),
 * HTML characters decoder for the Letterboxd RSS feed: [he](https://www.npmjs.com/package/he),
+* HTML parser for Letterboxd liked movies: [cheerio](https://cheerio.js.org/),
 * iCalendar generator: [ical-generator](https://www.npmjs.com/package/ical-generator),
 * icons: [Google Material Symbols Rounded](https://fonts.google.com/icons?icon.style=Rounded) or custom-made
 <!-- w: 400; 48px -->
