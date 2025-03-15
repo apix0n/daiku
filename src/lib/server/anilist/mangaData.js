@@ -106,7 +106,7 @@ async function readingManga(userMangaData) {
         anilistGlobal.applyPosterOverrides(media.media);
 
         let readingLang = undefined;
-        const langMatch = media.notes?.match(new RegExp(config.mangaLangRegex));
+        const langMatch = media.notes?.match(new RegExp(config.alLangRegex));
         if (langMatch) { readingLang = langMatch[1]; media.daikuReadingLang = readingLang } // Extract language from notes
     }
 

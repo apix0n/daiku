@@ -61,12 +61,13 @@
     }
 
     .list {
+        --height: 145px;
         display: flex;
         background: var(--background-3);
         padding: 8px;
         gap: 8px;
         border-radius: 12px;
-        height: 145px;
+        height: var(--height);
         width: 100%;
         overflow-x: auto;
         overflow-y: hidden;
@@ -104,6 +105,7 @@
     .list a {
         flex: 0 0 auto;
         max-height: 100%;
+        max-width: calc(var(--height) / 1.6);
         aspect-ratio: 2/3;
         border-radius: 6px;
         background-size: cover;
@@ -137,17 +139,29 @@
             height: unset;
             width: unset;
             min-height: fit-content;
-            max-height: 500px;
+            max-height: 375px;
             padding: 0 8px 8px 8px;
             flex: 0 0 auto;
         }
         
         .list {
-            height: 120px;
+            --height: 120px;
         }
     }
 
     .list:has(> :nth-child(4):last-child) {
         justify-content: space-evenly;
+        a {
+            flex-grow: 1;
+        }
+    }
+
+    @media screen and (min-width: 500px) and (max-width: 900px) {
+        .list:has(> :nth-child(4):last-child) {
+            justify-content: revert;
+            a {
+                flex-grow: 0;
+            }
+        }
     }
 </style>

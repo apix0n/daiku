@@ -28,11 +28,11 @@
     </div>
     
     <div class="cards">
-        <Favourites data={data} />
         <Continuing data={data}/>
+        <Favourites data={data} />
         <Stats data={data} />
-        <RecentActivity data={data} />
         <WatchTime data={data}/>
+        <RecentActivity data={data} />
     </div>
 </div>
 

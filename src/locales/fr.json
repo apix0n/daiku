@@ -57,5 +57,6 @@
   "updatedFromServiceAt": "mise à jour depuis {service} à",
   "releasing": "en diffusion",
   "specials": "spéciaux",
-  "continue": "continuer"
+  "continue": "continuer",
+  "favourites": "favoris"
 }

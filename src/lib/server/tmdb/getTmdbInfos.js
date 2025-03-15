@@ -1,4 +1,4 @@
-import { secrets } from '../config';
+import { secrets, config } from '../config';
 const tmdbApiKey = secrets.tmdbApiKey;
 
 export async function getTmdbInfos(tmdbId) {
@@ -7,7 +7,7 @@ export async function getTmdbInfos(tmdbId) {
     }
 
     const params = new URLSearchParams({
-        language: 'fr-FR',
+        language: config.defaultTmdbLang,
         append_to_response: 'images',
         include_image_language: 'null',
         api_key: tmdbApiKey,

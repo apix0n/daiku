@@ -32,9 +32,10 @@ another media dashboard
 | LETTERBOXD_USERNAME | your Letterboxd username | `null` |
 | TMDBAPIKEY | your TMDB API key | `null` |
 | DAIKU_API_CACHE_TIME | defines how long (in seconds) to keep API calls responses in memory before fetching new data | 1800 |
-| DAIKU_ANILIST_CACHE_TIME | defines how long (in seconds) to keep AniList data (anime & manga) in memory before fetching new data | 300 |
-| DAIKU_DEFAULT_MANGA_LANG | defines the default language fallback for MALsync last chapter querying | `en` |
-| DAIKU_REGEX_MANGA_LANGUAGE | regular expression for the language extraction from user notes on AniList | `lang:([^\s]+)` |
+| DAIKU_ANILIST_CACHE_TIME | defines how long (in seconds) to keep AniList anime & manga data in memory before fetching new data | 300 |
+| DAIKU__DEFAULT_MANGA_LANG | defines the default language fallback for MALsync last chapter querying | `en` |
+| DAIKU_DEFAULT_TMDB_LANG | defines the default language fallback for TMDB info querying ([more info on TMDB's API docs](https://developer.themoviedb.org/docs/languages)) | `en-US` |
+| DAIKU_ANILIST_LANG_REGEX | regular expression for the language extraction from user notes on AniList | `lang:([^\s]+)` |
 | DAIKU_APP_ACCENT | defines the main accent color used in the app | `#e8794e` |
 | DAIKU_APP_ACCENT_SECOND | defines the second accent color used in the app | `#62544e` |
 | DAIKU_API_AUTH_KEY_VARIABLE | defines from which environment variable the api authorization key will be set | `undefined` |

@@ -41,7 +41,7 @@ export async function load({ fetch }) {
                 alFavouritesData.favourites[0],
                 lbFavouritesData.favourites[0],
                 ...alFavouritesData.favourites.slice(1),
-            ]
+            ].filter(item => item && Array.isArray(item.favourites) && item.favourites.length > 0)
         };
 
         return {

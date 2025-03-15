@@ -613,6 +613,14 @@ label {
     border-radius: 4px;
 }
 
+#nojs a {
+    font-weight: 500;
+}
+
+#nojs a:hover {
+    text-decoration: underline;
+}
+
 h3>.series-info {
     font-size: 1em;
 }
