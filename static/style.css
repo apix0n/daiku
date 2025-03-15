@@ -337,16 +337,6 @@ svg {
     height: 1em;
 }
 
-.rating>a {
-    z-index: 2;
-    gap: 1px;
-    display: inline-flex;
-}
-
-.rating>a:hover svg path {
-    fill: var(--app-accent);
-}
-
 .container {
     width: calc(85vw - env(safe-area-inset-left));
     margin: auto;
@@ -479,6 +469,7 @@ svg {
 
 .possessed.volume-info {
     background-color: var(--app-accent);
+    color: var(--app-accent-contrast);
 }
 
 .possessions {

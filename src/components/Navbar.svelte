@@ -121,7 +121,7 @@
 
 	.navbtns > a:first-of-type {
 		--background-3-hover: var(--app-accent-dark);
-		--text-2: var(--white);
+		--text-2: var(--app-accent-dark-contrast);
 	}
 	
 	.navbtns > a:active {
@@ -134,7 +134,7 @@
 
 	.isActive {
 		background: var(--app-accent) !important;
-		color: var(--white) !important;
+		color: var(--app-accent-contrast) !important;
 		box-shadow: inset 0 0 0 1px var(--background-3);
 	}
 

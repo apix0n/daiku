@@ -147,6 +147,10 @@
         .list {
             --height: 120px;
         }
+
+        .list a:hover::after {
+            content: unset;
+        }
     }
 
     .list:has(> :nth-child(4):last-child) {

@@ -8,6 +8,7 @@
 	import { _ } from 'svelte-i18n';
 	import Continuing from '../../components/Continuing.svelte'
 	import Favourites from '../../components/Favourites.svelte'
+	import Footer from '../../components/Footer.svelte'
 </script>
 
 <svelte:head>
@@ -34,6 +35,8 @@
         <WatchTime data={data}/>
         <RecentActivity data={data} />
     </div>
+
+    <Footer />
 </div>
 
 <style>
