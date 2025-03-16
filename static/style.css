@@ -284,7 +284,7 @@ pre {
     background: #17171752;
     border-radius: var(--border-radius);
     backdrop-filter: blur(3px);
-    border: 1px solid var(--tAccentColor, #4848488a);
+    outline: 1px solid var(--tAccentColor, #4848488a);
 }
 
 .more:has(> :last-child:nth-child(1)) {
@@ -379,7 +379,7 @@ svg {
 
 .element.ova {
     display: none;
-    outline: 2px var(--app-accent-dark) solid;
+    outline: 2px var(--accentColor, var(--background-4)) solid;
 }
 
 .element.ova.visible {
