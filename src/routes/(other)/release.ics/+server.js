@@ -44,13 +44,18 @@ export async function GET({ request, url }) {
     ]);
 
     animeData.current.forEach((anime) => {
+        const eventId = anime.mediaLink?.replace(/^https?:\/\//, '')
+            .replace(/\.[a-z]+\//, '-')
+            .replace(/\/$/, '');
+
         if (anime.lastEpisode) {
             cal.createEvent({
                 start: new Date(anime.lastEpisode.timestamp * 1000),
                 end: new Date(anime.lastEpisode.timestamp * 1000 + anime.episodesDuration * 60 * 1000),
                 summary: anime.title,
                 location: `Episode ${anime.lastEpisode.number}`,
-                url: anime.mediaLink
+                url: anime.mediaLink,
+                id: `${eventId}-ep${anime.lastEpisode.number}`
             });
         };
         if (anime.nextEpisode) {
@@ -59,7 +64,8 @@ export async function GET({ request, url }) {
                 end: new Date(anime.nextEpisode.timestamp * 1000 + anime.episodesDuration * 60 * 1000),
                 summary: anime.title,
                 location: `Episode ${anime.nextEpisode.number}`,
-                url: anime.mediaLink
+                url: anime.mediaLink,
+                id: `${eventId}-ep${anime.nextEpisode.number}`
             });
         }
     });
@@ -69,11 +75,16 @@ export async function GET({ request, url }) {
         (anime.status === 'RELEASING' && anime.nextEpisode && anime.nextEpisode.number - 1 === 1)
     );
     planningData.anime.forEach(anime => {
+        const eventId = anime.mediaLink?.replace(/^https?:\/\//, '')
+            .replace(/\.[a-z]+\//, '-')
+            .replace(/\/$/, '');
+
         cal.createEvent({
             start: new Date(anime.startDate),
             allDay: true,
             summary: anime.title,
-            location: "Episode 1"
+            location: "Episode 1",
+            id: `${eventId}-start`
         })
     })
 
@@ -93,10 +104,12 @@ export async function GET({ request, url }) {
     mangacollecData.collection.forEach(series => {
         series.editions.forEach(edition => {
             edition.next.forEach(volume => {
+                const eventId = `manga-${series.titre.toLowerCase().replace(/\s+/g, '-')}-${volume.numeroTome}`;
                 cal.createEvent({
                     start: new Date(volume.releaseDate),
                     allDay: true,
                     summary: `Tome ${volume.numeroTome} - ${series.titre}`,
+                    id: eventId
                 })
             })
         })
