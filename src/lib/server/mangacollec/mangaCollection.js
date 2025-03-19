@@ -141,14 +141,14 @@ export async function fetchMangaCollection(username) {
                 }));
 
             const nextVolumes = edition.title === null ? volumesInEdition
-                .filter(vol => !(vol.id in possessedVolumesData))
+                .filter(vol => !(vol.id in possessedVolumesData) && vol.release_date !== null)
                 .map(vol => {
                     return {
                         numeroTome: vol.number,
                         isbn: vol.isbn,
                         coverLink: toAmazonThumbnailLink(vol.image_url) || toAmazonThumbnailLink(volumesInEdition.find(v => v.image_url)?.image_url),
                         noCover: !vol.image_url,
-                        releaseDate: new Date(vol.release_date) <= new Date() ? null : new Date(vol.release_date)
+                        releaseDate: new Date(vol.release_date),
                     };
                 }) : [];
 

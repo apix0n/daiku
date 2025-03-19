@@ -91,7 +91,7 @@
                 <div class="possessions">
                     {#each edition.next as next}
                     <!-- svelte-ignore a11y_click_events_have_key_events -->
-                    <div class="possession" class:torelease={next.releaseDate} class:nocover={next.noCover} releaseDate={next.releaseDate != null ? new Date(next.releaseDate).toLocaleDateString() : ''} role="button" tabindex="0" on:click={() => openModal(next, edition, manga)}>
+                    <div class="possession" class:torelease={new Date(next.releaseDate) > new Date()} class:nocover={next.noCover} releaseDate={new Date(next.releaseDate).toLocaleDateString()} role="button" tabindex="0" on:click={() => openModal(next, edition, manga)}>
                         <img src={next.coverLink} alt={`Cover of volume ${next.numeroTome}`} class="cover" />
                         <span>Tome {next.numeroTome}</span>
                     </div>
@@ -115,7 +115,7 @@
         {/if}
         <h2>{selectedVolume.mangaTitle}</h2>
         <h3>{selectedVolume.editionTitle} · Tome {selectedVolume.numeroTome}</h3>
-        {#if selectedVolume.releaseDate != null}
+        {#if selectedVolume.releaseDate > new Date()}
             <h3>releases on {new Date(selectedVolume.releaseDate).toLocaleDateString()}</h3>
         {/if}
         <p class="isbn">ISBN: {selectedVolume.isbn}</p>
