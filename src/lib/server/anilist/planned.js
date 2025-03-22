@@ -101,7 +101,6 @@ export function plannedAnime(userPlannedAnime) {
         startDate: anilistGlobal.planningFormatDate(entry.media.startDate),
         coverLink: entry.media.coverImage.large,
         accentColor: entry.media.coverImage.color,
-        airingAt: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined,
         nextEpisode: entry.media.nextAiringEpisode ? {
             number: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode : undefined,
             timestamp: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined

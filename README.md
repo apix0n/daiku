@@ -1,6 +1,11 @@
 # daiku
 
+![Made in Svelte(Kit)](https://img.shields.io/badge/Made%20in%20Svelte(Kit)-grey?logo=svelte&labelColor=FF3E00&logoColor=white) ![GitHub last commit](https://img.shields.io/github/last-commit/apix0n/daiku)
+
+
 another media dashboard
+
+> this is in active development and mostly a personal project, but feel free to contribute if you want—help is always appreciated! 
 
 ## requirements
 
@@ -15,10 +20,9 @@ another media dashboard
 * [MAL-Sync](https://malsync.moe/) API for getting the last released chapter of a manga,
     >  queried client-side, private API
 * [Letterboxd](https://letterboxd.com/) for movies (+ liked),
-    > movies: through the user diary RSS feed and limited to 50 entries (counts movies, series & lists)
-    > 
-    > likes: parses the Letterboxd user page & respective movie pages
-* [The Movie Database (TMDB)](https://www.themoviedb.org/) for localised movie titles, runtimes & clean movie posters,
+    > * movies: through the user diary RSS feed and limited to 50 entries (counts movies, series & lists)
+    > * likes: parses the Letterboxd user page & respective movie pages for the TMDB id
+* [The Movie Database (TMDB) API](https://www.themoviedb.org/) for localised movie titles, runtimes & clean movie posters,
 * [Mangacollec](https://www.mangacollec.com/) for the manga library,
     > private API
 * [@apix0n/daiku-alternatives](https://github.com/apix0n/daiku-alternatives) for alternative titles, covers and additional information to override on the media

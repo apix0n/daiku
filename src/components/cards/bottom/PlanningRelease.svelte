@@ -25,7 +25,7 @@
             displayedDate = $_('releasingDate.inDateN', { values: { n: formattedDate }});
         } else if (dateString.length === 10) {
             if (Math.abs(now - date) <= fourteenDaysInMs) {
-                displayedDate = $_('releasingDate.onDateN', { values: { n: getRelativeTime(date) }});
+                displayedDate = $_('releasingDate.onDateN', { values: { n: getRelativeTime(locale, date) }});
             } else {
                 const formattedDate = date.toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' });
                 displayedDate = $_('releasingDate.onDayN', { values: { n: formattedDate }});

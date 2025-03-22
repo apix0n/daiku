@@ -55,6 +55,7 @@
     a {
         padding: 5px 30px;
         background: var(--app-accent);
+        color: var(--app-accent-contrast);
         font-size: 1.25em;
         border-radius: 0.5em;
     }
