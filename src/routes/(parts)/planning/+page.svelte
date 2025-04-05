@@ -10,13 +10,13 @@
   export let data;
   const { anime, manga, updatedAt } = data.plannedData;
 
-  import { _, locale as localeStore } from 'svelte-i18n';
+  import { _ } from 'svelte-i18n';
 </script>
 
 <h2>anime <span>· {anime.filter(a => a.type !== "MOVIE").length} planned</span></h2>
 
 <div id="anime" class="elements-wrapper elements-planned">
-  {#each anime.filter(a => a.type !== "MOVIE") as anime}
+  {#each anime.filter(a => a.type !== "MOVIE" && a.status !== "NOT_YET_RELEASED") as anime}
 
     <BaseCard accent={anime.accentColor} background={anime.coverLink} status={anime.status}>
       <!-- top -->

@@ -1,14 +1,14 @@
 <script>
     export let date, service, margin;
 
-    import { _, locale as localeStore } from "svelte-i18n";
+    import { _, locale as localeStore, date as dateI18N, time } from "svelte-i18n";
     import { get } from "svelte/store";
     let locale = get(localeStore)
 </script>
 
 <div class="updated-time" class:margin0={margin == 0}>
     <span>{$_("updatedFromServiceAt", { values: { service: service }})}</span>
-    <span>{new Date(date).toLocaleString(locale)}</span>
+    <span>{$dateI18N(new Date(date), { month: 'numeric', day: 'numeric', year: 'numeric' } )}, {$time(new Date(date), {format: 'medium'})}</span>
 </div>
 
 <style>

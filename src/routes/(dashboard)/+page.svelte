@@ -19,22 +19,24 @@
     <div class="header">
         <h1>{$_('home')}</h1>
     </div>
+
+    <a href="/anime">anime</a>
     
-    <div class="links">
+    <!-- <div class="links">
         <a href="/anime">{$_("mainTitles.anime")} <span>{$_('watchingNumber', { values: { n: data.animeData.current.length } })}</span></a>
         <a href="/manga">{$_("mainTitles.manga")} <span>{$_('readingNumber', { values: { n: data.mangaData.current.length } })}</span></a>
         <a href="/movies">{$_("mainTitles.movies")} <span>{$_('watchedNumber', { values: { n: data.watchedMovies.watched.length } })}</span></a>
         <a href="/planning">{$_("mainTitles.planned")}</a>
         <a href="/collection">{$_("mainTitles.mangaCollection")} <span>{$_('volumesCount', { values: { n: totalVolumes(data.mangaCollection.collection) } })} · {$_('seriesCount', { values: { n: seriesWithPossessions(data.mangaCollection.collection).length } })}</span></a>
-    </div>
+    </div> -->
     
-    <div class="cards">
+    <!-- <div class="cards">
         <Continuing data={data}/>
         <Favourites data={data} />
         <Stats data={data} />
         <WatchTime data={data}/>
         <RecentActivity data={data} />
-    </div>
+    </div> -->
 
     <Footer />
 </div>
@@ -99,6 +101,7 @@
     .cards {
         display: flex;
         flex-direction: column;
+        max-height: unset;
     }
 
     .links {

@@ -1,6 +1,5 @@
 <script>
     import { page } from '$app/state';
-	import { dev } from '$app/environment';
     import { version } from '$app/environment';
 
 	// Import des icônes
@@ -31,12 +30,8 @@
 		<a href="/collection/next" class:isActive={isActive('/collection/next')} aria-label="Wished manga to complete the collection"><ShelfSparkle/></a>
 		<a href="/movies" class:isActive={isActive('/movies')} aria-label="Last 100 watched movies"><Movie/></a>
 		<a href="/planning" class:isActive={isActive('/planning')} aria-label="To-watch & to-read lists"><CalendarClock/></a>
+		<a href="/planning/notreleased" class:isActive={isActive('/planning/notreleased')} aria-label="To-watch & to-read lists"><CalendarClock/></a>
 	</div>
-	{#if (dev)}
-	<div class="navbtns">
-		<a href="/dump" class:isActive={isActive('/dump')} aria-label="Display all loaded data"><Document/></a>
-	</div>
-	{/if}
 </nav>
 
 <style>

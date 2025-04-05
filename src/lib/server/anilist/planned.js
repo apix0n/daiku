@@ -36,7 +36,6 @@ export async function getPlannedAnime(userId) {
             }
         }
     }`;
-    await anilistGlobal.loadPosterOverrides();
     return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
@@ -68,11 +67,9 @@ export async function getPlannedManga(userId) {
                         }
                     }
                 }
-                isCustomList
             }
         }
     }`;
-    await anilistGlobal.loadPosterOverrides();
     return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 

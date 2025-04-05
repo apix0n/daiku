@@ -71,21 +71,32 @@ export async function GET({ request, url }) {
     });
 
     planningData.anime = planningData.anime.filter(anime =>
-        (anime.status === 'NOT_YET_RELEASED' && anime.startDate?.length === 10) ||
+        (anime.status === 'NOT_YET_RELEASED' && (anime.startDate?.length === 10 || anime.nextEpisode)) ||
         (anime.status === 'RELEASING' && anime.nextEpisode && anime.nextEpisode.number - 1 === 1)
     );
     planningData.anime.forEach(anime => {
         const eventId = anime.mediaLink?.replace(/^https?:\/\//, '')
             .replace(/\.[a-z]+\//, '-')
             .replace(/\/$/, '');
-
-        cal.createEvent({
-            start: new Date(anime.startDate),
-            allDay: true,
-            summary: anime.title,
-            location: "Episode 1",
-            id: `${eventId}-start`
-        })
+        
+        if (anime.nextEpisode) {
+            cal.createEvent({
+                start: new Date(anime.nextEpisode.timestamp * 1000),
+                end: new Date(anime.nextEpisode.timestamp * 1000 + anime.episodesDuration * 60 * 1000),
+                summary: anime.title,
+                location: `Episode ${anime.nextEpisode.number}`,
+                url: anime.mediaLink,
+                id: `${eventId}-ep${anime.nextEpisode.number}`
+            });
+        } else if (anime.startDate) {
+            cal.createEvent({
+                start: new Date(anime.startDate),
+                allDay: true,
+                summary: anime.title,
+                location: "Episode 1",
+                id: `${eventId}-start`
+            })
+        }
     })
 
     const now = new Date();

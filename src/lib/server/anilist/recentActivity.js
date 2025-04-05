@@ -28,7 +28,6 @@ async function getRecentActivityData(userId, threshold) {
             }
         }
     }`;
-    await anilistGlobal.loadPosterOverrides();
     const response = await anilistGlobal.fetchGraphQL(query, { userId: userId, createdAtGreater: threshold });
     return response.data.Page.activities;
 }

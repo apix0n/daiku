@@ -1,10 +1,11 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
+import { applyAnimeReleaseTime, getAnimeReleaseTime } from '../animeSchedule/animeReleaseTime';
 import { getPrecedingEpisode } from './getPrecedingEpisode';
 
-async function getUserAnimeData(userId, sortOption = 'UPDATED_TIME_DESC') {
+async function getUserAnimeData(userId) {
     const query = `
-    query ($userId: Int, $sort: [MediaListSort]) {
-        MediaListCollection(userId: $userId, type: ANIME, status_not: PLANNING, sort: $sort) {
+    query ($userId: Int) {
+        MediaListCollection(userId: $userId, type: ANIME, status_not: PLANNING, sort: FINISHED_ON_DESC) {
             lists {
                 entries {
                     media {
@@ -41,12 +42,12 @@ async function getUserAnimeData(userId, sortOption = 'UPDATED_TIME_DESC') {
                         month
                         day
                     }
+                    updatedAt
                 }
             }
         }
     }`;
-    await anilistGlobal.loadPosterOverrides();
-    return await anilistGlobal.fetchGraphQL(query, { userId: userId, sort: sortOption });
+    return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
 function watchedAnime(userAnimeData) {
@@ -98,6 +99,7 @@ async function currentAnime(userAnimeData, fetchLastEpisode) {
     const seen = new Set();
     const allCurrentAnime = userAnimeData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
+        .sort((a, b) => b.updatedAt - a.updatedAt) // Sort by updatedAt descending
         .filter(entry => entry.status === "CURRENT" || entry.status === "REPEATING") // Keep only current and rewatching entries
         .filter(entry => {
             const duplicate = seen.has(entry.media.id);
@@ -105,17 +107,20 @@ async function currentAnime(userAnimeData, fetchLastEpisode) {
             return !duplicate;
         }); // Filter out duplicates (same media in multiple lists)
 
-    for (const media of allCurrentAnime) {
+    await Promise.all(allCurrentAnime.map(async (media) => {
         try {
             if (media.media.status === "RELEASING" && media.media.nextAiringEpisode?.episode && fetchLastEpisode) {
                 media.media.lastEpisode = await getPrecedingEpisode(media.media.id, media.media.nextAiringEpisode.episode);
                 if (media.media.lastEpisode.number > media.media.nextAiringEpisode?.episode) {
-                    media.media.lastEpisode = undefined
+                    media.media.lastEpisode = undefined;
                 }
             }
-        } catch {}
+            await applyAnimeReleaseTime(media);
+        } catch (error) {
+            console.error("Error processing anime:", media.media.title.english || media.media.title.romaji, error);
+        }
         anilistGlobal.applyPosterOverrides(media.media);
-    };
+    }));
 
     return allCurrentAnime.map(entry => ({
         title: entry.media.title.english || entry.media.title.romaji,
@@ -142,6 +147,7 @@ function droppedAnime(userAnimeData) {
     const seen = new Set();
     const allDroppedAnime = userAnimeData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
+        .sort((a, b) => b.updatedAt - a.updatedAt) // Sort by updatedAt descending
         .filter(entry => entry.status === "DROPPED" || entry.status === "PAUSED") // Keep only dropped and paused entries
         .filter(entry => {
             const duplicate = seen.has(entry.media.id);
@@ -173,14 +179,13 @@ function droppedAnime(userAnimeData) {
     }));
 }
 
-export async function fetchAnimeData(userId, fetchLastEpisode=true) {
+export async function fetchAnimeData(userId, fetchLastEpisode = true) {
     try {
-        const watchedUserData = await getUserAnimeData(userId, 'FINISHED_ON_DESC');
         const userData = await getUserAnimeData(userId);
         return {
             updatedAt: new Date().toISOString(),
             current: await currentAnime(userData, fetchLastEpisode),
-            watched: watchedAnime(watchedUserData),
+            watched: watchedAnime(userData),
             dropped: droppedAnime(userData),
         };
     } catch (error) {

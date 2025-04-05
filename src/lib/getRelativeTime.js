@@ -6,8 +6,8 @@ export function getRelativeTime(locale = "en", date, unit = 'day') {
     if (unit === 'day') {
         const diffInDays = Math.floor(diffDays / (1000 * 60 * 60 * 24));
         const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
-        if (diffInDays < -6) {
-            return rtf.format(Math.floor(-diffInDays / 7), 'week');
+        if (diffInDays < -6 && diffInDays > -14) {
+            return rtf.format(Math.ceil(-diffInDays / 7), 'week');
         }
         return rtf.format(-diffInDays, 'day');
     } else if (unit === 'hour') {

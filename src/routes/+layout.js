@@ -1,32 +1,10 @@
 import { browser } from '$app/environment';
-import '$lib/i18n'; // Import to initialize. Important :)
-import { locale, waitLocale } from 'svelte-i18n';
-import { getLatestChapter } from '$lib/malsyncGetLatestChapter';
+import '$lib/i18n';
+import { waitLocale } from 'svelte-i18n';
 
-export const ssr = false;
+export const load = async () => {
+    console.log('%cdaiku, by apix - https://github.com/apix0n', 'background:rgb(196, 144, 66); color: black; font-size: large; font-weight: bold; padding: 2px 6px; border-radius: 3px;');
 
-export const load = async ({ data }) => {
-    // Initialisation de la locale si on est côté navigateur
-    if (browser) {
-        locale.set(window.navigator.language);
-    }
-
-    // Attendre que la traduction soit chargée
+    // Wait for translations to load
     await waitLocale();
-
-    // Charger les derniers chapitres pour les mangas en cours
-    if (data?.mangaData?.current) {
-        const updatedManga = await Promise.all(
-            data.mangaData.current.map(async (manga) => {
-                if (manga.status === "RELEASING" && manga.malId) {
-                    const lastChapter = await getLatestChapter(manga.malId, manga.readingLang);
-                    return { ...manga, lastChapter };
-                }
-                return manga;
-            })
-        );
-        data.mangaData.current = updatedManga;
-    }
-
-    return data;
 };

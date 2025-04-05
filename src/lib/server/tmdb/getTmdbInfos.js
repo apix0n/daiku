@@ -21,9 +21,13 @@ export async function getTmdbInfos(tmdbId) {
         throw new Error(`[tmdbid] http error, status: ${response.status}`);
     }
 
-    const titre = data.title;
     const posters = data.images?.posters || [];
     const poster = imgUrlPrefix + (posters[0]?.file_path || data.poster_path);
-    const runtime = data.runtime;
-    return { titre, poster, runtime };
+    return {
+        titre: data.title,
+        poster,
+        runtime: data.runtime,
+        status: data.status,
+        releaseDate: data.release_date
+    };
 }

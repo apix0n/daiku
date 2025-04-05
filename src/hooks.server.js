@@ -1,4 +1,4 @@
-import { config } from '$lib/server/config';
+import { config } from '$lib/config';
 
 export const handle = async ({ event, resolve }) => {
     return await resolve(event, {

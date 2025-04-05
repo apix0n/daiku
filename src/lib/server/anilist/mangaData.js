@@ -1,10 +1,10 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 import { config } from '../config';
 
-async function getUserMangaData(userId, sortOption = 'UPDATED_TIME_DESC') {
+async function getUserMangaData(userId) {
     const query = `
-    query ($userId: Int, $sort: [MediaListSort]) {
-        MediaListCollection(userId: $userId, type: MANGA, status_not: PLANNING, sort: $sort) {
+    query ($userId: Int) {
+        MediaListCollection(userId: $userId, type: MANGA, status_not: PLANNING, sort: FINISHED_ON_DESC) {
             lists {
                 entries {
                     media {
@@ -40,12 +40,12 @@ async function getUserMangaData(userId, sortOption = 'UPDATED_TIME_DESC') {
                         month
                         day
                     }
+                    updatedAt
                 }
             }
         }
     }`;
-    await anilistGlobal.loadPosterOverrides();
-    return await anilistGlobal.fetchGraphQL(query, { userId: userId, sort: sortOption });
+    return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
 function readManga(userMangaData) {
@@ -95,6 +95,7 @@ async function readingManga(userMangaData) {
     const seen = new Set();
     const allCurrentManga = userMangaData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
+        .sort((a, b) => b.updatedAt - a.updatedAt) // Sort by updatedAt descending
         .filter(entry => entry.status === "CURRENT" || entry.status === "REPEATING") // Keep only current and rewatching entries
         .filter(entry => {
             const duplicate = seen.has(entry.media.id);
@@ -133,6 +134,7 @@ function droppedManga(userMangaData) {
     const seen = new Set();
     const allDroppedManga = userMangaData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
+        .sort((a, b) => b.updatedAt - a.updatedAt) // Sort by updatedAt descending
         .filter(entry => entry.status === "DROPPED" || entry.status === "PAUSED") // Keep only dropped and paused entries
         .filter(entry => {
             const duplicate = seen.has(entry.media.id);
@@ -162,12 +164,11 @@ function droppedManga(userMangaData) {
 
 export async function fetchMangaData(userId) {
     try {
-        const readUserData = await getUserMangaData(userId, 'FINISHED_ON_DESC'); // For read manga
-        const userData = await getUserMangaData(userId); // For other statuses
+        const userData = await getUserMangaData(userId);
         return {
             updatedAt: new Date().toISOString(),
             current: await readingManga(userData),
-            read: readManga(readUserData),
+            read: readManga(userData),
             dropped: droppedManga(userData),
         };
     } catch (error) {

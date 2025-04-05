@@ -16,9 +16,15 @@
         {:else}
             {$_("Nepisodes", { values: { n: number }})}
         {/if}
+    {/if}
+    
+    {#if number != undefined && number !== 1 && duration > 0}
         ×
     {/if}
-    {$_("NminutesShort", { values: { n: duration }})}
+
+    {#if duration > 0}
+        {$_("NminutesShort", { values: { n: duration }})}
+    {/if}
 
     {#if rewatch}
         <Rewatch Number={rewatch}/>

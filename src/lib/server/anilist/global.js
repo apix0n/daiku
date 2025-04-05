@@ -1,8 +1,11 @@
 export const apiUrl = 'https://graphql.anilist.co';
 export const siteUrl = 'https://anilist.co'
 
-import { config } from "../config";
+import { config } from "$lib/config";
 export let alternativesUrl = `${config.alternativesBaseUrl}/anilist`;
+
+import { applyPosterOverrides } from '../overrides/anilist';
+export { applyPosterOverrides };
 
 export async function fetchGraphQL(query, variables) {
     // const controller = new AbortController();
@@ -57,65 +60,4 @@ export async function getUserId(username) {
     const response = await fetchGraphQL(query, { name: username });
     // if (!response.ok) throw new Error("HTTP error " + response.status);
     return response.data.User.id;
-}
-
-let posterOverrides = {};
-let cacheTimestamp = null;
-
-export async function loadPosterOverrides() {
-    const cacheDuration = 24 * 60 * 60 * 1000; // 1 day in milliseconds
-
-    if (posterOverrides && (Date.now() - cacheTimestamp < cacheDuration)) {
-        return posterOverrides;
-    }
-
-    try {
-        const response = await fetch(alternativesUrl + '/overrides.json');
-        posterOverrides = await response.json();
-        cacheTimestamp = Date.now();
-        return posterOverrides;
-    } catch (error) {
-        if (posterOverrides) {
-            return posterOverrides;
-        } else {
-            return {};
-        }
-    }
-}
-
-export function applyPosterOverrides(media) {
-    const override = posterOverrides[media.id];
-    if (override) {
-        if (override.covers) {
-            if (override.covers.large) {
-                media.coverImage.extraLarge = `${alternativesUrl}/${override.covers.large}`;
-            }
-            if (override.covers.medium) {
-                media.coverImage.large = `${alternativesUrl}/${override.covers.medium}`;
-            }
-            if (override.covers.small) {
-                media.coverImage.medium = `${alternativesUrl}/${override.covers.small}`;
-            }
-        }
-        if (override.title) {
-            media.title.english = override.title;
-        }
-        if (override.airingEpisodesOffset) {
-            if (media.nextAiringEpisode) {
-                media.nextAiringEpisode.episode += override.airingEpisodesOffset;
-            }
-            if (media.lastEpisode) {
-                media.lastEpisode.number += override.airingEpisodesOffset;
-            }
-        }
-        if (override.accentColor) {
-            media.coverImage.color = override.accentColor;
-        }
-        if (override.releaseTime && media.nextAiringEpisode) {
-            media.nextAiringEpisode.airingAt = Math.floor(new Date(media.nextAiringEpisode.airingAt * 1000).setUTCHours(override.releaseTime[0], override.releaseTime[1] || 0) / 1000);
-        }
-        if (override.releaseTime && media.lastEpisode) {
-            media.lastEpisode.timestamp = Math.floor(new Date(media.lastEpisode.timestamp * 1000).setUTCHours(override.releaseTime[0], override.releaseTime[1] || 0) / 1000);
-        }
-    }
 }

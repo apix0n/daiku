@@ -52,7 +52,6 @@ async function getUserFavouritesData(userId) {
         }
       }
     }`
-    await anilistGlobal.loadPosterOverrides();
     return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
@@ -67,7 +66,7 @@ function anilistFavourites(userFavouritesData) {
 
     return [
         {
-            icon: 'ph:television-simple',
+            type: 'anime',
             favourites: favourites.anime.edges
                 .sort((a, b) => a.favouriteOrder - b.favouriteOrder)
                 .map(edge => ({
@@ -77,7 +76,7 @@ function anilistFavourites(userFavouritesData) {
                 }))
         },
         {
-            icon: 'ph:book-open',
+            type: 'manga',
             favourites: favourites.manga.edges
                 .sort((a, b) => a.favouriteOrder - b.favouriteOrder)
                 .map(edge => ({
@@ -87,7 +86,7 @@ function anilistFavourites(userFavouritesData) {
                 }))
         },
         {
-            icon: 'ph:user',
+            type: 'characters',
             favourites: favourites.characters.edges
                 .sort((a, b) => a.favouriteOrder - b.favouriteOrder)
                 .map(edge => ({
@@ -99,13 +98,12 @@ function anilistFavourites(userFavouritesData) {
     ];
 }
 
-
 export async function fetchFavouritesData(userId) {
     try {
         const userData = await getUserFavouritesData(userId);
         return {
             updatedAt: new Date().toISOString(),
-            favourites: await anilistFavourites(userData),
+            favourites: anilistFavourites(userData),
         };
     } catch (error) {
         console.error('Error fetching anime data:', error);

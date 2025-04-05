@@ -1,9 +1,7 @@
 import * as cheerio from 'cheerio';
-import { getTmdbInfos } from '../tmdb/getTmdbInfos';
-import { replaceByTmdb } from '../tmdb/replaceByTmdb';
+import { getBoxdTMDBInfos } from './getBoxdTMDBInfos';
 
-
-const ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0";
+export const ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0";
 
 export async function fetchUserFavourites(username) {
     try {
@@ -16,7 +14,6 @@ export async function fetchUserFavourites(username) {
         }
 
         const html = await response.text();
-        // return html;
         const $ = cheerio.load(html); // Load HTML into Cheerio
 
         console.log(`letterboxd likes | fetched profile for user ${username}`);
@@ -36,38 +33,6 @@ export async function fetchUserFavourites(username) {
     }
 }
 
-export async function getBoxdTMDBInfos(links) {
-    const tmdbData = { watched: [] };
-
-    for (const link of links) {
-        const response = await fetch(link, {
-            headers: { 'User-Agent': ua }
-        });
-        const html = await response.text();
-        const $ = cheerio.load(html);
-
-        const body = $('body');
-        const tmdbType = body.attr('data-tmdb-type');
-        const tmdbId = body.attr('data-tmdb-id');
-
-        if (tmdbId && tmdbType === "movie") {
-            tmdbData.watched.push({
-                title: body.find('h1.filmtitle').text().trim(),
-                mediaType: "movie",
-                sourceList: "letterboxd",
-                movieRuntime: null,
-                coverLink: null,
-                link: link,
-                tmdbId: tmdbId,
-            });
-        }
-    }
-
-    const updatedList = await replaceByTmdb(tmdbData);
-
-    return updatedList;
-}
-
 export async function makeBoxdFavouritesList(letterboxdUsername) {
     try {
         const userFav = await fetchUserFavourites(letterboxdUsername);
@@ -82,7 +47,7 @@ export async function makeBoxdFavouritesList(letterboxdUsername) {
         return {
             updatedAt: new Date().toISOString(),
             favourites: [{
-                icon: "ph:movies",
+                type: "movies",
                 favourites: movieFavourites
             }],
         };

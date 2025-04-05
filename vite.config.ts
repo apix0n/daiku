@@ -14,4 +14,13 @@ export default defineConfig({
 	server: {
 		port: parseInt(process.env.PORT || '5173')
 	},
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					overrides: ['./src/lib/overrides/data.js']
+				}
+			}
+		}
+	}
 });

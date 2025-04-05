@@ -21,11 +21,10 @@
   "watchedAnime": "izlenen animeler",
   "watchedEpisodes": "izlenen bölümler",
   "watchedMovies": "izlenen filmler",
-  "-currentLang": "türkçe",
   "days": "günler",
   "currentlyWatching": "şu anda izliyor",
   "currentlyReading": "şu anda okunuyor",
-  "Nepisodes": "{n} bölüm",
+  "Nepisodes": "{n, plural, =0 {? bölüm} other {# bölüm}}",
   "NminutesShort": "{n} dk.",
   "episodeNumberN": "bölüm {n}",
   "watched": "izlenen",
@@ -41,7 +40,7 @@
   "releasingDate": {
     "soon": "yakında çıkıyor",
     "inDateN": "{n} tarihinde çıkıyor",
-    "onDateN": "{n}’de başlıyor",
+    "onDateN": "{n} başlıyor",
     "onDayN": "{n} gününde başlıyor"
   },
   "updatedFromServiceAt": "{service} tarafından güncellendi",

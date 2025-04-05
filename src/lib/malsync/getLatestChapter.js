@@ -1,4 +1,4 @@
-import { clientConfig as config } from "./config";
+import { config } from "../config";
 
 export async function getLatestChapter(malMangaId, lang = config.defaultMangaLang) {
     const url = `https://api.malsync.moe/nc/mal/manga/${malMangaId}/pr`;
@@ -17,18 +17,18 @@ export async function getLatestChapter(malMangaId, lang = config.defaultMangaLan
         const data = await response.json();
         const langEntry = data.find(entry => entry.lang === lang);
         if (langEntry) {
-            console.log(`[malsync api] found chapter ${langEntry.lastEp.total} for ${malMangaId}`)
+            console.log(`malsync | found chapter ${langEntry.lastEp.total} for ${malMangaId}`)
             return {
                 number: langEntry.lastEp.total,
                 timestamp: langEntry.lastEp.timestamp
             }
         } else {
-            console.error('Aucune entrée trouvée');
+            console.error('malsync | no chapter found for', malMangaId);
             return null;
         }
     } catch (error) {
         clearTimeout(timeoutId);
-        console.error('Erreur lors de la récupération du dernier chapitre:', error);
+        console.error("malsync | couldn't fetch last chapter for", malMangaId, ":", error);
         return null;
     }
 }

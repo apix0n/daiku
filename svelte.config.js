@@ -20,8 +20,8 @@ const config = {
 			publicPrefix: "DAIKU__"
 		},
 		prerender: {
-			crawl: false,
-			entries: []
+			entries: ['*'],
+			handleMissingId: 'ignore',
 		}
 	}
 };

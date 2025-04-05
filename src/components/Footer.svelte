@@ -1,9 +1,11 @@
 <script>
     import { version } from '$app/environment';
+    import LanguagePicker from './LanguagePicker.svelte';
 </script>
 
 <footer>
     <a target="_blank">made by apix</a> <span>·</span> {version}
+    <LanguagePicker />
 </footer>
 
 <style>
