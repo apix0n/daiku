@@ -74,6 +74,7 @@ html {
 
 * {
     font-family: 'Jost';
+    text-rendering: optimizeLegibility;
 }
 
 a {
@@ -90,13 +91,17 @@ body {
     min-height: 100dvh;
 }
 
+body.noscroll {
+    overflow: hidden;
+}
+
 h1 {}
 
 .container[data-section="parts"]>h2 {
     background: var(--background-2);
     position: sticky;
     top: 0;
-    z-index: 3;
+    z-index: 5;
     margin-left: -7.5vw;
     margin-right: -7.5vw;
     border-bottom: solid 1px var(--background-3);
@@ -158,75 +163,6 @@ pre {
     /*! flex-grow: 0; */
     flex-wrap: wrap;
     /*! align-content: center; */
-}
-
-.elements-wrapper .element {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    /* align-items: center;
-    padding: 0px; */
-    /* gap: 10px; */
-    width: var(--element-width);
-    height: calc(var(--element-width) * 1.5);
-    /* background: black; */
-    border-radius: var(--border-radius);
-    /*! flex: none; */
-    /*! order: 0; */
-    /*! flex-grow: 0; */
-    /* overflow: clip; */
-    background-size: cover;
-    position: relative;
-    background-position: 50%;
-    outline: 2px solid var(--background-2);
-}
-
-.elements-wrapper .element:has(>:last-child:nth-child(2)) {
-    justify-content: space-between;
-}
-
-.informations {
-    color: var(--white);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: .5em;
-    padding-top: 2em;
-    gap: .4em;
-    /* background: rgba(37, 37, 37, 0.5); */
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 65%, rgba(0, 0, 0, 0) 100%);
-    /* backdrop-filter: blur(6px); */
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
-    flex: none;
-    align-self: stretch;
-    flex-grow: 0;
-    box-sizing: border-box;
-    max-height: 100%;
-    overflow: hidden;
-}
-
-.informations.top {
-    background: linear-gradient(180deg, rgb(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.3) 65%, rgba(0, 0, 0, 0) 100%);
-    padding: .5em;
-    width: inherit;
-    padding-bottom: 1em;
-    flex-direction: row;
-    justify-content: space-between;
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
-}
-
-.informations.top:has(> :last-child:nth-child(1)) {
-    justify-content: flex-end;
-}
-
-.informations.top>span:not(.rating) {
-    width: 100%;
-    text-align: center;
-    text-shadow: 0 0 5px var(--black);
-    overflow: unset;
-    font-size: .8em;
-    /* color: var(--accentColor); */
 }
 
 .upper {
@@ -311,29 +247,6 @@ pre {
     margin-right: .2em;
 }
 
-.element .media-title {
-    font-weight: 600;
-    font-size: 1.3em;
-    text-align: center;
-    line-height: 120%;
-    overflow-wrap: anywhere;
-    text-shadow: 0 0 10px var(--black);
-}
-
-.element a.media-title {
-    text-decoration: underline 0.08em rgba(0, 0, 0, 0);
-    transition: text-decoration-color 300ms;
-}
-
-.element a.media-title:hover {
-    text-decoration-color: var(--accentColor, rgba(168, 168, 168));
-    transition: text-decoration-color 300ms;
-}
-
-.element ::selection {
-    background: var(--tAccentColor, rgba(168, 168, 168, 0.5));
-}
-
 svg {
     fill: currentColor;
     height: 1em;
@@ -344,17 +257,6 @@ svg {
     margin: auto;
     padding-left: env(safe-area-inset-left);
     margin-bottom: 16px;
-}
-
-@media screen and (max-width: 1200px) {
-    .elements-wrapper .element {
-        font-size: 15px;
-        --element-width: 170px;
-    }
-
-    .element .media-title {
-        font-size: 1.2em;
-    }
 }
 
 @media screen and (max-width: 1000px) {
@@ -372,24 +274,9 @@ svg {
     }
 }
 
-@media screen and (max-width: 768px) {
-    .elements-wrapper .element {
-        font-size: 14px;
-        --element-width: 150px;
-    }
-}
-
-.element.ova {
-    display: none;
-    outline: 2px var(--accentColor, var(--background-4)) solid;
-}
-
-.element.ova.visible {
-    display: flex;
-}
-
 .elements-wrapper .element.releasing::before,
-.item .releasing::before {
+.item .releasing::before,
+.image.releasing::before {
     content: "";
     border-radius: 50%;
     background: var(--releasing);
@@ -410,7 +297,14 @@ svg {
     left: -0.2em;
 }
 
-.elements-wrapper .element.releasing.notyet::before {
+.image.releasing::before {
+    height: 1.5em;
+    width: 1.5em;
+    top: -0.7em;
+    left: -0.7em;
+}
+
+.releasing.notyet::before {
     background: var(--notyet-releasing);
 }
 
@@ -436,7 +330,8 @@ svg {
 
 @media (prefers-color-scheme: dark) {
     .elements-wrapper .element.releasing::before,
-    .item .releasing::before {
+    .item .releasing::before,
+    .image.releasing::before {
         animation: pulse-dark 2s infinite;
     }
 }
@@ -557,10 +452,6 @@ label {
     height: 100%;
     width: 100%;
     padding: 3px;
-}
-
-.toCatchUp {
-    font-weight: 500;
 }
 
 .loader-container {

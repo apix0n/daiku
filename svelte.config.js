@@ -19,6 +19,9 @@ const config = {
 		env: {
 			publicPrefix: "DAIKU__"
 		},
+		alias: {
+			$components: 'src/components',
+		},
 		prerender: {
 			entries: ['*'],
 			handleMissingId: 'ignore',

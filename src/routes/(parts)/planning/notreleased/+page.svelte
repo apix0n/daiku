@@ -1,9 +1,9 @@
 <script>
-    import BaseCard from '../../../../components/cards/BaseCard.svelte';
-    import Informations from '../../../../components/cards/bottom/Informations.svelte';
-    import PlanningRelease from '../../../../components/cards/bottom/PlanningRelease.svelte';
-    import UpdatedTime from '../../../../components/UpdatedTime.svelte';
-    import RelativeTimeInfo from '../../../../components/cards/top/ReleaseInfo.svelte';
+    import BaseCard from '$components/cards/BaseCard.svelte';
+    import Informations from '$components/cards/bottom/Informations.svelte';
+    import PlanningRelease from '$components/cards/bottom/PlanningRelease.svelte';
+    import UpdatedTime from '$components/UpdatedTime.svelte';
+    import RelativeTimeInfo from '$components/cards/top/ReleaseInfo.svelte';
 
     export let data;
     const { anime, updatedAt } = data.plannedData;

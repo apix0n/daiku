@@ -1,8 +1,8 @@
 <script lang="ts">
 	let { children } = $props();
 	import { page } from '$app/state';
-	import Navbar from '../../components/Navbar.svelte';
-	import Footer from '../../components/Footer.svelte';
+	import Navbar from '$components/Navbar.svelte';
+	import Footer from '$components/Footer.svelte';
 </script>
 
 <svelte:head>

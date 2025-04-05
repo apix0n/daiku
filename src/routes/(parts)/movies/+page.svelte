@@ -1,11 +1,11 @@
 <script>
     export let data;
-    import UpdatedTime from '../../../components/UpdatedTime.svelte';
+    import UpdatedTime from '$components/UpdatedTime.svelte';
 
-    import BaseCard from '../../../components/cards/BaseCard.svelte';
-    import Rating from '../../../components/cards/top/Rating.svelte';
-    import Informations from '../../../components/cards/bottom/Informations.svelte';
-    import RuntimeDate from '../../../components/cards/bottom/RuntimeDate.svelte';
+    import BaseCard from '$components/cards/BaseCard.svelte';
+    import Rating from '$components/cards/top/Rating.svelte';
+    import Informations from '$components/cards/bottom/Informations.svelte';
+    import RuntimeDate from '$components/cards/bottom/RuntimeDate.svelte';
 
     const { watched, boxdUpdatedAt, alUpdatedAt } = data.watchedMovies;
 

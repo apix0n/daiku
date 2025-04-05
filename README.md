@@ -34,7 +34,10 @@ another media dashboard
 * [AniList](https://anilist.co/) for anime (series, movies), manga and favourites (anime, manga & characters),
 * [AnimeSchedule](https://animeschedule.net/) for correct (international) releasing anime airing time, 
 * [MAL-Sync](https://malsync.moe/) API for getting the last released chapter of a manga,
-    >  queried client-side, private API
+    > queried client-side, private API
+* [Jikan](https://jikan.moe/) for anime and manga synopsis,
+    > queried client side;
+    > unofficial, free and auth-less API for MyAnimeList
 * [Letterboxd](https://letterboxd.com/) for movies (+ liked),
     > * movies: through the user diary RSS feed and limited to 50 entries (counts movies, series & lists)
     > * likes: parses the Letterboxd user page & respective movie pages for the TMDB id

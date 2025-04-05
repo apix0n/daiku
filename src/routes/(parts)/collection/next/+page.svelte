@@ -1,10 +1,10 @@
 <script>
     import { onMount } from 'svelte';
-    import Cultura from '../../../../components/enseignes/Cultura.svelte';
-    import Fnac from '../../../../components/enseignes/Fnac.svelte';
-    import Amazon from '../../../../components/enseignes/Amazon.svelte';
-    import FuretDuNord from '../../../../components/enseignes/FuretDuNord.svelte';
-    import UpdatedTime from '../../../../components/UpdatedTime.svelte';
+    import Cultura from '$components/enseignes/Cultura.svelte';
+    import Fnac from '$components/enseignes/Fnac.svelte';
+    import Amazon from '$components/enseignes/Amazon.svelte';
+    import FuretDuNord from '$components/enseignes/FuretDuNord.svelte';
+    import UpdatedTime from '$components/UpdatedTime.svelte';
 
     export let data;
     const { collection, updatedAt } = data.mangaCollection;

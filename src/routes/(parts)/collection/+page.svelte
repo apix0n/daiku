@@ -1,5 +1,5 @@
 <script>
-    import UpdatedTime from '../../../components/UpdatedTime.svelte';
+    import UpdatedTime from '$components/UpdatedTime.svelte';
     import { seriesWithPossessions, totalVolumes } from '$lib/mangacollec/calculations';
 
     export let data

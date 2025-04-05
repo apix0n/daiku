@@ -1,12 +1,6 @@
-import { dataStore } from '$lib/stores/dataStore';
+import { loadCollectionData } from '$lib/data.js';
 
 export const load = async ({ fetch }) => {
-    const storedData = dataStore.get('mangaCollection');
-    if (storedData) {
-        return { mangaCollection: storedData };
-    }
-
-    const mangaCollection = await fetch('/api/get/mangacollec').then(r => r.json());
-    dataStore.set('mangaCollection', mangaCollection);
+    const mangaCollection = (await loadCollectionData()).mangaCollection;
     return { mangaCollection };
 };

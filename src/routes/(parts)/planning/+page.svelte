@@ -1,11 +1,11 @@
 <script>
-  import BaseCard from '../../../components/cards/BaseCard.svelte'
-  import Informations from '../../../components/cards/bottom/Informations.svelte';
-  import AnimeInfo from '../../../components/cards/bottom/AnimeInfo.svelte';
-	import MangaInfo from '../../../components/cards/bottom/MangaInfo.svelte'
-  import PlanningRelease from '../../../components/cards/bottom/PlanningRelease.svelte';
-  import UpdatedTime from '../../../components/UpdatedTime.svelte';
-	import RelativeTimeInfo from '../../../components/cards/top/ReleaseInfo.svelte'
+  import BaseCard from '$components/cards/BaseCard.svelte'
+  import Informations from '$components/cards/bottom/Informations.svelte';
+  import AnimeInfo from '$components/cards/bottom/AnimeInfo.svelte';
+	import MangaInfo from '$components/cards/bottom/MangaInfo.svelte'
+  import PlanningRelease from '$components/cards/bottom/PlanningRelease.svelte';
+  import UpdatedTime from '$components/UpdatedTime.svelte';
+	import RelativeTimeInfo from '$components/cards/top/ReleaseInfo.svelte'
   
   export let data;
   const { anime, manga, updatedAt } = data.plannedData;

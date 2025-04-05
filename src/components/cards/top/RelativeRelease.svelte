@@ -6,7 +6,7 @@
     import { _, locale as localeStore } from "svelte-i18n"
     const locale = get(localeStore)
 
-    const datetimestamp = new Date(timestamp * 1000)
+    const datetimestamp = new Date(timestamp)
     const now = new Date()
 
     const dict = {
@@ -27,9 +27,9 @@
     let timestampDate = getRelativeTime(locale, datetimestamp);
 
     if (isToday) {
-        if (timestamp > Date.now() / 1000) {
+        if (timestamp > Date.now()) {
             timestampDate = $_("todayAt", { values: { time: datetimestamp.toLocaleTimeString([], { timeStyle: 'short' })}})
-        } else if (timestamp - Date.now() / 1000 > -(60 * 60)) {
+        } else if (timestamp - Date.now() > -(60 * 60)) {
             timestampDate = getRelativeTime(locale, datetimestamp, 'minute');
         } else {
             timestampDate = getRelativeTime(locale, datetimestamp, 'hour');

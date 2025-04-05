@@ -1,13 +1,13 @@
 <script>
-  import UpdatedTime from '../../../components/UpdatedTime.svelte';
+  import UpdatedTime from '$components/UpdatedTime.svelte';
 
-    import BaseCard from '../../../components/cards/BaseCard.svelte';
-    import Informations from '../../../components/cards/bottom/Informations.svelte';
-    import DateProgess from '../../../components/cards/bottom/DateProgess.svelte'
-    import Rating from '../../../components/cards/top/Rating.svelte';
-    import MangaInfo from '../../../components/cards/bottom/MangaInfo.svelte';
-    import RelativeTimeInfo from '../../../components/cards/top/ReleaseInfo.svelte';
-    import Dates from '../../../components/cards/bottom/Dates.svelte'
+    import BaseCard from '$components/cards/BaseCard.svelte';
+    import Informations from '$components/cards/bottom/Informations.svelte';
+    import DateProgess from '$components/cards/bottom/DateProgess.svelte'
+    import Rating from '$components/cards/top/Rating.svelte';
+    import MangaInfo from '$components/cards/bottom/MangaInfo.svelte';
+    import RelativeTimeInfo from '$components/cards/top/ReleaseInfo.svelte';
+    import Dates from '$components/cards/bottom/Dates.svelte'
 
     export let data
     const { current, read, updatedAt } = data.mangaData;
@@ -30,7 +30,7 @@
         <BaseCard accent={manga.accentColor} background={manga.coverLink} status={manga.status}>
           <!-- top -->
           {#if manga.status === "RELEASING" && manga.lastChapter && manga.chaptersProgress <= manga.lastChapter.number && manga.lastChapter.number - manga.chaptersProgress < 20 }
-            <RelativeTimeInfo number={manga.lastChapter.number} timestamp={Math.floor(manga.lastChapter.timestamp / 1000)} mediaType={manga.mediaType} catchUp={manga.chaptersProgress < manga.lastChapter.number} />
+            <RelativeTimeInfo number={manga.lastChapter.number} timestamp={Math.floor(manga.lastChapter.timestamp)} mediaType={manga.mediaType} catchUp={manga.chaptersProgress < manga.lastChapter.number} />
           {/if}
 
           <!-- bottom -->
@@ -44,7 +44,6 @@
     {/each}
   </div>
 {/if}
-
 
 {#if read.length !== 0}
     <h2>

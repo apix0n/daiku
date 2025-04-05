@@ -1,4 +1,5 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
+import { isHtml } from 'cheerio/utils';
 import { applyAnimeReleaseTime, getAnimeReleaseTime } from '../animeSchedule/animeReleaseTime';
 import { getPrecedingEpisode } from './getPrecedingEpisode';
 
@@ -18,11 +19,15 @@ async function getUserAnimeData(userId) {
                         episodes
                         duration
                         id
+                        idMal
                         status
                         coverImage {
                             color
+                            extraLarge
                             large
+                            medium
                         }
+                        bannerImage
                         nextAiringEpisode {
                             airingAt
                             episode
@@ -30,6 +35,7 @@ async function getUserAnimeData(userId) {
                     }
                     score(format: POINT_10)
                     progress
+                    notes
                     status
                     repeat
                     startedAt {
@@ -80,18 +86,44 @@ function watchedAnime(userAnimeData) {
     });
 
     return allWatchedAnime.map(entry => ({
-        title: entry.media.title.english || entry.media.title.romaji,
-        mediaType: "anime",
-        type: entry.media.format.toLowerCase(),
-        episodesNumber: entry.media.episodes,
-        episodesDuration: entry.media.duration,
-        startedDate: anilistGlobal.formatDate(entry.startedAt),
-        finishedDate: anilistGlobal.formatDate(entry.completedAt),
-        rating: entry.score,
-        rewatch: entry.repeat,
-        mediaLink: anilistGlobal.siteUrl + "/anime/" + entry.media.id,
-        coverLink: entry.media.coverImage.large,
-        accentColor: entry.media.coverImage.color,
+        media: {
+            title: {
+                english: entry.media.title.english || undefined,
+                romaji: entry.media.title.romaji || undefined,
+                native: entry.media.title.native || undefined,
+            },
+            type: 'anime',
+            source: 'anilist',
+            status: entry.media.status,
+            runtime: entry.media.duration,
+            accentColor: entry.media.coverImage.color,
+            cover: {
+                large: entry.media.coverImage.extraLarge,
+                medium: entry.media.coverImage.large,
+                small: entry.media.coverImage.medium,
+            },
+            banner: {
+                large: entry.media.bannerImage,
+            },
+            episodes: {
+                count: entry.media.episodes,
+            },
+            id: {
+                anilist: entry.media.id,
+                myanimelist: entry.media.idMal,
+            }
+        },
+        dates: {
+            started: anilistGlobal.formatDate(entry.startedAt),
+            finished: anilistGlobal.formatDate(entry.completedAt),
+        },
+        repeat: entry.repeat,
+        status: 'completed',
+        review: entry.score || entry.notes ? {
+            rating: entry.score || undefined,
+            isHtml: entry.notes ? false : undefined,
+            text: entry.notes || undefined,
+        } : undefined,
     }));
 }
 
@@ -123,23 +155,51 @@ async function currentAnime(userAnimeData, fetchLastEpisode) {
     }));
 
     return allCurrentAnime.map(entry => ({
-        title: entry.media.title.english || entry.media.title.romaji,
-        mediaType: "anime",
-        status: entry.media.status,
-        episodesProgress: entry.progress,
-        episodesNumber: entry.media.episodes,
-        episodesDuration: entry.media.duration,
-        startedDate: anilistGlobal.formatDate(entry.startedAt),
-        userStatus: entry.status,
-        rewatch: entry.repeat,
-        mediaLink: anilistGlobal.siteUrl + "/anime/" + entry.media.id,
-        coverLink: entry.media.coverImage.large,
-        accentColor: entry.media.coverImage.color,
-        lastEpisode: entry.media.lastEpisode,
-        nextEpisode: entry.media.nextAiringEpisode ? {
-            number: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode : undefined,
-            timestamp: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined
-        } : undefined
+        media: {
+            title: {
+                english: entry.media.title.english || undefined,
+                romaji: entry.media.title.romaji || undefined,
+                native: entry.media.title.native || undefined,
+            },
+            type: 'anime',
+            source: 'anilist',
+            status: entry.media.status,
+            runtime: entry.media.duration,
+            accentColor: entry.media.coverImage.color,
+            cover: {
+                large: entry.media.coverImage.extraLarge,
+                medium: entry.media.coverImage.large,
+                small: entry.media.coverImage.medium,
+            },
+            banner: entry.media.bannerImage ? {
+                large: entry.media.bannerImage,
+            } : undefined,
+            episodes: {
+                count: entry.media.episodes,
+                last: entry.media.lastEpisode,
+                next: entry.media.nextAiringEpisode ? {
+                    number: entry.media.nextAiringEpisode.episode,
+                    timestamp: entry.media.nextAiringEpisode.airingAt * 1000,
+                } : undefined,
+            },
+            id: {
+                anilist: entry.media.id,
+                myanimelist: entry.media.idMal,
+            }
+        },
+        dates: {
+            started: anilistGlobal.formatDate(entry.startedAt),
+        },
+        repeat: entry.repeat,
+        status: entry.status,
+        progress: {
+            episode: entry.progress,
+        },
+        review: entry.score || entry.notes ? {
+            rating: entry.score || undefined,
+            isHtml: entry.notes ? false : undefined,
+            text: entry.notes || undefined,
+        } : undefined,
     }));
 }
 
@@ -160,22 +220,49 @@ function droppedAnime(userAnimeData) {
     });
 
     return allDroppedAnime.map(entry => ({
-        title: entry.media.title.english || entry.media.title.romaji,
-        mediaType: "anime",
-        status: entry.media.status,
-        episodesProgress: entry.progress,
-        episodesNumber: entry.media.episodes,
-        episodesDuration: entry.media.duration,
-        startedDate: anilistGlobal.formatDate(entry.startedAt),
-        userStatus: entry.status,
-        mediaLink: anilistGlobal.siteUrl + "/anime/" + entry.media.id,
-        coverLink: entry.media.coverImage.large,
-        accentColor: entry.media.coverImage.color,
-        airingAt: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined,
-        nextEpisode: {
-            number: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode : undefined,
-            timestamp: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined
-        }
+        media: {
+            title: {
+                english: entry.media.title.english || undefined,
+                romaji: entry.media.title.romaji || undefined,
+                native: entry.media.title.native || undefined,
+            },
+            type: 'anime',
+            source: 'anilist',
+            status: entry.media.status,
+            runtime: entry.media.duration,
+            accentColor: entry.media.coverImage.color,
+            cover: {
+                large: entry.media.coverImage.extraLarge,
+                medium: entry.media.coverImage.large,
+                small: entry.media.coverImage.medium,
+            },
+            banner: entry.media.bannerImage ? {
+                large: entry.media.bannerImage,
+            } : undefined,
+            episodes: {
+                count: entry.media.episodes,
+                next: entry.media.nextAiringEpisode ? {
+                    number: entry.media.nextAiringEpisode.episode,
+                    timestamp: entry.media.nextAiringEpisode.airingAt * 1000,
+                } : undefined,
+            },
+            id: {
+                anilist: entry.media.id,
+                myanimelist: entry.media.idMal,
+            }
+        },
+        dates: {
+            started: anilistGlobal.formatDate(entry.startedAt),
+        },
+        progress: {
+            episode: entry.progress,
+        },
+        status: entry.status,
+        review: entry.score || entry.notes ? {
+            rating: entry.score || undefined,
+            isHtml: entry.notes ? false : undefined,
+            text: entry.notes || undefined,
+        } : undefined,
     }));
 }
 

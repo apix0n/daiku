@@ -1,14 +1,14 @@
 <script>
-    import RecentActivity from '../../components/RecentActivity.svelte';
-    import Stats from '../../components/Stats.svelte';
-    import WatchTime from '../../components/WatchTime.svelte';
+    import RecentActivity from '$components/RecentActivity.svelte';
+    import Stats from '$components/Stats.svelte';
+    import WatchTime from '$components/WatchTime.svelte';
     export let data;
 
     import { totalVolumes, seriesWithPossessions } from '$lib/mangacollec/calculations';
 	import { _ } from 'svelte-i18n';
-	import Continuing from '../../components/Continuing.svelte'
-	import Favourites from '../../components/Favourites.svelte'
-	import Footer from '../../components/Footer.svelte'
+	import Continuing from '$components/Continuing.svelte'
+	import Favourites from '$components/Favourites.svelte'
+	import Footer from '$components/Footer.svelte'
 </script>
 
 <svelte:head>

@@ -6,12 +6,13 @@
     const locale = get(localeStore)
 
     import RelativeRelease from "./RelativeRelease.svelte";
+    import InformationsTop from "./InformationsTop.svelte";
 
-    export let catchUp = false;
+    export let catchUp = true;
 </script>
 
-<div class="informations top" class:toCatchUp={catchUp}>
-    <span class="next-episode" title={(new Date(timestamp * 1000)).toLocaleString(locale)}>
+<InformationsTop {catchUp}>
+    <span class="next-episode" title={(new Date(timestamp)).toLocaleString(locale)}>
         <RelativeRelease timestamp={timestamp} number={number} mediaType={mediaType}/>
     </span>
-</div>
+</InformationsTop>

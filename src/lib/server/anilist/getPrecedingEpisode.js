@@ -16,6 +16,6 @@ export async function getPrecedingEpisode(animeId, episode) {
     let response = await anilistGlobal.fetchGraphQL(query, { mediaId: animeId, page: episode - 1 })
     return {
         number: response.data.Media.airingSchedule.nodes[0].episode,
-        timestamp: response.data.Media.airingSchedule.nodes[0].airingAt
+        timestamp: response.data.Media.airingSchedule.nodes[0].airingAt * 1000
     };
 }
