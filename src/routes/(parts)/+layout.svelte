@@ -2,6 +2,13 @@
 	import { page } from "$app/state";
 	import Navbar from "$components/Navbar.svelte";
 	import Footer from "$components/Footer.svelte";
+
+	let containerElem: HTMLElement;
+
+	import { afterNavigate } from "$app/navigation";
+  	afterNavigate(() => {
+  	  containerElem.scrollTo({ top: 0, behavior: 'auto' });
+  	});
 </script>
 
 <svelte:head>
@@ -14,7 +21,7 @@
 
 <div class="layout">
 	<Navbar />
-	<div class="container" data-section="parts">
+	<div class="container" data-section="parts" bind:this={containerElem}>
 		<slot></slot>
 		<Footer />
 	</div>

@@ -13,7 +13,7 @@
             <h1>{entry.media.title.locale || entry.media.title.english || entry.media.title.romaji}</h1>
         </div>
         <span class="sub">
-            {#if entry.media.title.english.toLowerCase() !== (entry.media.title.romaji.toLowerCase() || entry.media.title.native.toLowerCase())}
+            {#if (entry.media.title.locale?.toLowerCase() || entry.media.title.english?.toLowerCase()) !== (entry.media.title.romaji?.toLowerCase() || entry.media.title.native?.toLowerCase())}
                 <i>{entry.media.title.romaji || entry.media.title.native}</i> ·
             {/if}
             {#if entry.media.status && entry.media.status !== "FINISHED"}

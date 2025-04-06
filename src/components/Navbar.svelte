@@ -21,7 +21,7 @@
 <svelte:head>
 	<style>
 		:root {
-			--navbar-width: calc(76px + env(safe-area-inset-left));
+			--navbar-width: calc(68px + env(safe-area-inset-left));
 		}
 	</style>
 </svelte:head>
@@ -93,7 +93,7 @@
 		background: var(--background-2);
 		border-left: none;
 		position: relative;
-		box-sizing: border-box;
+		/* box-sizing: border-box; */
 		text-align: center;
 		@media screen and (max-width: 1000px) {
 			width: 100%;
