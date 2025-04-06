@@ -10,22 +10,33 @@
     const { watched, boxdUpdatedAt, alUpdatedAt } = data.watchedMovies;
 
     import { _ } from 'svelte-i18n';
+    import Overlay from '$components/overlay/Overlay.svelte';
+
+    let selectedMovie = null;
+
+    function openMovie(movie) {
+        selectedMovie = movie;
+    }
 </script>
+
+{#if selectedMovie}
+  <Overlay entry={selectedMovie} on:close={() => selectedMovie = null} />
+{/if}
 
 <h2>{$_("watched")} <span>· {watched.length} movies</span></h2>
 
 <div id="watched" class="elements-wrapper watched-movies-wrapper">
   {#each watched as movie}
   
-  <BaseCard background={movie.coverLink}>
+  <BaseCard background={movie.media.cover.medium} on:click={() => openMovie(movie)}>
     <!-- top -->
-    {#if movie.rating > 0}
-      <Rating value={movie.rating} />
+    {#if movie.review.rating > 0}
+      <Rating value={movie.review.rating} />
     {/if}
 
     <!-- bottom -->
-    <Informations title={movie.title} link={movie.link} rewatch={movie.rewatch}>
-      <RuntimeDate runtime={movie.movieRuntime} watchedDate={movie.finishedDate}/>
+    <Informations title={movie.media.title.locale} rewatch={movie.repeat}>
+      <RuntimeDate runtime={movie.media.runtime} watchedDate={movie.dates.finished}/>
     </Informations>
   </BaseCard>
 

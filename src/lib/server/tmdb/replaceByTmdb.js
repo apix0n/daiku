@@ -1,33 +1,47 @@
 import { getTmdbInfos } from "./getTmdbInfos.js";
 import { config } from "$lib/config";
 import { applyPosterOverrides } from '$lib/server/overrides/tmdb';
-
-export let alternativesUrl = `${config.alternativesBaseUrl}/tmdb`;
+import { getTmdbIdFromImdbId } from "./getTmdbIdFromImdb.js";
 
 export async function replaceByTmdb(movieList) {
     const moviePromises = movieList.watched.map(async (movie) => {
-        if (!movie.tmdbId) {
-            console.log(`Movie ID is undefined for movie:`, movie.title);
-            return movie;
+        if (!movie.media.id.tmdb) {
+            if (movie.media.id.imdb) {
+                movie.media.id.tmdb = await getTmdbIdFromImdbId(movie.media.id.imdb);
+                if (!movie.media.id.tmdb) {
+                    console.log(`Failed to fetch TMDB ID for movie:`, movie.media.title.english || 'Unknown Title');
+                    return movie;
+                }
+                console.log(`Fetched missing TMDB ID for movie:`, movie.media.title.english || 'Unknown Title', `TMDB ID: ${movie.media.id.tmdb}`);
+            }
         }
 
         try {
-            const { titre, poster, runtime, status, releaseDate } = await getTmdbInfos(movie.tmdbId);
+            const tmdbData = await getTmdbInfos(movie.media.id.tmdb);
+            // Merge the movie data with TMDB data, preserving existing titles
             const updatedMovie = {
                 ...movie,
-                title: titre,
-                coverLink: poster,
-                movieRuntime: runtime,
-                releaseDate: status !== "Released" ? releaseDate : undefined,
+                media: {
+                    ...movie.media,
+                    ...tmdbData.media,
+                    title: {
+                        ...movie.media.title,
+                        ...tmdbData.media.title
+                    },
+                    id: {
+                        ...movie.media.id,
+                        ...tmdbData.media.id
+                    }
+                }
             };
             applyPosterOverrides(updatedMovie);
             return updatedMovie;
         } catch (error) {
-            console.error(`Failed to fetch TMDB info for movie ID ${movie.tmdbId}:`, error);
+            console.error(`Failed to fetch TMDB info for movie ID ${movie.media.id.tmdb}:`, error);
             if (error.message.includes("status: 401")) {
-                throw error; // Propagate auth errors up
+                throw error;
             }
-            return movie; // Return original movie on other errors
+            return movie;
         }
     });
 

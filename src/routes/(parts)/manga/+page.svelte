@@ -13,9 +13,19 @@
     const { current, read, updatedAt } = data.mangaData;
 
     let isChecked = false;
+    let selectedManga = null;
+
+    function handleCardClick(manga) {
+        selectedManga = manga;
+    }
 
     import { _ } from 'svelte-i18n';
+    import Overlay from '$components/overlay/Overlay.svelte';
 </script>
+
+{#if selectedManga}
+    <Overlay entry={selectedManga} on:close={() => selectedManga = null} />
+{/if}
 
 {#if current.length !== 0}
 <h2>
@@ -25,18 +35,18 @@
 
   <div id="current" class="elements-wrapper elements-manga">
     {#each current as manga}
-        {#if manga.status !== "NOT_YET_RELEASED" && manga.chaptersProgress > 0}
+        {#if manga.media.status !== "NOT_YET_RELEASED" && manga.progress.chapter > 0}
 
-        <BaseCard accent={manga.accentColor} background={manga.coverLink} status={manga.status}>
+        <BaseCard accent={manga.media.accentColor} background={manga.media.cover.medium} status={manga.media.status} on:click={() => handleCardClick(manga)}>
           <!-- top -->
-          {#if manga.status === "RELEASING" && manga.lastChapter && manga.chaptersProgress <= manga.lastChapter.number && manga.lastChapter.number - manga.chaptersProgress < 20 }
-            <RelativeTimeInfo number={manga.lastChapter.number} timestamp={Math.floor(manga.lastChapter.timestamp)} mediaType={manga.mediaType} catchUp={manga.chaptersProgress < manga.lastChapter.number} />
+          {#if manga.media.status === "RELEASING" && manga.media.chapters.last && manga.progress.chapter <= manga.media.chapters.last.number && manga.media.chapters.last.number - manga.progress.chapter < 20 }
+            <RelativeTimeInfo number={manga.media.chapters.last.number} timestamp={Math.floor(manga.media.chapters.last.timestamp)} mediaType={manga.media.type} catchUp={manga.progress.chapter < manga.media.chapters.last.number} />
           {/if}
 
           <!-- bottom -->
-           <Informations title={manga.title} link={manga.mediaLink}>
-              <MangaInfo chapters={manga.chapterCount} volumes={manga.volumesCount}/>
-              <DateProgess userStatus={manga.userStatus} startDate={manga.startedDate} progress={manga.chaptersProgress} total={manga.chapterCount} media={manga.mediaType}/>
+           <Informations title={manga.media.title.english || manga.media.title.romaji}>
+              <MangaInfo chapters={manga.media.chapters.count} volumes={manga.media.volumes.count}/>
+              <DateProgess userStatus={manga.status} startDate={manga.dates.started} progress={manga.progress.chapter} total={manga.media.chapters.count} media={manga.media.type}/>
            </Informations>
         </BaseCard>
 
@@ -48,24 +58,23 @@
 {#if read.length !== 0}
     <h2>
       {$_("read")}
-      <span>· {read.filter(manga => manga.chapterCount > 4).length} manga & {read.filter(manga => manga.chapterCount <= 4).length} specials</span>
+      <span>· {read.filter(manga => manga.media.chapters.count > 4).length} manga & {read.filter(manga => manga.media.chapters.count <= 4).length} specials</span>
       <div class="checkboxdiv"><input type="checkbox" id="toggle" bind:checked={isChecked}><label for="toggle" class="toggle-label">{$_("specialsOneShotsToggle")}</label></div>
     </h2>
     
     <div id="watched" class="elements-wrapper elements-manga">
       {#each read as manga}
-        {#if manga.status !== "NOT_YET_RELEASED" }
+        {#if manga.media.status !== "NOT_YET_RELEASED" }
 
-          <BaseCard accent={manga.accentColor} background={manga.coverLink} status={manga.status} ova={manga.chapterCount <= 4 && !manga.volumesCount} bind:visible={isChecked}>
+          <BaseCard accent={manga.media.accentColor} background={manga.media.cover.medium} status={manga.media.status} ova={manga.media.chapters.count <= 4 && !manga.media.volumes.count} bind:visible={isChecked} on:click={() => handleCardClick(manga)}>
           <!-- top -->
-          {#if manga.rating !== 0}
-              <Rating value={manga.rating} />
+          {#if manga.review.rating !== 0}
+              <Rating value={manga.review.rating} />
           {/if}
 
           <!-- bottom -->
-           <Informations title={manga.title} link={manga.mediaLink}>
-              <MangaInfo chapters={manga.chapterCount} volumes={manga.volumesCount}/>
-              <Dates start={manga.startedDate} end={manga.finishedDate} />
+           <Informations title={manga.media.title.english || manga.media.title.romaji}>
+              <MangaInfo chapters={manga.media.chapters.count} volumes={manga.media.volumes.count}/>
             </Informations>
           </BaseCard>
           

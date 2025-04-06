@@ -10,14 +10,14 @@
 <div class="informations">
     <div class="top">
         <div class="title">
-            <h1>{entry.media.title.english || entry.media.title.romaji}</h1>
+            <h1>{entry.media.title.locale || entry.media.title.english || entry.media.title.romaji}</h1>
         </div>
         <span class="sub">
-            {#if entry.media.title.english !== entry.media.title.romaji}
-                <i>{entry.media.title.romaji}</i> ·
+            {#if entry.media.title.english.toLowerCase() !== (entry.media.title.romaji.toLowerCase() || entry.media.title.native.toLowerCase())}
+                <i>{entry.media.title.romaji || entry.media.title.native}</i> ·
             {/if}
-            {#if entry.media.status !== "FINISHED"}
-                {entry.media.status.toLowerCase()} ·
+            {#if entry.media.status && entry.media.status !== "FINISHED"}
+                {entry.media.status?.toLowerCase()} ·
             {/if}
             {entry.media.type.toLowerCase()}
             {#if entry.media.type === "anime"}
@@ -26,11 +26,14 @@
                     duration={entry.media.runtime}
                 />
             {/if}
-            {#if entry.media.type === "manga"}
+            {#if entry.media.type === "manga" && (entry.media.chapters?.count || entry.media.volumes?.count)}
                 · <MangaInfo
-                    number={entry.media.chapters.count}
-                    volumes={entry.media.volumes}
+                    chapters={entry.media.chapters?.count}
+                    volumes={entry.media.volumes?.count}
                 />
+            {/if}
+            {#if entry.media.type === "movie" && entry.media.runtime}
+                · {$_("NminutesShort", { values: { n: entry.media.runtime } })}
             {/if}
         </span>
     </div>
@@ -42,7 +45,9 @@
     />
     <span class="sep" style:--accent={entry.media.accentColor}></span>
     <div class="synopsis">
-        {#if synopsis}
+        {#if entry.media.synopsis}
+            {entry.media.synopsis}
+        {:else if synopsis}
             {#await synopsis}
                 Loading synopsis...
             {:then text}
@@ -50,8 +55,6 @@
             {:catch error}
                 Failed to load synopsis
             {/await}
-        {:else}
-            {entry.media.synopsis}
         {/if}
     </div>
     <LinkButtons ids={entry.media.id} mediaType={entry.media.type}/>
@@ -73,11 +76,12 @@
         justify-content: space-between;
         align-items: center;
     }
-
+    
     .top {
         display: flex;
         flex-direction: column;
         margin-bottom: 15px;
+        margin-left: .5rem; /* avoids overlap with overflow */
     }
 
     .sub {
@@ -90,8 +94,10 @@
     }
 
     h1 {
-        text-shadow: 0 0 10px var(--black);
         line-height: 1.2em;
+        @media (prefers-color-scheme: dark) {
+            text-shadow: 0 0 10px var(--black);
+        }
     }
 
     i {
@@ -102,7 +108,7 @@
         display: block;
         width: 100%;
         height: 1px;
-        background-color: var(--accent);
+        background-color: var(--accent, var(--text-2));
         margin: 10px 0;
     }
 
@@ -114,7 +120,7 @@
 
     @media screen and (max-width: 900px) {
         h1 {
-            margin-top: -1rem;
+            margin-top: -2rem;
         }
 
         .informations {

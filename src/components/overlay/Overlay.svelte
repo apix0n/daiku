@@ -13,15 +13,17 @@
     let synopsisPromise;
 
     // Check cache first, then fetch if needed
-    $: if (entry?.media?.id?.myanimelist) {
+    $: if (entry?.media?.id?.myanimelist && !entry.media.synopsis) {
         const malId = entry.media.id.myanimelist;
         if ($synopsisCache[malId]) {
             synopsisPromise = Promise.resolve($synopsisCache[malId]);
         } else {
-            synopsisPromise = getSynopsis(malId).then(synopsis => {
-                cacheSynopsis(malId, synopsis);
-                return synopsis;
-            });
+            synopsisPromise = getSynopsis(malId, entry.media.type).then(synopsis => {
+                if (synopsis) {  // Only cache if synopsis is not null
+                    cacheSynopsis(malId, synopsis);
+                }
+                return synopsis || 'No synopsis available.';  // Provide fallback text
+            }).catch(() => 'Failed to load synopsis.');  // Handle potential errors
         }
     }
 
@@ -45,8 +47,10 @@
         {/if}
         <div class="content">
             <Image background={entry.media.cover.large} status={entry.media.status}>
-                {#if entry.media.episodes.next && entry.media.status === "RELEASING"}
+                {#if entry.media.type === "anime" && entry.media.episodes?.next && entry.media.status === "RELEASING"}
                     <RelativeRelease timestamp={Math.floor(entry.media.episodes?.next?.timestamp)} number={entry.media.episodes?.next?.number} mediaType={entry.media.type}/>
+                {:else if entry.media.type === "manga" && entry.media.chapters?.last && entry.media.status === "RELEASING"}
+                    <RelativeRelease timestamp={Math.floor(entry.media.chapters?.last?.timestamp)} number={entry.media.chapters?.last?.number} mediaType={entry.media.type}/>
                 {/if}
             </Image>
             <Informations 
@@ -79,7 +83,7 @@
         max-width: 90%;
         height: 90%;
         aspect-ratio: 2/1;
-        background-color: #111111;
+        background-color: var(--background-2);
         position: relative;
         overflow-y: hidden;
         font-size: 1.1em;
@@ -96,7 +100,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        color: white;
         position: relative;
         gap: 40px;
         z-index: 2;
@@ -110,18 +113,27 @@
         width: 100%;
         height: 40%;
         z-index: 0;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, #111111 90%), var(--image-link) center/cover no-repeat;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, var(--background-2) 90%), var(--image-link) center/cover no-repeat;
         opacity: .7;
     }
 
     .banner[data-nobanner="true"] {
-        filter: blur(10px);
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(10px);
+        }
     }
 
     .close {
         position: absolute;
-        top: 1rem;
-        right: 1rem;
+        padding: 2rem;
+        top: 0;
+        right: 0;
         background: none;
         border: none;
         font-size: 1.5rem;

@@ -23,7 +23,7 @@
         padding: 0px;
         height: 75%;
         aspect-ratio: 1 / 1.5;
-        background: rgba(255, 255, 255, 0.15);
+        background: var(--transparent);
         border-radius: 8px;
     }
 

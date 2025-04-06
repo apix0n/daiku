@@ -1,4 +1,4 @@
-import { secrets, config } from '../config';
+import { secrets, config } from '$lib/server/config';
 const tmdbApiKey = secrets.tmdbApiKey;
 
 export async function getTmdbInfos(tmdbId) {
@@ -13,7 +13,19 @@ export async function getTmdbInfos(tmdbId) {
         api_key: tmdbApiKey,
     });
 
-    const imgUrlPrefix = 'https://image.tmdb.org/t/p/w300_and_h450_bestv2';
+    const posterSizes = {
+        large: 'w500',
+        medium: 'w342',
+        small: 'w92'
+    };
+
+    const backdropSizes = {
+        large: 'w1280',
+        medium: 'w780',
+        small: 'w300'
+    };
+
+    const baseImageUrl = 'https://image.tmdb.org/t/p';
     const url = `https://api.themoviedb.org/3/movie/${tmdbId}?${params.toString()}`;
     const response = await fetch(url);
     const data = await response.json();
@@ -22,12 +34,32 @@ export async function getTmdbInfos(tmdbId) {
     }
 
     const posters = data.images?.posters || [];
-    const poster = imgUrlPrefix + (posters[0]?.file_path || data.poster_path);
+    const defaultPosterPath = posters[0]?.file_path || data.poster_path;
+    const posterUrls = Object.entries(posterSizes).reduce((acc, [size, width]) => {
+        acc[size] = defaultPosterPath ? `${baseImageUrl}/${width}${defaultPosterPath}` : null;
+        return acc;
+    }, {});
+
+    const backdropUrls = Object.entries(backdropSizes).reduce((acc, [size, width]) => {
+        acc[size] = data.backdrop_path ? `${baseImageUrl}/${width}${data.backdrop_path}` : null;
+        return acc;
+    }, {});
+
     return {
-        titre: data.title,
-        poster,
-        runtime: data.runtime,
-        status: data.status,
-        releaseDate: data.release_date
-    };
-}
+        media: {
+            title: {
+                locale: data.title,
+                native: data.original_title,
+            },
+            cover: posterUrls,
+            banner: backdropUrls,
+            runtime: data.runtime,
+            releaseDate: data.status !== "Released" ? data.release_date : undefined,
+            synopsis: data.overview,
+            id: {
+                tmdb: tmdbId,
+                imdb: data.imdb_id
+            }
+        }
+    }
+};

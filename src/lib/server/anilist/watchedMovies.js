@@ -20,10 +20,14 @@ async function getUserWatchedAnime(userId) {
                         episodes
                         duration
                         id
+                        idMal
                         coverImage {
                             color
+                            extraLarge
                             large
+                            medium
                         }
+                        bannerImage
                     }
                     score(format: POINT_10)
                     completedAt {
@@ -32,6 +36,7 @@ async function getUserWatchedAnime(userId) {
                         day
                     }
                     repeat
+                    notes
                 }
             }
         }
@@ -40,37 +45,25 @@ async function getUserWatchedAnime(userId) {
 }
 
 async function getAnimeIdsFile() {
-    const cacheDuration = 24 * 60 * 60 * 1000; // 1 day in milliseconds
     const url = "https://raw.githubusercontent.com/Kometa-Team/Anime-IDs/refs/heads/master/anime_ids.json";
-
-    if (cachedAnimeIdsFile && (Date.now() - cacheTimestamp < cacheDuration)) {
-        console.log("[al2tmdb] ----- served cached anime ids file -----")
-        return cachedAnimeIdsFile;
-    }
-
     try {
-        const response = await fetch(url);
-        cachedAnimeIdsFile = await response.json();
-        cacheTimestamp = Date.now();
-        console.log("[al2tmdb] ----- downloaded & cached anime ids file -----")
-        return cachedAnimeIdsFile;
+        console.log('Fetching anime ids file from:', url);
+        return (await fetch(url)).json();
     } catch (error) {
-        console.error('[al2tmdb] ----- error fetching anime ids file: ', error);
-        if (cachedAnimeIdsFile) {
-            console.log("[al2tmdb] ----- error fetching anime ids file, served cached instead -----");
-            return cachedAnimeIdsFile;
-        } else {
-            throw error;
-        }
+        console.error('al2tmdb | error fetching anime ids file: ', error);
+        return {}
     }
 }
 
 const animeIdsFile = await getAnimeIdsFile();
 
-async function getTmdbIdForAnilistId(anilistId) {
+function getIdsFromAnilistId(anilistId) {
     for (const key in animeIdsFile) {
         if (animeIdsFile[key].anilist_id === anilistId) {
-            return animeIdsFile[key].tmdb_movie_id;
+            return {
+                tmdb: animeIdsFile[key].tmdb_movie_id,
+                imdb: animeIdsFile[key].imdb_id,
+            }
         }
     }
     return null;
@@ -104,18 +97,41 @@ async function watchedMovies(userMovieData) {
     });
 
     return await Promise.all(allWatchedMovies.map(async entry => {
-        const tmdbId = await getTmdbIdForAnilistId(entry.media.id);
+        const ids = await getIdsFromAnilistId(entry.media.id);
+
         return {
-            title: entry.media.title.english || entry.media.title.romaji,
-            mediaType: "movie",
-            sourceList: "anilist",
-            movieRuntime: entry.media.episodes * entry.media.duration || null,
-            coverLink: entry.media.coverImage.large,
-            finishedDate: anilistGlobal.formatDate(entry.completedAt),
-            rating: entry.score,
-            rewatch: entry.repeat,
-            link: anilistGlobal.siteUrl + "/anime/" + entry.media.id,
-            tmdbId: tmdbId,
+            media: {
+                title: {
+                    romaji: entry.media.title.romaji,
+                    english: entry.media.title.english,
+                    native: entry.media.title.native
+                },
+                cover: {
+                    large: entry.media.coverImage.extraLarge,
+                    medium: entry.media.coverImage.large,
+                    small: entry.media.coverImage.medium,
+                },
+                banner: {
+                    large: entry.media.bannerImage
+                },
+                accentColor: entry.media.coverImage.color,
+                type: 'movie',
+                source: 'anilist',
+                runtime: entry.media.episodes * entry.media.duration || null,
+                id: {
+                    anilist: entry.media.id,
+                    myanimelist: entry.media.idMal,
+                    ...ids
+                }
+            },
+            dates: {
+                finished: anilistGlobal.formatDate(entry.completedAt),
+            },
+            review: {
+                rating: entry.score,
+                text: entry.notes,
+            },
+            repeat: entry.repeat,
         };
     }));
 }

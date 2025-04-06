@@ -14,6 +14,7 @@
     --black: #000;
     --releasing: #5be420;
     --notyet-releasing: #f29633;
+    --transparent: rgba(72, 72, 72, 0.15);
     --element-width: 200px;
     --border-radius: 1em;
     --scrollbar-radius: 8px;
@@ -31,6 +32,7 @@
         --text: #fff;
         --text-2: #b0b0b0;
         --text-3: #696969;
+        --transparent: rgba(255, 255, 255, 0.15);
         color-scheme: dark;
     }
 }
@@ -85,10 +87,8 @@ a {
 body {
     background-color: var(--background);
     color: var(--text);
-    overflow-x: hidden;
+    overflow: hidden;
     margin: 0;
-    min-height: 100vh;
-    min-height: 100dvh;
 }
 
 body.noscroll {
@@ -97,44 +97,10 @@ body.noscroll {
 
 h1 {}
 
-.container[data-section="parts"]>h2 {
-    background: var(--background-2);
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    margin-left: -7.5vw;
-    margin-right: -7.5vw;
-    border-bottom: solid 1px var(--background-3);
-    border-top: solid 1px var(--background-3);
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    gap: 0 .3em;
-    flex-wrap: wrap;
-}
-
-.container[data-section="parts"]>h2:first-of-type {
-    margin-top: 0;
-}
-
-.container[data-section="parts"]>h2 span {
-    font-size: 1rem;
-    font-weight: 400;
-    color: var(--app-accent);
-    position: relative;
-    top: .1em;
-}
-
 .container[data-section="dashboard"] h2 {
     font-size: 2rem;
     font-weight: 500;
     margin: 0;
-}
-
-@media screen and (max-height: 600px) {
-    .container[data-section="parts"]>h2 {
-        position: static;
-    }
 }
 
 pre {
@@ -252,28 +218,6 @@ svg {
     height: 1em;
 }
 
-.container {
-    width: calc(85vw - env(safe-area-inset-left));
-    margin: auto;
-    padding-left: env(safe-area-inset-left);
-    margin-bottom: 16px;
-}
-
-@media screen and (max-width: 1000px) {
-    .container {
-        width: auto;
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);
-        margin-bottom: calc(76px + 16px + env(safe-area-inset-bottom));
-        /* To make space for the navbar on mobile */
-    }
-
-    .container[data-section="parts"]>h2 {
-        margin-left: unset;
-        margin-right: unset;
-    }
-}
-
 .elements-wrapper .element.releasing::before,
 .item .releasing::before,
 .image.releasing::before {
@@ -305,7 +249,7 @@ svg {
 }
 
 .releasing.notyet::before {
-    background: var(--notyet-releasing);
+    background: var(--notyet-releasing) !important;
 }
 
 @keyframes pulse {
@@ -430,28 +374,8 @@ label {
 }
 
 .checkboxdiv {
-    position: absolute;
-    right: 7.5vw;
     font-size: initial;
     font-weight: initial;
-}
-
-@media screen and (max-width: 1000px) {
-    .checkboxdiv {
-        right: 10px;
-    }
-}
-
-@media screen and (max-width: 600px) {
-    .checkboxdiv {
-        position: unset;
-    }
-}
-
-.navbtns>a>svg {
-    height: 100%;
-    width: 100%;
-    padding: 3px;
 }
 
 .loader-container {

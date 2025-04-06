@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { XMLParser } from 'fast-xml-parser';
 import he from 'he'; // to decode html entities (film title)
+import { makeBoxdCoverLinksFromUrl, extractBoxdId } from '$lib/server/letterboxd/utils';
 
 export async function fetchWatchedMovies(username) {
     const watchedMovies = [];
@@ -13,13 +14,9 @@ export async function fetchWatchedMovies(username) {
     if (parsedFeed?.rss?.channel?.item) {
         for (const item of parsedFeed.rss.channel.item) {
             const tmdbId = parseInt(item['tmdb:movieId']);
-            let filmTitle, coverSrc, runtime, review, reviewIsSpoiler;
+            let filmTitle, coverSrc, review, reviewIsSpoiler;
 
             const finishedDate = item['letterboxd:watchedDate'];
-            const mediaType = 'movie';
-            const rating = Math.round(parseFloat(item['letterboxd:memberRating'] ?? 0) * 2);
-            const isRewatch = item['letterboxd:rewatch'] === 'Yes';
-            const reviewLink = item.link;
 
             if (tmdbId) {
                 filmTitle = he.decode(item['letterboxd:filmTitle']); // decode title to replace html entities
@@ -43,25 +40,34 @@ export async function fetchWatchedMovies(username) {
                     review = undefined
                 }
                 coverSrc = match ? match[1] : null;
-                runtime = null;
             } else {
                 continue
             }
 
             watchedMovies.push({
-                title: filmTitle,
-                mediaType: mediaType,
-                sourceList: "letterboxd",
-                movieRuntime: runtime,
-                coverLink: coverSrc,
-                finishedDate: finishedDate,
-                rating: rating,
-                review: review,
-                reviewIsSpoiler: reviewIsSpoiler,
-                rewatch: isRewatch,
-                link: reviewLink,
-                tmdbId: tmdbId,
-            });
+                media: {
+                    title: {
+                        english: filmTitle,
+                    },
+                    type: 'movie',
+                    source: 'letterboxd',
+                    cover: makeBoxdCoverLinksFromUrl(coverSrc),
+                    id: {
+                        tmdb: tmdbId,
+                        letterboxd: extractBoxdId(item.link),
+                    },
+                },
+                review: {
+                    rating: Math.round(parseFloat(item['letterboxd:memberRating'] ?? 0) * 2),
+                    text: review,
+                    isSpoiler: reviewIsSpoiler,
+                    isHtml: true
+                },
+                repeat: item['letterboxd:rewatch'] === 'Yes',
+                dates: {
+                    finished: finishedDate,
+                },
+            })
         }
     }
 

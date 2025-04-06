@@ -44,6 +44,7 @@ another media dashboard
 * [The Movie Database (TMDB) API](https://www.themoviedb.org/) for localised movie titles, runtimes & clean movie posters,
 * [Mangacollec](https://www.mangacollec.com/) for the manga library,
     > private API
+* [@Kometa-Team/Anime-IDs](https://github.com/Kometa-Team/Anime-IDs) for linking anime to other platforms (anime to TMDB conversion), 
 * [@apix0n/daiku-alternatives](https://github.com/apix0n/daiku-alternatives) for alternative titles, covers and additional information to override on the media
 
 ## configuration

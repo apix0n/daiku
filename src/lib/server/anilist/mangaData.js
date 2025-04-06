@@ -21,8 +21,11 @@ async function getUserMangaData(userId) {
                         status
                         coverImage {
                             color
+                            medium
+                            extraLarge
                             large
                         }
+                        bannerImage
                     }
                     score(format: POINT_10)
                     progress
@@ -77,17 +80,43 @@ function readManga(userMangaData) {
     });
 
     return allReadManga.map(entry => ({
-        title: entry.media.title.english || entry.media.title.romaji,
-        mediaType: "manga",
-        chapterCount: entry.media.chapters,
-        volumesCount: entry.media.volumes,
-        startedDate: anilistGlobal.formatDate(entry.startedAt),
-        finishedDate: anilistGlobal.formatDate(entry.completedAt),
-        rating: entry.score,
-        reread: entry.repeat,
-        mediaLink: anilistGlobal.siteUrl + "/manga/" + entry.media.id,
-        coverLink: entry.media.coverImage.large,
-        accentColor: entry.media.coverImage.color,
+        media: {
+            title: {
+                english: entry.media.title.english,
+                romaji: entry.media.title.romaji,
+                native: entry.media.title.native,
+            },
+            type: 'manga',
+            source: 'anilist',
+            accentColor: entry.media.coverImage.color,
+            status: entry.media.status,
+            cover: {
+                large: entry.media.coverImage.extraLarge,
+                medium: entry.media.coverImage.large,
+                small: entry.media.coverImage.medium,
+            },
+            banner: {
+                large: entry.media.bannerImage,
+            },
+            chapters: {
+                count: entry.media.chapters,
+            },
+            volumes: {
+                count: entry.media.volumes,
+            },
+            id: {
+                anilist: entry.media.id,
+                myanimelist: entry.media.idMal,
+            }
+        },
+        dates: {
+            started: anilistGlobal.formatDate(entry.startedAt),
+            finished: anilistGlobal.formatDate(entry.completedAt),
+        },
+        review: {
+            rating: entry.score,
+            text: entry.notes,
+        }
     }));
 }
 
@@ -108,25 +137,57 @@ async function readingManga(userMangaData) {
 
         let readingLang = undefined;
         const langMatch = media.notes?.match(new RegExp(config.alLangRegex));
-        if (langMatch) { readingLang = langMatch[1]; media.daikuReadingLang = readingLang } // Extract language from notes
+        if (langMatch) { // Extract language from notes
+            readingLang = langMatch[1]; 
+            media.daikuReadingLang = readingLang;
+            media.notes = media.notes.replace(langMatch[0], '').trim(); // Remove the language from notes
+        } 
     }
 
     return allCurrentManga.map(entry => ({
-        title: entry.media.title.english || entry.media.title.romaji,
-        mediaType: "manga",
-        status: entry.media.status,
-        chaptersProgress: entry.progress,
-        volumesProgress: entry.progressVolumes,
-        chapterCount: entry.media.chapters,
-        volumesCount: entry.media.volumes,
-        startedDate: anilistGlobal.formatDate(entry.startedAt),
-        userStatus: entry.status,
-        reread: entry.repeat,
-        mediaLink: anilistGlobal.siteUrl + "/manga/" + entry.media.id,
-        coverLink: entry.media.coverImage.large,
-        accentColor: entry.media.coverImage.color,
-        malId: entry.media.idMal,
-        readingLang: entry.daikuReadingLang ? entry.daikuReadingLang : undefined
+        media: {
+            title: {
+                english: entry.media.title.english,
+                romaji: entry.media.title.romaji,
+                native: entry.media.title.native,
+            },
+            type: 'manga',
+            source: 'anilist',
+            accentColor: entry.media.coverImage.color,
+            status: entry.media.status,
+            cover: {
+                large: entry.media.coverImage.extraLarge,
+                medium: entry.media.coverImage.large,
+                small: entry.media.coverImage.medium,
+            },
+            banner: {
+                large: entry.media.bannerImage,
+            },
+            chapters: {
+                count: entry.media.chapters,
+            },
+            volumes: {
+                count: entry.media.volumes,
+            },
+            id: {
+                anilist: entry.media.id,
+                myanimelist: entry.media.idMal,
+            }
+        },
+        dates: {
+            started: anilistGlobal.formatDate(entry.startedAt),
+        },
+        progress: {
+            chapter: entry.progress,
+            volume: entry.progressVolumes,
+        },
+        status: entry.status,
+        repeat: entry.repeat,
+        review: {
+            rating: entry.score,
+            text: entry.notes,
+        },
+        lang: entry.daikuReadingLang,
     }));
 }
 

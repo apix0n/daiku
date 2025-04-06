@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-import { replaceByTmdb } from '../tmdb/replaceByTmdb';
+import { replaceByTmdb } from '$lib/server/tmdb/replaceByTmdb.js';
 import { ua } from './userLikes';
 
 async function fetchMovieData(link) {

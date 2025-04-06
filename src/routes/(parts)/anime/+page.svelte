@@ -43,7 +43,7 @@
       {/if}
 
       <!-- bottom -->
-      <Informations title={anime.media.title.english || anime.media.title.romaji} link={'https://anilist.co/anime/' + anime.media.id.anilist}>
+      <Informations title={anime.media.title.english || anime.media.title.romaji}>
         <AnimeInfo number={anime.media.episodes.count} duration={anime.media.runtime} rewatch={anime.repeat}/>
         <DateProgess userStatus={anime.status} startDate={anime.dates.started} progress={anime.progress.episode} total={anime.media.episodes.count} media={anime.media.type}/>
       </Informations>
@@ -72,9 +72,8 @@
     {/if}
 
     <!-- bottom -->
-     <Informations title={anime.media.title.english || anime.media.title.romaji} link={'https://anilist.co/anime/' + anime.media.id.anilist}>
+     <Informations title={anime.media.title.english || anime.media.title.romaji}>
        <AnimeInfo number={anime.media.episodes.count} duration={anime.media.runtime} rewatch={anime.repeat}/>
-       <!-- <Dates start={anime.dates.started} end={anime.dates.finished} /> -->
     </Informations>
   </BaseCard>
 

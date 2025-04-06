@@ -8,11 +8,20 @@
     import NoEntriesMessage from '$components/NoEntriesMessage.svelte';
     import UpdatedTime from '$components/UpdatedTime.svelte';
 
-    export let data
+    export let data, selectedAnime = null;
     const { dropped, updatedAt } = data.animeData;
 
+    function handleCardClick(anime) {
+        selectedAnime = anime;
+    }
+
     import { _ } from 'svelte-i18n';
+    import Overlay from '$components/overlay/Overlay.svelte';
 </script>
+
+{#if selectedAnime}
+    <Overlay entry={selectedAnime} on:close={() => selectedAnime = null} />
+{/if}
 
 {#if dropped.length > 0}
 
@@ -23,14 +32,14 @@
   {#each dropped as anime}
     {#if anime.status === "PAUSED" && anime.status !== "NOT_YET_RELEASED" && anime.progress.episode > 0}
 
-      <BaseCard accent={anime.media.accentColor} background={anime.media.cover.medium} status={anime.media.status}>
+      <BaseCard accent={anime.media.accentColor} background={anime.media.cover.medium} status={anime.media.status} on:click={() => handleCardClick(anime)}>
         <!-- top -->
         {#if anime.status === "RELEASING"}
           <RelativeTimeInfo number={anime.media.episodes.next.number} timestamp={anime.media.episodes.next.timestamp} mediaType={anime.media.type} />
         {/if}
 
         <!-- bottom -->
-        <Informations title={anime.media.title.english || anime.media.title.romaji} link={'https://anilist.co/anime/' + anime.media.id.anilist}>
+        <Informations title={anime.media.title.english || anime.media.title.romaji}>
           <AnimeInfo number={anime.media.episodes.count} duration={anime.media.runtime}/>
           <DroppedPaused progress={anime.progress.episode} type={anime.status} mediaType={anime.media.type}/>
         </Informations>
@@ -48,14 +57,14 @@
   {#each dropped as anime}
     {#if anime.status === "DROPPED" && anime.status !== "NOT_YET_RELEASED" && anime.progress.episode > 0}
 
-      <BaseCard accent={anime.media.accentColor} background={anime.media.cover.medium} status={anime.media.status}>
+      <BaseCard accent={anime.media.accentColor} background={anime.media.cover.medium} status={anime.media.status} on:click={() => handleCardClick(anime)}>
         <!-- top -->
         {#if anime.status === "RELEASING"}
           <RelativeTimeInfo number={anime.media.episodes.next.number} timestamp={anime.media.episodes.next.timestamp} mediaType={anime.media.type} />
         {/if}
 
         <!-- bottom -->
-        <Informations title={anime.media.title.english || anime.media.title.romaji} link={'https://anilist.co/anime/' + anime.media.id.anilist}>
+        <Informations title={anime.media.title.english || anime.media.title.romaji}>
           <AnimeInfo number={anime.media.episodes.count} duration={anime.media.runtime}/>
           <DroppedPaused progress={anime.progress.episode} type={anime.status} mediaType={anime.media.type}/>
         </Informations>

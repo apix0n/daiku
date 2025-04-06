@@ -3,7 +3,7 @@ import { getLatestChapter } from '$lib/malsync/getLatestChapter';
 import { combineMoviesLists } from '$lib/combineMoviesLists';
 
 export async function loadAnimeData(update = false) {
-    if (update) {
+    if (!update) {
         const storedData = dataStore.get('animeData');
         if (storedData) {
             return { animeData: storedData };
@@ -16,7 +16,7 @@ export async function loadAnimeData(update = false) {
 }
 
 export async function loadCollectionData(update = false) {
-    if (update) {
+    if (!update) {
         const storedData = dataStore.get('mangaCollection');
         if (storedData) {
             return { mangaCollection: storedData };
@@ -29,7 +29,7 @@ export async function loadCollectionData(update = false) {
 }
 
 export async function loadMangaData(update = false) {
-    if (update) {
+    if (!update) {
         const storedData = dataStore.get('mangaData');
         if (storedData) {
             return { mangaData: storedData };
@@ -41,9 +41,18 @@ export async function loadMangaData(update = false) {
     if (mangaData?.current) {
         const updatedManga = await Promise.all(
             mangaData.current.map(async (manga) => {
-                if (manga.status === "RELEASING" && manga.malId) {
-                    const lastChapter = await getLatestChapter(manga.malId, manga.readingLang);
-                    return { ...manga, lastChapter };
+                if (manga.media.status === "RELEASING" && manga.media.id.myanimelist) {
+                    const lastChapter = await getLatestChapter(manga.media.id.myanimelist, manga.lang);
+                    return {
+                        ...manga,
+                        media: {
+                            ...manga.media,
+                            chapters: {
+                                ...manga.media.chapters,
+                                last: lastChapter
+                            }
+                        }
+                    };
                 }
                 return manga;
             })
@@ -56,7 +65,7 @@ export async function loadMangaData(update = false) {
 };
 
 export async function loadMovieData(update = false) {
-    if (update) {
+    if (!update) {
         const storedMovies = dataStore.get('watchedMovies');
         if (storedMovies) {
             return { watchedMovies: storedMovies };
@@ -75,7 +84,7 @@ export async function loadMovieData(update = false) {
 }
 
 export async function loadPlannedData(update = false) {
-    if (update) {
+    if (!update) {
         const storedData = dataStore.get('plannedData');
         if (storedData) {
             return { plannedData: storedData };

@@ -1,5 +1,4 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
-import { isHtml } from 'cheerio/utils';
 import { applyAnimeReleaseTime, getAnimeReleaseTime } from '../animeSchedule/animeReleaseTime';
 import { getPrecedingEpisode } from './getPrecedingEpisode';
 

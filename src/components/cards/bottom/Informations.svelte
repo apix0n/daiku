@@ -1,7 +1,7 @@
 <script>
     import Rewatch from "../../icons/Rewatch.svelte";
 
-    export let title, link, rewatch;
+    export let title, rewatch;
 </script>
 
 <div class="informations">
@@ -47,16 +47,6 @@
         line-height: 120%;
         overflow-wrap: anywhere;
         text-shadow: 0 0 10px var(--black);
-    }
-
-    a.media-title {
-        text-decoration: underline 0.08em rgba(0, 0, 0, 0);
-        transition: text-decoration-color 300ms;
-    }
-
-    a.media-title:hover {
-        text-decoration-color: var(--accentColor, rgba(168, 168, 168));
-        transition: text-decoration-color 300ms;
     }
 
     @media screen and (max-width: 1200px) {

@@ -30,6 +30,14 @@
                     {new Date(dates.started).toLocaleDateString()} to {new Date(dates.finished).toLocaleDateString()}
                 </span>
             </div>
+        {:else if dates?.finished}
+            <div class="text">
+                {watchWord} on {new Date(dates.finished).toLocaleDateString()}
+                {#if progress}
+                    <span class="separator">•</span>
+                    at {mediaType === 'MANGA' ? 'chapter' : 'episode'} {progress.episode}
+                {/if}
+            </div>            
         {:else if progress}
             <div class="text">
                 at {mediaType === 'MANGA' ? 'chapter' : 'episode'} {progress.episode}
@@ -44,8 +52,10 @@
         {/if}
     </div>
 
-    {#if review?.text}
+    {#if review?.text && !review?.isHtml}
         <div class="review">{review.text}</div>
+    {:else if review?.text && review?.isHtml}
+        <div class="review">{@html review.text}</div>
     {/if}
 </div>
 
@@ -55,8 +65,8 @@
         flex-direction: column;
         gap: 5px;
         padding: 5px 10px;
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: var(--transparent);
+        border: 1px solid var(--transparent);
         backdrop-filter: blur(5px);
         border-radius: 10px;
     }
@@ -69,18 +79,22 @@
         background: inherit;
         white-space: pre-wrap;
         position: relative;
+        :global * {
+            margin: 0;
+        }
     }
 
     .review::before {
         content: "“";
         position: absolute;
         line-height: 1em;
-        top: -.2em;
-        font-size: 5em;
+        top: -.05em;
+        font-size: 4em;
         right: .1em;
         font-family: serif;
         font-weight: bold;
-        color: var(--text-2);
+        color: var(--transparent);
+        float: right;
     }
 
     .line-info {

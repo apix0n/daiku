@@ -5,13 +5,15 @@
     import Tmdb from "../icons/platforms/TMDB.svelte";
     import AniList from "../icons/platforms/AniList.svelte";
     import MyAnimeList from "../icons/platforms/MyAnimeList.svelte";
+    import Imdb from "$components/icons/platforms/IMDB.svelte";
+    import Letterboxd from "$components/icons/platforms/Letterboxd.svelte";
     
 </script>
 
 <div class="buttons-wrapper">
     More info:    
     <div class="buttons">
-        {#each Object.entries(ids) as [key, id]}
+        {#each Object.entries(ids).filter(a => a[1] != null) as [key, id]}
             <a href="{getLinkFromId(id, key, mediaType)}" target="_blank">
             {#if key === "myanimelist"}
                 <MyAnimeList />
@@ -19,6 +21,10 @@
                 <Tmdb />
             {:else if key === "anilist"}
                 <AniList />
+            {:else if key === "imdb"}
+                <Imdb />
+            {:else if key === "letterboxd"}
+                <Letterboxd />
             {/if}
             </a>
         {/each}
@@ -32,8 +38,8 @@
         align-items: center;
         gap: 5px;
         padding: 5px 10px;
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: var(--transparent);
+        border: 1px solid var(--transparent);
         backdrop-filter: blur(5px);
         border-radius: 10px;
         margin-top: 10px;
