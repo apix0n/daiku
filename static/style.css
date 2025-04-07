@@ -376,6 +376,17 @@ label {
 .checkboxdiv {
     font-size: initial;
     font-weight: initial;
+    position: absolute;
+    right: 0;
+    margin-right: 1em;
+}
+
+@media screen and (max-width: 1200px) {
+    .checkboxdiv {
+        position: unset;
+        margin-right: usnet;
+    }
+    
 }
 
 .loader-container {
