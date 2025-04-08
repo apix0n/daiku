@@ -15,12 +15,14 @@ export async function getPlannedAnime(userId) {
                         episodes
                         duration
                         id
+                        idMal
                         status
                         coverImage {
                             color
                             large
                             extraLarge
                         }
+                        bannerImage
                         startDate {
                             year
                             month
@@ -53,7 +55,9 @@ export async function getPlannedManga(userId) {
                         }
                         chapters
                         volumes
+                        bannerImage
                         id
+                        idMal
                         status
                         coverImage {
                             color
@@ -73,41 +77,62 @@ export async function getPlannedManga(userId) {
     return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
-export function plannedAnime(userPlannedAnime) {
+export function plannedAnime(userPlannedData) {
     const seen = new Set();
-    const allCurrentAnime = userPlannedAnime.data.MediaListCollection.lists
+    const allPlanned = userPlannedData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
+        .filter(entry => entry.media.format !== "MOVIE")
         .filter(entry => {
             const duplicate = seen.has(entry.media.id);
             seen.add(entry.media.id);
             return !duplicate;
         }); // Filter out duplicates (same media in multiple lists)
 
-    allCurrentAnime.forEach(media => {
+    allPlanned.forEach(media => {
         anilistGlobal.applyPosterOverrides(media.media);
     });
 
-    return allCurrentAnime.map(entry => ({
-        title: entry.media.title.english || entry.media.title.romaji,
-        mediaType: "anime",
-        status: entry.media.status,
-        type: entry.media.format,
-        episodesNumber: entry.media.episodes,
-        episodesDuration: entry.media.duration,
-        mediaLink: anilistGlobal.siteUrl + "/anime/" + entry.media.id,
-        startDate: anilistGlobal.planningFormatDate(entry.media.startDate),
-        coverLink: entry.media.coverImage.large,
-        accentColor: entry.media.coverImage.color,
-        nextEpisode: entry.media.nextAiringEpisode ? {
-            number: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.episode : undefined,
-            timestamp: entry.media.nextAiringEpisode ? entry.media.nextAiringEpisode.airingAt : undefined
-        } : undefined
+    return allPlanned.map(entry => ({
+        media: {
+            title: {
+                english: entry.media.title.english,
+                romaji: entry.media.title.romaji,
+                native: entry.media.title.native,
+            },
+            type: 'anime',
+            source: 'anilist',
+            accentColor: entry.media.coverImage.color,
+            status: entry.media.status,
+            runtime: entry.media.duration,
+            cover: {
+                large: entry.media.coverImage.extraLarge,
+                medium: entry.media.coverImage.large,
+                small: entry.media.coverImage.medium,
+            },
+            banner: {
+                large: entry.media.bannerImage,
+            },
+            episodes: {
+                count: entry.media.episodes,
+                next: entry.media.nextAiringEpisode ? {
+                    number: entry.media.nextAiringEpisode.episode,
+                    timestamp: entry.media.nextAiringEpisode.airingAt * 1000,
+                } : undefined,
+            },
+            id: {
+                anilist: entry.media.id,
+                myanimelist: entry.media.idMal,
+            },
+            dates: {
+                start: anilistGlobal.planningFormatDate(entry.media.startDate),
+            }
+        },
     }));
 }
 
-export function plannedManga(userPlannedManga) {
+export function plannedManga(userPlannedData) {
     const seen = new Set();
-    const allCurrentAnime = userPlannedManga.data.MediaListCollection.lists
+    const allPlanned = userPlannedData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
         .filter(entry => {
             const duplicate = seen.has(entry.media.id);
@@ -115,20 +140,89 @@ export function plannedManga(userPlannedManga) {
             return !duplicate;
         }); // Filter out duplicates (same media in multiple lists)
 
-    allCurrentAnime.forEach(media => {
+    allPlanned.forEach(media => {
         anilistGlobal.applyPosterOverrides(media.media);
     });
 
-    return allCurrentAnime.map(entry => ({
-        title: entry.media.title.english || entry.media.title.romaji,
-        mediaType: "manga",
-        status: entry.media.status,
-        chapterCount: entry.media.chapters,
-        volumesCount: entry.media.volumes,
-        mediaLink: anilistGlobal.siteUrl + "/manga/" + entry.media.id,
-        startDate: anilistGlobal.planningFormatDate(entry.media.startDate),
-        coverLink: entry.media.coverImage.large,
-        accentColor: entry.media.coverImage.color,
+    return allPlanned.map(entry => ({
+        media: {
+            title: {
+                english: entry.media.title.english,
+                romaji: entry.media.title.romaji,
+                native: entry.media.title.native,
+            },
+            type: 'manga',
+            source: 'anilist',
+            accentColor: entry.media.coverImage.color,
+            status: entry.media.status,
+            cover: {
+                large: entry.media.coverImage.extraLarge,
+                medium: entry.media.coverImage.large,
+                small: entry.media.coverImage.medium,
+            },
+            banner: {
+                large: entry.media.bannerImage,
+            },
+            chapters: {
+                count: entry.media.chapters,
+            },
+            volumes: {
+                count: entry.media.volumes,
+            },
+            id: {
+                anilist: entry.media.id,
+                myanimelist: entry.media.idMal,
+            },
+            dates: {
+                start: anilistGlobal.planningFormatDate(entry.media.startDate),
+            }
+        },
+    }));
+}
+
+export function plannedMovies(userPlannedData) {
+    const seen = new Set();
+    const allPlanned = userPlannedData.data.MediaListCollection.lists
+        .flatMap(list => list.entries)
+        .filter(entry => entry.media.format === "MOVIE")
+        .filter(entry => {
+            const duplicate = seen.has(entry.media.id);
+            seen.add(entry.media.id);
+            return !duplicate;
+        }); // Filter out duplicates (same media in multiple lists)
+
+    allPlanned.forEach(media => {
+        anilistGlobal.applyPosterOverrides(media.media);
+    });
+
+    return allPlanned.map(entry => ({
+        media: {
+            title: {
+                english: entry.media.title.english,
+                romaji: entry.media.title.romaji,
+                native: entry.media.title.native,
+            },
+            type: 'movie',
+            source: 'anilist',
+            accentColor: entry.media.coverImage.color,
+            status: entry.media.status,
+            runtime: entry.media.duration * entry.media.episodes,
+            cover: {
+                large: entry.media.coverImage.extraLarge,
+                medium: entry.media.coverImage.large,
+                small: entry.media.coverImage.medium,
+            },
+            banner: {
+                large: entry.media.bannerImage,
+            },
+            id: {
+                anilist: entry.media.id,
+                myanimelist: entry.media.idMal,
+            },
+            dates: {
+                start: anilistGlobal.planningFormatDate(entry.media.startDate),
+            }
+        },
     }));
 }
 
@@ -141,6 +235,7 @@ export async function fetchPlannedData(userId) {
             updatedAt: new Date().toISOString(),
             anime: plannedAnime(plannedAnimeData),
             manga: plannedManga(plannedMangaData),
+            movies: plannedMovies(plannedAnimeData),
         };
     } catch (error) {
         console.error('Error fetching planned data:', error);

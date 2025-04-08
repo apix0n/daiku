@@ -37,12 +37,14 @@
             {/if}
         </span>
     </div>
-    <UserInfo
-        dates={entry.dates}
-        review={entry.review}
-        progress={entry.progress}
-        mediaType={entry.media.type}
-    />
+    {#if entry.dates || entry.review || entry.progress}
+        <UserInfo
+            dates={entry.dates}
+            review={entry.review}
+            progress={entry.progress}
+            mediaType={entry.media.type}
+        />
+    {/if}
     <span class="sep" style:--accent={entry.media.accentColor}></span>
     <div class="synopsis">
         {#if entry.media.synopsis}

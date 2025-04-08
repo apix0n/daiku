@@ -19,23 +19,21 @@
     }
 
     const animePlanned = 
-    anime.filter(a => a.type !== "MOVIE")
-        .filter(a => {
-            if (a.status === "NOT_YET_RELEASED") return true;
-            if (a.status === "RELEASING" && isRecentlyStarted(a.startDate)) return true;
+    anime.filter(a => {
+            if (a.media.status === "NOT_YET_RELEASED") return true;
+            if (a.media.status === "RELEASING" && isRecentlyStarted(a.media.dates.start)) return true;
             return false;
         })
-        .filter(a => a.startDate != null && a.startDate.length > 4)
-        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+        .filter(a => a.media.dates.start != null && a.media.dates.start.length > 4)
+        .sort((a, b) => new Date(a.media.dates.start) - new Date(b.media.dates.start));
 
-    const announcedAnime = anime.filter(a => a.type !== "MOVIE")
-        .filter(a => a.status === "NOT_YET_RELEASED" && (a.startDate == null || a.startDate.length <= 4))
+    const announcedAnime = anime.filter(a => a.media.status === "NOT_YET_RELEASED" && (a.media.dates.start == null || a.media.dates.start.length <= 4))
         .sort((a, b) => {
             // Put null dates at the end and those with a release year at the beginning
-            if (a.startDate === null) return 1;
-            if (b.startDate === null) return -1;
+            if (a.media.dates.start === null) return 1;
+            if (b.media.dates.start === null) return -1;
             
-            return a.startDate.localeCompare(b.startDate); // Sort by year
+            return a.media.dates.start.localeCompare(b.media.dates.start); // Sort by year
         });
 
     function getSeason(dateString) {
@@ -53,15 +51,15 @@
     }
 
     const groupedPlanned = animePlanned.reduce((acc, anime) => {
-        const season = getSeason(anime.startDate);
+        const season = getSeason(anime.media.dates.start);
         if (!acc[season]) acc[season] = [];
         acc[season].push(anime);
         return acc;
     }, {});
 
     const seasons = Object.keys(groupedPlanned).sort((a, b) => {
-        const dateA = new Date(groupedPlanned[a][0].startDate);
-        const dateB = new Date(groupedPlanned[b][0].startDate);
+        const dateA = new Date(groupedPlanned[a][0].media.dates.start);
+        const dateB = new Date(groupedPlanned[b][0].media.dates.start);
         return dateA - dateB;
     });
 </script>
@@ -72,12 +70,12 @@
     <h3>{season}</h3>
     <div class="elements-wrapper">
         {#each groupedPlanned[season] as anime}
-            <BaseCard accent={anime.accentColor} background={anime.coverLink} status={anime.status}>
-                <Informations title={anime.title} link={anime.mediaLink}>
-                    {#if anime.startDate != null}
-                        <PlanningRelease dateString={anime.startDate}/>
+            <BaseCard accent={anime.media.accentColor} background={anime.media.cover.medium} status={anime.media.status}>
+                <Informations title={anime.media.title.english || anime.media.title.romaji}>
+                    {#if anime.media.dates.start != null}
+                        <PlanningRelease dateString={anime.media.dates.start}/>
                     {:else}
-                        <PlanningRelease status={anime.status}/>
+                        <PlanningRelease status={anime.media.status}/>
                     {/if}
                 </Informations>
             </BaseCard>
@@ -90,18 +88,18 @@
 <div id="anime" class="elements-wrapper elements-planned">
   {#each announcedAnime as anime}
 
-    <BaseCard accent={anime.accentColor} background={anime.coverLink} status={anime.status}>
+    <BaseCard accent={anime.media.accentColor} background={anime.media.cover.medium} status={anime.media.status}>
       <!-- top -->
-      {#if anime.status === "RELEASING"} <!-- for airing/releasing anime -->
+      {#if anime.media.status === "RELEASING"} <!-- for airing/releasing anime -->
         <RelativeTimeInfo number={anime.nextEpisode.number} timestamp={anime.nextEpisode.timestamp} mediaType={anime.mediaType} />
       {/if}
 
       <!-- bottom -->
-      <Informations title={anime.title} link={anime.mediaLink}>
-        {#if anime.startDate != null}
-          <PlanningRelease dateString={anime.startDate}/>
+      <Informations title={anime.media.title.english || anime.media.title.romaji}>
+        {#if anime.media.dates.start != null}
+          <PlanningRelease dateString={anime.media.dates.start}/>
         {:else}
-          <PlanningRelease status={anime.status}/>
+          <PlanningRelease status={anime.media.status}/>
         {/if}
       </Informations>
     </BaseCard>

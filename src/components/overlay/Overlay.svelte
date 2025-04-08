@@ -46,7 +46,7 @@
             <button class="close" on:click={close}>×</button>
         {/if}
         <div class="content">
-            <Image background={entry.media.cover.large} status={entry.media.status}>
+            <Image background={entry.media.cover.large || entry.media.cover.medium} status={entry.media.status}>
                 {#if entry.media.type === "anime" && entry.media.episodes?.next && entry.media.status === "RELEASING"}
                     <RelativeRelease timestamp={Math.floor(entry.media.episodes?.next?.timestamp)} number={entry.media.episodes?.next?.number} mediaType={entry.media.type}/>
                 {:else if entry.media.type === "manga" && entry.media.chapters?.last && entry.media.status === "RELEASING"}

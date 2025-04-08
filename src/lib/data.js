@@ -91,7 +91,22 @@ export async function loadPlannedData(update = false) {
         }
     }
 
-    const plannedData = await fetch('/api/get/anilist/planning').then(r => r.json());
+    const [letterboxdData, anilistData] = await Promise.all([
+        fetch('/api/get/letterboxd/watchlist').then(r => r.json()),
+        fetch('/api/get/anilist/planning').then(r => r.json())
+    ]);
+
+    const plannedData = {
+        ...anilistData,
+        movies: [
+            ...(anilistData.movies || []),
+            ...(letterboxdData.watched || []).map(movie => ({
+                ...movie,
+                source: 'letterboxd'
+            }))
+        ]
+    };
+
     dataStore.set('plannedData', plannedData);
     return { plannedData };
 }

@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio';
 import { replaceByTmdb } from '$lib/server/tmdb/replaceByTmdb.js';
+import { extractBoxdId } from './utils';
 import { ua } from './userLikes';
 
 async function fetchMovieData(link) {
@@ -15,14 +16,20 @@ async function fetchMovieData(link) {
 
     if (tmdbId && tmdbType === "movie") {
         return {
-            title: body.find('h1.filmtitle').text().trim(),
-            mediaType: "movie",
-            sourceList: "letterboxd",
-            movieRuntime: null,
-            coverLink: null,
-            link: link,
-            tmdbId: tmdbId,
-        };
+            media: {
+                title: {
+                    english: body.find('h1:not(#header *)').text().trim()
+                },
+                type: 'movie',
+                source: 'letterboxd',
+                runtime: null,
+                cover: { },
+                id: {
+                    letterboxd: extractBoxdId(link),
+                    tmdb: tmdbId
+                }
+            }
+        }
     }
     return null;
 }

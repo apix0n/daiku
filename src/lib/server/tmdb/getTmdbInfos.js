@@ -54,7 +54,9 @@ export async function getTmdbInfos(tmdbId) {
             cover: posterUrls,
             banner: backdropUrls,
             runtime: data.runtime,
-            releaseDate: data.status !== "Released" ? data.release_date : undefined,
+            dates: data.status !== "Released" ? {
+                start: data.status !== "Released" ? data.release_date : undefined
+            } : undefined,
             synopsis: data.overview,
             id: {
                 tmdb: tmdbId,
