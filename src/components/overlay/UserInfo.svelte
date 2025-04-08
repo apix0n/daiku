@@ -17,8 +17,8 @@
         else timeSpan = `${Math.floor(days/365)} years`;
     }
 
-    const watchWord = mediaType === 'MANGA' ? 'read' : 'watched';
-    const watchingWord = mediaType === 'MANGA' ? 'reading' : 'watching';
+    const watchWord = mediaType === 'manga' ? 'read' : 'watched';
+    const watchingWord = mediaType === 'manga' ? 'reading' : 'watching';
 </script>
 
 <div class="userinfo">
@@ -35,12 +35,12 @@
                 {watchWord} on {new Date(dates.finished).toLocaleDateString()}
                 {#if progress}
                     <span class="separator">•</span>
-                    at {mediaType === 'MANGA' ? 'chapter' : 'episode'} {progress.episode}
+                    at {mediaType === 'manga' ? 'chapter' : 'episode'} {progress.episode || progress.chapter}
                 {/if}
             </div>            
         {:else if progress}
             <div class="text">
-                at {mediaType === 'MANGA' ? 'chapter' : 'episode'} {progress.episode}
+                at {mediaType === 'manga' ? 'chapter' : 'episode'} {progress.episode || progress.chapter}
                 {#if dates?.started}
                     <span class="separator">•</span>
                     started {watchingWord} on {new Date(dates.started).toLocaleDateString()}

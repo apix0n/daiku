@@ -15,7 +15,6 @@
     --releasing: #5be420;
     --notyet-releasing: #f29633;
     --transparent: rgba(72, 72, 72, 0.15);
-    --element-width: 200px;
     --border-radius: 1em;
     --scrollbar-radius: 8px;
     --fonts-monospace: "Ubuntu Mono", Consolas, Menlo, Monaco, "Lucida Console, Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
@@ -386,7 +385,6 @@ label {
         position: unset;
         margin-right: usnet;
     }
-    
 }
 
 .loader-container {

@@ -26,7 +26,7 @@
 
 		@media screen and (max-width: 1000px) {
 			:root {
-				--navbar-width: calc(52px + env(safe-area-inset-left));
+				--navbar-width: 52px;
 			}
 		}
 	</style>
@@ -65,7 +65,8 @@
 
 <style>
 	nav {
-		width: var(--navbar-width);
+		width: calc(var(--navbar-width) - env(safe-area-inset-left));
+		margin-left: env(safe-area-inset-left);
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;

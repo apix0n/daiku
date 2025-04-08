@@ -79,7 +79,7 @@
     }
 
     .overlay {
-        border-radius: 20px;
+        border-radius: var(--border-radius);
         max-width: 90%;
         height: 90%;
         aspect-ratio: 2/1;

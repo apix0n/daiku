@@ -23,6 +23,7 @@
 
 <style>
     .element {
+        --element-width: 200px;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
@@ -50,13 +51,13 @@
         }
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 768px), 
+    (max-height: 600px) and (orientation: landscape) {
         .element {
             font-size: 14px;
             --element-width: 150px;
         }
     }
-
     .element.ova {
         display: none;
         outline: 2px var(--accentColor, var(--background-4)) solid;

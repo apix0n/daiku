@@ -41,7 +41,7 @@
 
 	.container {
 		background-color: var(--background);
-		border-radius: 16px 0 0 16px;
+		border-radius: var(--border-radius) 0 0 var(--border-radius);
 		overflow-y: auto;
 		overflow-x: hidden;
 		flex-grow: 1;
@@ -53,39 +53,67 @@
 		}
 		@media screen and (max-width: 1000px) {
 			--padding: 0;
+			padding-inline: 0.4em;
+			padding-bottom: 1em;
+			border-radius: 0 0 var(--border-radius) var(--border-radius);
+			margin-left: env(safe-area-inset-left);
+			margin-right: env(safe-area-inset-right);
 		}
 	}
 
 	:global {
 		h2 {
-			background: var(--background-2);
 			position: sticky;
 			top: 0;
-			z-index: 5;
-			margin-left: -100%;
-			margin-right: -100%;
-			border-bottom: solid 1px var(--background-3);
-			border-top: solid 1px var(--background-3);
-			align-items: center;
+			z-index: 4;
 			display: flex;
 			justify-content: center;
 			gap: 0 0.3em;
 			flex-wrap: wrap;
+			align-items: center;
+			margin-left: auto;
+			margin-right: auto;
+			gap: 0 .3em;
+			width: fit-content;
+			box-sizing: border-box;
+			min-width: 100%;
+			max-width: 100%;
+			background-color: var(--background-2);
+			padding: 0 .8em;
+			border-radius: 5em;
+			font-size: 1.3rem;
+			text-align: center;
+			&:first-of-type {
+				margin-top: 0;
+				&::before {
+					content: '';
+					position: absolute;
+					top: 0;
+					left: 0;
+					background-color: var(--background-2);
+					z-index: -1;
+					border-radius: 0 0 50% 50%;
+					width: 100%;
+					height: 100%;
+				}
+			}
+			@media screen and (max-width: 1000px) {
+				top: 0;
+				width: 100%;
+				padding: 0;
+				&:first-of-type {
+					margin-top: 0;
+				}
+			}
 			@media screen and (max-height: 600px) {
-				position: static;
+				position: revert;
 			}
 		}
 
-		h2:first-of-type {
-			margin-top: 0;
-		}
-
 		h2 span {
-			font-size: 1rem;
+			font-size: .8em;
 			font-weight: 400;
 			color: var(--app-accent);
-			position: relative;
-			top: 0.1em;
 		}
 	}
 </style>

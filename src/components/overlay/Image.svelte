@@ -24,7 +24,7 @@
         height: 75%;
         aspect-ratio: 1 / 1.5;
         background: var(--transparent);
-        border-radius: 8px;
+        border-radius: var(--border-radius);
     }
 
     .info {
@@ -41,7 +41,7 @@
     img {
         width: 100%;
         height: 100%;
-        border-radius: 6px;
+        border-radius: var(--border-radius);
         object-fit: cover;
     }
 

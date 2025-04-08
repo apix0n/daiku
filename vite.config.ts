@@ -6,16 +6,19 @@ export default defineConfig({
 	plugins: [
 		sveltekit(),
 		SvelteKitPWA({
+			registerType: 'autoUpdate',
+			injectRegister: 'auto',
 			devOptions: {
 				enabled: true
-			}
+			},
 		})
 	],
 	preview: {
 		allowedHosts: true,
 	},
 	server: {
-		port: parseInt(process.env.PORT || '5173')
+		port: parseInt(process.env.PORT || '5173'),
+		allowedHosts: true
 	},
 	build: {
 		rollupOptions: {

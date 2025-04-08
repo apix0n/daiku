@@ -208,18 +208,43 @@ function droppedManga(userMangaData) {
     });
 
     return allDroppedManga.map(entry => ({
-        title: entry.media.title.english || entry.media.title.romaji,
-        mediaType: "manga",
-        status: entry.media.status,
-        chaptersProgress: entry.progress,
-        volumesProgress: entry.progressVolumes,
-        chapterCount: entry.media.chapters,
-        volumesCount: entry.media.volumes,
-        startedDate: anilistGlobal.formatDate(entry.startedAt),
-        userStatus: entry.status,
-        mediaLink: anilistGlobal.siteUrl + "/manga/" + entry.media.id,
-        coverLink: entry.media.coverImage.large,
-        accentColor: entry.media.coverImage.color,
+        media: {
+            title: {
+                english: entry.media.title.english,
+                romaji: entry.media.title.romaji,
+                native: entry.media.title.native,
+            },
+            type: 'manga',
+            source: 'anilist',
+            accentColor: entry.media.coverImage.color,
+            status: entry.media.status,
+            cover: {
+                large: entry.media.coverImage.extraLarge,
+                medium: entry.media.coverImage.large,
+                small: entry.media.coverImage.medium,
+            },
+            banner: {
+                large: entry.media.bannerImage,
+            },
+            chapters: {
+                count: entry.media.chapters,
+            },
+            volumes: {
+                count: entry.media.volumes,
+            },
+            id: {
+                anilist: entry.media.id,
+                myanimelist: entry.media.idMal,
+            }
+        },
+        dates: {
+            started: anilistGlobal.formatDate(entry.startedAt)
+        },
+        progress: {
+            chapter: entry.progress,
+            volume: entry.progressVolumes
+        },
+        status: entry.status
     }));
 }
 

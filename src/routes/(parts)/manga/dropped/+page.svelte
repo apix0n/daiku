@@ -1,62 +1,108 @@
 <script>
-    import BaseCard from '$components/cards/BaseCard.svelte';
-    import Informations from '$components/cards/bottom/Informations.svelte';
-    import MangaInfo from '$components/cards/bottom/MangaInfo.svelte';
-    import RelativeTimeInfo from '$components/cards/top/ReleaseInfo.svelte';
-    import DroppedPaused from '$components/cards/bottom/DroppedPaused.svelte'
+    import BaseCard from "$components/cards/BaseCard.svelte";
+    import Informations from "$components/cards/bottom/Informations.svelte";
+    import MangaInfo from "$components/cards/bottom/MangaInfo.svelte";
+    import RelativeTimeInfo from "$components/cards/top/ReleaseInfo.svelte";
+    import DroppedPaused from "$components/cards/bottom/DroppedPaused.svelte";
 
-    import NoEntriesMessage from '$components/NoEntriesMessage.svelte';
-    import UpdatedTime from '$components/UpdatedTime.svelte';
+    import NoEntriesMessage from "$components/NoEntriesMessage.svelte";
+    import UpdatedTime from "$components/UpdatedTime.svelte";
 
-    export let data
+    export let data;
     const { dropped, updatedAt } = data.mangaData;
 
-    import { _ } from 'svelte-i18n';
+    import { _ } from "svelte-i18n";
+
+    let selectedManga = null;
+
+    function handleCardClick(manga) {
+        selectedManga = manga;
+    }
+
+    import Overlay from '$components/overlay/Overlay.svelte';
 </script>
 
+{#if selectedManga}
+    <Overlay entry={selectedManga} on:close={() => selectedManga = null} />
+{/if}
+
 {#if dropped.length > 0}
+    {#if dropped.filter((manga) => manga.status === "PAUSED").length > 0}
+        <h2>
+            {$_("paused")}
+            <span
+                >· {dropped.filter((manga) => manga.status === "PAUSED")
+                    .length} manga</span
+            >
+        </h2>
 
-{#if dropped.filter(manga => manga.userStatus === "PAUSED").length > 0}
-  <h2>{$_("paused")} <span>· {dropped.filter(manga => manga.userStatus === "PAUSED").length} manga</span></h2>
+        <div id="paused" class="elements-wrapper elements-manga">
+            {#each dropped as manga}
+                {#if manga.status === "PAUSED" && manga.media.status !== "NOT_YET_RELEASED" && manga.progress.chapter > 0}
+                    <BaseCard
+                        accent={manga.media.accentColor}
+                        background={manga.media.cover.medium}
+                        status={manga.media.status}
+                        on:click={() => handleCardClick(manga)}
+                    >
+                        <!-- bottom -->
+                        <Informations
+                            title={manga.media.title.english || manga.media.title.romaji}
+                        >
+                            <MangaInfo
+                                chapters={manga.media.chapters.count}
+                                volumes={manga.media.volumes.count}
+                            />
+                            <DroppedPaused
+                                progress={manga.progress.chapter}
+                                type={manga.status}
+                                mediaType={manga.media.type}
+                            />
+                        </Informations>
+                    </BaseCard>
+                {/if}
+            {/each}
+        </div>
+    {/if}
 
-  <div id="paused" class="elements-wrapper elements-manga">
-    {#each dropped as manga}
-      {#if manga.userStatus === "PAUSED" && manga.status !== "NOT_YET_RELEASED" && manga.chaptersProgress > 0}
-        
-      <BaseCard accent={manga.accentColor} background={manga.coverLink} status={manga.status}>
-        <!-- bottom -->
-        <Informations title={manga.title} link={manga.mediaLink}>
-          <MangaInfo chapters={manga.chapterCount} volumes={manga.volumesCount}/>
-          <DroppedPaused progress={manga.chaptersProgress} type={manga.userStatus} mediaType={manga.mediaType}/>
-        </Informations>
-      </BaseCard>
+    {#if dropped.filter((manga) => manga.status === "DROPPED").length !== 0}
+        <h2>
+            {$_("dropped")}
+            <span
+                >· {dropped.filter((manga) => manga.status === "DROPPED")
+                    .length} manga</span
+            >
+        </h2>
+        <div id="dropped" class="elements-wrapper elements-manga">
+            {#each dropped as manga}
+                {#if manga.status === "DROPPED" && manga.media.status !== "NOT_YET_RELEASED" && manga.progress.chapter > 0}
+                    <BaseCard
+                        accent={manga.media.accentColor}
+                        background={manga.media.cover.medium}
+                        status={manga.media.status}
+                        on:click={() => handleCardClick(manga)}
+                    >
+                        <!-- bottom -->
+                        <Informations
+                            title={manga.media.title.english || manga.media.title.romaji}
+                        >
+                            <MangaInfo
+                                chapters={manga.media.chapters.count}
+                                volumes={manga.media.volumes.count}
+                            />
+                            <DroppedPaused
+                                progress={manga.progress.chapter}
+                                type={manga.status}
+                                mediaType={manga.media.type}
+                            />
+                        </Informations>
+                    </BaseCard>
+                {/if}
+            {/each}
+        </div>
+    {/if}
+{:else}
+    <NoEntriesMessage updateTime={updatedAt} />
+{/if}
 
-      {/if}
-    {/each}
-  </div>
-  {/if}
-
-{#if dropped.filter(manga => manga.userStatus === "DROPPED").length !== 0}
-  <h2>{$_("dropped")} <span>· {dropped.filter(manga => manga.userStatus === "DROPPED").length} manga</span></h2>
-  <div id="dropped" class="elements-wrapper elements-manga">
-  {#each dropped as manga}
-      {#if manga.userStatus === "DROPPED" && manga.status !== "NOT_YET_RELEASED" && manga.chaptersProgress > 0}
-      
-      <BaseCard accent={manga.accentColor} background={manga.coverLink} status={manga.status}>
-        <!-- bottom -->
-        <Informations title={manga.title} link={manga.mediaLink}>
-          <MangaInfo chapters={manga.chapterCount} volumes={manga.volumesCount}/>
-          <DroppedPaused progress={manga.chaptersProgress} type={manga.userStatus} mediaType={manga.mediaType}/>
-        </Informations>
-      </BaseCard>
-
-      {/if}
-  {/each}
-  </div>
-  {/if}
-  
-  {:else}
-  <NoEntriesMessage updateTime={updatedAt}/>
-  {/if}
-  
-  <UpdatedTime date={updatedAt} service="AniList"/>
+<UpdatedTime date={updatedAt} service="AniList" />
