@@ -59,11 +59,15 @@
         height: 100%;
         padding: 0px;
         border-radius: 6px;
+        transition: all .2s;
         :global svg {
             height: 100%;
             aspect-ratio: 1/1;
             padding: 0 5px;
             border-radius: 6px;
+        }
+        &:hover {
+            scale: 1.05;
         }
     }
 </style>

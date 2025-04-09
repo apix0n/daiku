@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio';
 import { getBoxdTMDBInfos } from './getBoxdTMDBInfos';
+import { getLinkFromId } from '$lib/getLinkFromId';
 
 export const ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0";
 
@@ -39,9 +40,9 @@ export async function makeBoxdFavouritesList(letterboxdUsername) {
         const movieInfos = await getBoxdTMDBInfos(userFav);
 
         const movieFavourites = movieInfos.watched.map(movie => ({
-            cover: movie.coverLink,
-            name: movie.title,
-            link: movie.link
+            cover: movie.media.cover.medium,
+            name: movie.media.title.locale || movie.media.title.english,
+            link: getLinkFromId(movie.media.id.letterboxd, 'letterboxd')
         }));
 
         return {

@@ -1,6 +1,7 @@
 import ical from 'ical-generator';
 import { config } from '$lib/server/config';
 import { createHeaders } from '$lib/server/apiHeaders.js';
+import { getLinkFromId } from '$lib/getLinkFromId.js';
 
 console.log("release.ics | initialised cache")
 const cache = {
@@ -44,55 +45,51 @@ export async function GET({ request, url }) {
     ]);
 
     animeData.current.forEach((anime) => {
-        const eventId = anime.mediaLink?.replace(/^https?:\/\//, '')
-            .replace(/\.[a-z]+\//, '-')
-            .replace(/\/$/, '');
+        const eventId = anime.media.source + anime.media.id.anilist || anime.media.id.myanimelist;
 
-        if (anime.lastEpisode) {
+        if (anime.media.episodes.last) {
             cal.createEvent({
-                start: new Date(anime.lastEpisode.timestamp * 1000),
-                end: new Date(anime.lastEpisode.timestamp * 1000 + anime.episodesDuration * 60 * 1000),
-                summary: anime.title,
-                location: `Episode ${anime.lastEpisode.number}`,
-                url: anime.mediaLink,
-                id: `${eventId}-ep${anime.lastEpisode.number}`
+                start: new Date(anime.media.episodes.last.timestamp),
+                end: new Date(anime.media.episodes.last.timestamp + anime.media.runtime * 60),
+                summary: anime.media.title.english || anime.media.title.romaji,
+                location: `Episode ${anime.media.episodes.last.number}`,
+                url: getLinkFromId(anime.media.id.anilist, anime.media.source, anime.media.type),
+                id: `${eventId}-ep${anime.media.episodes.last.number}`
             });
         };
-        if (anime.nextEpisode) {
+        if (anime.media.episodes.next) {
             cal.createEvent({
-                start: new Date(anime.nextEpisode.timestamp * 1000),
-                end: new Date(anime.nextEpisode.timestamp * 1000 + anime.episodesDuration * 60 * 1000),
-                summary: anime.title,
-                location: `Episode ${anime.nextEpisode.number}`,
-                url: anime.mediaLink,
-                id: `${eventId}-ep${anime.nextEpisode.number}`
+                start: new Date(anime.media.episodes.next.timestamp),
+                end: new Date(anime.media.episodes.next.timestamp + anime.media.runtime * 60),
+                summary: anime.media.title.english || anime.media.title.romaji,
+                location: `Episode ${anime.media.episodes.next.number}`,
+                url: getLinkFromId(anime.media.id.anilist, anime.media.source, anime.media.type),
+                id: `${eventId}-ep${anime.media.episodes.next.number}`
             });
         }
     });
 
     planningData.anime = planningData.anime.filter(anime =>
-        (anime.status === 'NOT_YET_RELEASED' && (anime.startDate?.length === 10 || anime.nextEpisode)) ||
-        (anime.status === 'RELEASING' && anime.nextEpisode && anime.nextEpisode.number - 1 === 1)
+        (anime.media.status === 'NOT_YET_RELEASED' && (anime.media.dates.start?.length === 10 || anime.media.episodes.next)) ||
+        (anime.media.status === 'RELEASING' && anime.media.episodes.next && anime.media.episodes.next.number - 1 === 1)
     );
     planningData.anime.forEach(anime => {
-        const eventId = anime.mediaLink?.replace(/^https?:\/\//, '')
-            .replace(/\.[a-z]+\//, '-')
-            .replace(/\/$/, '');
+        const eventId = anime.media.source + anime.media.id.anilist || anime.media.id.myanimelist;
         
-        if (anime.nextEpisode) {
+        if (anime.media.episodes.next) {
             cal.createEvent({
-                start: new Date(anime.nextEpisode.timestamp * 1000),
-                end: new Date(anime.nextEpisode.timestamp * 1000 + anime.episodesDuration * 60 * 1000),
-                summary: anime.title,
-                location: `Episode ${anime.nextEpisode.number}`,
-                url: anime.mediaLink,
-                id: `${eventId}-ep${anime.nextEpisode.number}`
+                start: new Date(anime.media.episodes.next.timestamp),
+                end: new Date(anime.media.episodes.next.timestamp + anime.media.runtime * 60),
+                summary: anime.media.title.english || anime.media.title.romaji,
+                location: `Episode ${anime.media.episodes.next.number}`,
+                url: getLinkFromId(anime.media.id.anilist, anime.media.source, anime.media.type),
+                id: `${eventId}-ep${anime.media.episodes.next.number}`
             });
-        } else if (anime.startDate) {
+        } else if (anime.media.dates.start) {
             cal.createEvent({
-                start: new Date(anime.startDate),
+                start: new Date(anime.media.dates.start),
                 allDay: true,
-                summary: anime.title,
+                summary: anime.media.title.english || anime.media.title.romaji,
                 location: "Episode 1",
                 id: `${eventId}-start`
             })
@@ -127,7 +124,7 @@ export async function GET({ request, url }) {
     })
 
     if (!cache.data || cache.maxTimestamp > time) {
-        cache.maxTimestamp = time + (config.apiCacheTime * 1000);
+        cache.maxTimestamp = time + (config.apiCacheTime);
         cache.data = cal.toString();
     }
     console.log("release.ics | updated & served from cache")
