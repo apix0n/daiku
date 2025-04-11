@@ -83,4 +83,4 @@
         </div>
 {/if}
       
-<UpdatedTime date={updatedAt} service="AniList"/>
+<UpdatedTime date={updatedAt} service="AniList & MAL-Sync"/>

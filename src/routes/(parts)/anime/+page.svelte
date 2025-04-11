@@ -36,7 +36,7 @@
       <!-- top -->
       {#if anime.media.status === "RELEASING" && anime.media.episodes.next && anime.media.episodes.next?.number - 1 === anime.progress.episode} <!-- for airing/releasing anime, only show next episode in ... label if the user's is up to-date -->
         <RelativeTimeInfo number={anime.media.episodes.next.number} timestamp={anime.media.episodes.next.timestamp} mediaType={anime.media.type} />
-      {:else if anime.media.status === "RELEASING" && anime.media.episodes.last && anime.progress.episode > 0 && anime.progress.episode < anime.media.episodes.count && anime.media.episodes.last.number - anime.progress.episode <= 2}
+      {:else if anime.media.status === "RELEASING" && anime.media.episodes.last && anime.progress.episode > 0 && anime.media.episodes.last.number - anime.progress.episode <= 2}
         <RelativeTimeInfo number={anime.media.episodes.last.number} timestamp={anime.media.episodes.last.timestamp} mediaType={anime.media.type} />
       {:else if anime.media.status === "RELEASING" && anime.media.episodes.next && anime.media.episodes.next.number - anime.progress.episode > 50 }
         <RelativeTimeInfo number={anime.media.episodes.next.number} timestamp={anime.media.episodes.next.timestamp} mediaType={anime.media.type} />

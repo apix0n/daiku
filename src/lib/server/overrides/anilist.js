@@ -34,7 +34,7 @@ export function applyPosterOverrides(media) {
             media.nextAiringEpisode.airingAt = Math.floor(new Date(media.nextAiringEpisode.airingAt * 1000).setUTCHours(override.releaseTime[0], override.releaseTime[1] || 0) / 1000);
         }
         if (override.releaseTime && media.lastEpisode) {
-            media.lastEpisode.timestamp = Math.floor(new Date(media.lastEpisode.timestamp * 1000).setUTCHours(override.releaseTime[0], override.releaseTime[1] || 0) / 1000);
+            media.lastEpisode.timestamp = Math.floor(new Date(media.lastEpisode.timestamp).setUTCHours(override.releaseTime[0], override.releaseTime[1] || 0));
         }
     }
 }

@@ -42,15 +42,16 @@ export async function applyAnimeReleaseTime(anime) {
     }
     const releaseTime = await getAnimeReleaseTime(anime.media.id);
     if (releaseTime) {
+        const [hours, minutes] = releaseTime;
         if (anime.media.nextAiringEpisode?.airingAt) {
             const nextDate = new Date(anime.media.nextAiringEpisode.airingAt * 1000);
-            nextDate.setUTCHours(releaseTime[0], releaseTime[1]);
+            nextDate.setUTCHours(hours, minutes, 0, 0);
             anime.media.nextAiringEpisode.airingAt = Math.floor(nextDate.getTime() / 1000);
         }
         if (anime.media.lastEpisode?.timestamp) {
-            const lastDate = new Date(anime.media.lastEpisode.timestamp * 1000);
-            lastDate.setUTCHours(releaseTime[0], releaseTime[1]);
-            anime.media.lastEpisode.timestamp = Math.floor(lastDate.getTime() / 1000);
+            const lastDate = new Date(anime.media.lastEpisode.timestamp);
+            lastDate.setUTCHours(hours, minutes, 0, 0);
+            anime.media.lastEpisode.timestamp = Math.floor(lastDate.getTime());
         }
         console.log("animeSchedule | found release time for", anime.media.title.english || anime.media.title.romaji);
     }
