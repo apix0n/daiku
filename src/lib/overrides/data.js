@@ -7,6 +7,8 @@ async function fetchOverrides() {
         fetch(`${config.alternativesBaseUrl}/mangacollec.json`).then(r => r.json()).catch(() => ({ series: {}, editions: {} }))
     ]);
 
+    console.log("--- overrides | fetched data")
+
     return { anilist, tmdb, mangacollec };
 }
 
