@@ -1,10 +1,8 @@
 <script>
-    export let catchUp;
-
-    catchUp = true
+    export let catchUp = false;
 </script>
 
-<div class="informations top" class:catchUp={catchUp}>
+<div class="informations top" class:toCatchUp={catchUp}>
     <slot></slot>
 </div>
 

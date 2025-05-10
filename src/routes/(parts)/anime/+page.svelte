@@ -6,7 +6,7 @@
     import DateProgess from '$components/cards/bottom/DateProgess.svelte'
     import Rating from '$components/cards/top/Rating.svelte';
     import AnimeInfo from '$components/cards/bottom/AnimeInfo.svelte';
-    import RelativeTimeInfo from '$components/cards/top/ReleaseInfo.svelte';
+    import ReleaseInfo from '$components/cards/top/ReleaseInfo.svelte';
     import Dates from '$components/cards/bottom/Dates.svelte'
     import Overlay from '$components/overlay/Overlay.svelte';
     import { _ } from "svelte-i18n"
@@ -35,11 +35,11 @@
     <BaseCard accent={anime.media.accentColor} background={anime.media.cover.medium} status={anime.media.status} on:click={() => handleCardClick(anime)}>
       <!-- top -->
       {#if anime.media.status === "RELEASING" && anime.media.episodes.next && anime.media.episodes.next?.number - 1 === anime.progress.episode} <!-- for airing/releasing anime, only show next episode in ... label if the user's is up to-date -->
-        <RelativeTimeInfo number={anime.media.episodes.next.number} timestamp={anime.media.episodes.next.timestamp} mediaType={anime.media.type} />
+        <ReleaseInfo number={anime.media.episodes.next.number} timestamp={anime.media.episodes.next.timestamp} mediaType={anime.media.type}/>
       {:else if anime.media.status === "RELEASING" && anime.media.episodes.last && anime.progress.episode > 0 && anime.media.episodes.last.number - anime.progress.episode <= 2}
-        <RelativeTimeInfo number={anime.media.episodes.last.number} timestamp={anime.media.episodes.last.timestamp} mediaType={anime.media.type} />
+        <ReleaseInfo number={anime.media.episodes.last.number} timestamp={anime.media.episodes.last.timestamp} mediaType={anime.media.type} catchUp/>
       {:else if anime.media.status === "RELEASING" && anime.media.episodes.next && anime.media.episodes.next.number - anime.progress.episode > 50 }
-        <RelativeTimeInfo number={anime.media.episodes.next.number} timestamp={anime.media.episodes.next.timestamp} mediaType={anime.media.type} />
+        <ReleaseInfo number={anime.media.episodes.next.number} timestamp={anime.media.episodes.next.timestamp} mediaType={anime.media.type} />
       {/if}
 
       <!-- bottom -->

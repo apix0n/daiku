@@ -8,7 +8,7 @@
     import RelativeRelease from "./RelativeRelease.svelte";
     import InformationsTop from "./InformationsTop.svelte";
 
-    export let catchUp = true;
+    export let catchUp;
 </script>
 
 <InformationsTop {catchUp}>

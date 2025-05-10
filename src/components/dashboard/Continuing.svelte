@@ -1,7 +1,7 @@
 <script>
     export let data;
     import { _ } from "svelte-i18n"
-	import RelativeRelease from "./cards/top/RelativeRelease.svelte";
+	import RelativeRelease from "../cards/top/RelativeRelease.svelte";
 
 $: continuing = {
     continue: [

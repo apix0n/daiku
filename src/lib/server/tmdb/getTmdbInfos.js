@@ -2,8 +2,8 @@ import { secrets, config } from '$lib/server/config';
 const tmdbApiKey = secrets.tmdbApiKey;
 
 export async function getTmdbInfos(tmdbId) {
-    if (!tmdbApiKey) {
-        throw new Error(`[tmdbid] tmdb api key could not be found, ignoring request for ${tmdbId}`)
+    if (!tmdbApiKey || !tmdbId) {
+        throw new Error(`tmdbid | ignoring request for ${tmdbId}`)
     }
 
     const params = new URLSearchParams({

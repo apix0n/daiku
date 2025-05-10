@@ -35,7 +35,7 @@
     {/if}
 
     <!-- bottom -->
-    <Informations title={movie.media.title.locale} rewatch={movie.repeat}>
+    <Informations title={movie.media.title.locale || movie.media.title.english || movie.media.title.romaji} rewatch={movie.repeat}>
       <RuntimeDate runtime={movie.media.runtime} watchedDate={movie.dates.finished}/>
     </Informations>
   </BaseCard>

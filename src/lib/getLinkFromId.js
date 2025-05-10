@@ -1,16 +1,16 @@
 export function getLinkFromId(id, platform, mediaType='') {
     switch (platform) {
         case 'anilist':
-            if (mediaType === 'anime') {
-                return `https://anilist.co/anime/${id}`
-            } else if (mediaType === 'manga') {
+            if (mediaType === 'manga') {
                 return `https://anilist.co/manga/${id}`
+            } else {
+                return `https://anilist.co/anime/${id}`
             }
         case 'myanimelist':
-            if (mediaType === 'anime') {
-                return `https://myanimelist.net/anime/${id}`
-            } else if (mediaType === 'manga') {
+            if (mediaType === 'manga') {
                 return `https://myanimelist.net/manga/${id}`
+            } else {
+                return `https://myanimelist.net/anime/${id}`
             }
         case 'letterboxd':
             return `https://letterboxd.com/film/${id}`

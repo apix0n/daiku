@@ -5,20 +5,25 @@ import { getTmdbIdFromImdbId } from "./getTmdbIdFromImdb.js";
 
 export async function replaceByTmdb(movieList) {
     const moviePromises = movieList.watched.map(async (movie) => {
+        const title = movie.media.title?.english || 'Unknown Title';
+
         if (!movie.media.id.tmdb) {
             if (movie.media.id.imdb) {
-                movie.media.id.tmdb = await getTmdbIdFromImdbId(movie.media.id.imdb);
-                if (!movie.media.id.tmdb) {
-                    console.log(`Failed to fetch TMDB ID for movie:`, movie.media.title.english || 'Unknown Title');
+                const tmdbId = await getTmdbIdFromImdbId(movie.media.id.imdb);
+                if (!tmdbId) {
+                    console.log(`Failed to fetch TMDB ID for movie:`, title);
                     return movie;
                 }
-                console.log(`Fetched missing TMDB ID for movie:`, movie.media.title.english || 'Unknown Title', `TMDB ID: ${movie.media.id.tmdb}`);
+                movie.media.id.tmdb = tmdbId;
+                console.log(`Fetched missing TMDB ID for movie:`, title, `TMDB ID: ${tmdbId}`);
+            } else {
+                console.log(`No TMDB or IMDb ID for movie:`, title);
+                return movie;
             }
         }
 
         try {
             const tmdbData = await getTmdbInfos(movie.media.id.tmdb);
-            // Merge the movie data with TMDB data, preserving existing titles
             const updatedMovie = {
                 ...movie,
                 media: {
@@ -38,9 +43,7 @@ export async function replaceByTmdb(movieList) {
             return updatedMovie;
         } catch (error) {
             console.error(`Failed to fetch TMDB info for movie ID ${movie.media.id.tmdb}:`, error);
-            if (error.message.includes("status: 401")) {
-                throw error;
-            }
+            if (error.message.includes("status: 401")) throw error;
             return movie;
         }
     });
