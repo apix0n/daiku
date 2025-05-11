@@ -29,7 +29,7 @@
     if (isToday) {
         if (timestamp > Date.now()) {
             timestampDate = $_("todayAt", { values: { time: datetimestamp.toLocaleTimeString([], { timeStyle: 'short' })}})
-        } else if (timestamp - Date.now() > -(60 * 60)) {
+        } else if (Date.now() - timestamp < 60 * 60 * 1000) {
             timestampDate = getRelativeTime(locale, datetimestamp, 'minute');
         } else {
             timestampDate = getRelativeTime(locale, datetimestamp, 'hour');
