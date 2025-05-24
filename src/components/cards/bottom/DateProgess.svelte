@@ -1,6 +1,6 @@
 <script>
     import Rewatch from "../../icons/Rewatch.svelte";
-    import { formatDateLocale } from "$lib/formatDateLocale";
+    import { formatDateLocale } from "$lib/utils/formatDateLocale";
 
     import { _, locale as localeStore } from "svelte-i18n"
     import { get } from "svelte/store";

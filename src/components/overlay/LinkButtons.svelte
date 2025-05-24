@@ -1,6 +1,6 @@
 <script>
     export let ids, mediaType;
-    import { getLinkFromId } from "$lib/getLinkFromId";
+    import { getLinkFromId } from "$lib/utils/getLinkFromId";
 
     import Tmdb from "../icons/platforms/TMDB.svelte";
     import AniList from "../icons/platforms/AniList.svelte";

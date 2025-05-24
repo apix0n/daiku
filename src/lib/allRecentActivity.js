@@ -1,4 +1,4 @@
-import { formatDateLocale } from "$lib/formatDateLocale";
+import { formatDateLocale } from "$lib/utils/formatDateLocale";
 
 export function allRecentActivity(anilistData, mangaCollection, watchedMovies, recentActivityThreshold) {
     let recentActivity = [...anilistData] || [];

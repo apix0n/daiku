@@ -1,6 +1,6 @@
 <script>
     export let runtime, watchedDate;
-    import { formatDateLocale } from "$lib/formatDateLocale";
+    import { formatDateLocale } from "$lib/utils/formatDateLocale";
     
     import { _, locale as localeStore } from "svelte-i18n";
     import { get } from "svelte/store";

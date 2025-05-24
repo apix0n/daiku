@@ -1,5 +1,5 @@
 import * as env from "$env/static/public"
-import { getContrastYIQ } from "$lib/contrastColor"
+import { getContrastYIQ } from "$lib/utils/contrastColor"
 
 export const config = {
     defaultMangaLang: env.DAIKU__DEFAULT_MANGA_LANG ?? "en",

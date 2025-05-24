@@ -1,7 +1,7 @@
 import ical from 'ical-generator';
 import { config } from '$lib/server/config';
 import { createHeaders } from '$lib/server/apiHeaders.js';
-import { getLinkFromId } from '$lib/getLinkFromId.js';
+import { getLinkFromId } from '$lib/utils/getLinkFromId.js';
 
 console.log("release.ics | initialised cache")
 const cache = {

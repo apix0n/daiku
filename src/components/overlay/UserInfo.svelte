@@ -1,5 +1,5 @@
 <script>
-    import { ratingStars } from "$lib/ratingStars";
+    import { ratingStars } from "$lib/utils/ratingStars";
 
     export let dates, review, progress, mediaType;
     

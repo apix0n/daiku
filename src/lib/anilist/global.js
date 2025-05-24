@@ -1,4 +1,4 @@
-import { getRelativeTime } from "$lib/getRelativeTime";
+import { getRelativeTime } from "$lib/utils/getRelativeTime";
 
 export function planningListFormatDate(dateString) {
     const date = new Date(dateString);

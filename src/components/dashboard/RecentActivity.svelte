@@ -1,6 +1,6 @@
 <script>
-    import { formatDateLocale } from "$lib/formatDateLocale";
-    import { getRelativeTime } from "$lib/getRelativeTime";
+    import { formatDateLocale } from "$lib/utils/formatDateLocale";
+    import { getRelativeTime } from "$lib/utils/getRelativeTime";
 
     export let data;
     import { _, locale as localeStore } from "svelte-i18n"

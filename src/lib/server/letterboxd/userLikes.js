@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 import { getBoxdTMDBInfos } from './getBoxdTMDBInfos';
-import { getLinkFromId } from '$lib/getLinkFromId';
+import { getLinkFromId } from '$lib/utils/getLinkFromId';
 
 export const ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0";
 

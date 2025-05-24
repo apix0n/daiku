@@ -9,6 +9,7 @@ export let config = {
     alLangRegex: env.DAIKU_ANILIST_LANG_REGEX ?? "lang:([^\s]+)",
     apiAuthKeyVariable: env.DAIKU_API_AUTH_KEY_VARIABLE || undefined,
     defaultTmdbLang: env.DAIKU_DEFAULT_TMDB_LANG || 'en-GB',
+    pauseAfterDays: parseInt(env.DAIKU_PAUSE_AFTER_DAYS) || 30,
 };
 
 export let accounts = {

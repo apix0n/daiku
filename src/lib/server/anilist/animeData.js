@@ -1,4 +1,5 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
+import { config } from '$lib/server/config';
 import { applyAnimeReleaseTime, getAnimeReleaseTime } from '../animeSchedule/animeReleaseTime';
 import { getPrecedingEpisode } from './getPrecedingEpisode';
 
@@ -133,6 +134,10 @@ async function currentAnime(userAnimeData, fetchLastEpisode) {
         .sort((a, b) => b.updatedAt - a.updatedAt) // Sort by updatedAt descending
         .filter(entry => entry.status === "CURRENT" || entry.status === "REPEATING") // Keep only current and rewatching entries
         .filter(entry => {
+            const updatedAt = new Date(entry.updatedAt * 1000);
+            return (new Date() - updatedAt) / (1000 * 60 * 60 * 24) <= config.pauseAfterDays;
+        }) // Filter out entries that have not been updated in the last $config.pauseAfterDays days
+        .filter(entry => {
             const duplicate = seen.has(entry.media.id);
             seen.add(entry.media.id);
             return !duplicate;
@@ -206,6 +211,16 @@ function droppedAnime(userAnimeData) {
     const seen = new Set();
     const allDroppedAnime = userAnimeData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
+        .map(entry => {
+            const updatedAt = new Date(entry.updatedAt * 1000);
+            if ((entry.status === "CURRENT" || entry.status === "REPEATING") && (new Date() - updatedAt) / (1000 * 60 * 60 * 24) > config.pauseAfterDays) {
+                return {
+                    ...entry,
+                    status: "PAUSED",
+                };
+            }
+            return entry;
+        }) // Add entries that have not been updated in the last $config.pauseAfterDays days and set their status as PAUSED
         .sort((a, b) => b.updatedAt - a.updatedAt) // Sort by updatedAt descending
         .filter(entry => entry.status === "DROPPED" || entry.status === "PAUSED") // Keep only dropped and paused entries
         .filter(entry => {

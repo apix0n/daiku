@@ -13,7 +13,7 @@
             <h1>{entry.media.title.locale || entry.media.title.english || entry.media.title.romaji}</h1>
         </div>
         <span class="sub">
-            {#if (entry.media.title.locale?.toLowerCase() || entry.media.title.english?.toLowerCase()) !== (entry.media.title.romaji?.toLowerCase() || entry.media.title.native?.toLowerCase())}
+            {#if (entry.media.title.locale?.toLowerCase() || entry.media.title.english?.toLowerCase() || entry.media.title.romaji?.toLowerCase()) !== (entry.media.title.romaji?.toLowerCase() || entry.media.title.native?.toLowerCase())}
                 <i>{entry.media.title.romaji || entry.media.title.native}</i> ·
             {/if}
             {#if entry.media.status && entry.media.status !== "FINISHED"}
@@ -53,7 +53,10 @@
             {#await synopsis}
                 Loading synopsis...
             {:then text}
-                {text}
+                {text.synopsis}
+                {#if text.source}
+                    <span class="source">{text.source}</span>
+                {/if}
             {:catch error}
                 Failed to load synopsis
             {/await}
@@ -109,7 +112,7 @@
     .sep {
         display: block;
         width: 100%;
-        height: 1px;
+        height: 2px;
         background-color: var(--accent, var(--text-2));
         margin: 10px 0;
     }
@@ -118,6 +121,14 @@
         white-space: pre-wrap;
         line-height: 1.5em;
         max-width: 750px;
+    }
+
+    .source {
+        background: var(--background-3);
+        border-radius: 1em;
+        font-size: 0.8em;
+        color: var(--text-2);
+        padding: 0 .4em;
     }
 
     @media screen and (max-width: 900px) {

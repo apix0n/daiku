@@ -1,7 +1,7 @@
 <script>
     import { _, locale as localeStore } from 'svelte-i18n';
     import { get } from 'svelte/store';
-    import { getRelativeTime } from "$lib/getRelativeTime";
+    import { getRelativeTime } from "$lib/utils/getRelativeTime";
 
     export let dateString, status;
 

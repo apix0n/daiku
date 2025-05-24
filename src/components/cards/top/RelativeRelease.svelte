@@ -1,5 +1,5 @@
 <script>
-    import { getRelativeTime } from "$lib/getRelativeTime";
+    import { getRelativeTime } from "$lib/utils/getRelativeTime";
     import { get } from "svelte/store"
     export let timestamp, number, mediaType;
 

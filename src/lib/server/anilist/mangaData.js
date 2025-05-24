@@ -1,5 +1,5 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
-import { config } from '../config';
+import { config } from '$lib/server/config.js';
 
 async function getUserMangaData(userId) {
     const query = `
@@ -127,6 +127,10 @@ async function readingManga(userMangaData) {
         .sort((a, b) => b.updatedAt - a.updatedAt) // Sort by updatedAt descending
         .filter(entry => entry.status === "CURRENT" || entry.status === "REPEATING") // Keep only current and rewatching entries
         .filter(entry => {
+            const updatedAt = new Date(entry.updatedAt * 1000);
+            return (new Date() - updatedAt) / (1000 * 60 * 60 * 24) <= config.pauseAfterDays;
+        }) // Filter out entries that have not been updated in the last $config.pauseAfterDays days
+        .filter(entry => {
             const duplicate = seen.has(entry.media.id);
             seen.add(entry.media.id);
             return !duplicate;
@@ -195,6 +199,16 @@ function droppedManga(userMangaData) {
     const seen = new Set();
     const allDroppedManga = userMangaData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
+        .map(entry => {
+            const updatedAt = new Date(entry.updatedAt * 1000);
+            if ((entry.status === "CURRENT" || entry.status === "REPEATING") && (new Date() - updatedAt) / (1000 * 60 * 60 * 24) > config.pauseAfterDays) {
+                return {
+                    ...entry,
+                    status: "PAUSED",
+                };
+            }
+            return entry;
+        }) // Add entries that have not been updated in the last $config.pauseAfterDays days and set their status as PAUSED
         .sort((a, b) => b.updatedAt - a.updatedAt) // Sort by updatedAt descending
         .filter(entry => entry.status === "DROPPED" || entry.status === "PAUSED") // Keep only dropped and paused entries
         .filter(entry => {
