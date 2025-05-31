@@ -37,7 +37,10 @@
         color: var(--white);
         cursor: pointer;
         transition: all 0.1s ease-in-out;
-        &:hover {
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .element:hover {
             scale: 1.04;
             outline-color: var(--accentColor, var(--background-4));
             z-index: 3;

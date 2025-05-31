@@ -24,6 +24,11 @@
                     datetimestamp.getMonth() === now.getMonth() &&
                     datetimestamp.getFullYear() === now.getFullYear();
 
+    // Add check for tomorrow
+    const isTomorrow = datetimestamp.getDate() === now.getDate() + 1 &&
+                      datetimestamp.getMonth() === now.getMonth() &&
+                      datetimestamp.getFullYear() === now.getFullYear();
+
     let timestampDate = getRelativeTime(locale, datetimestamp);
 
     if (isToday) {
@@ -34,6 +39,8 @@
         } else {
             timestampDate = getRelativeTime(locale, datetimestamp, 'hour');
         }
+    } else if (isTomorrow) {
+        timestampDate = getRelativeTime(locale, datetimestamp) + " " + $_("todayAt", { values: { time: datetimestamp.toLocaleTimeString([], { timeStyle: 'short' })}})
     }
 </script>
 

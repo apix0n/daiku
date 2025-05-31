@@ -1,5 +1,5 @@
 <script>
-    import { _, locale as localeStore } from 'svelte-i18n';
+    import { _, locale as localeStore, date as dateI18N } from 'svelte-i18n';
     import { get } from 'svelte/store';
     import { getRelativeTime } from "$lib/utils/getRelativeTime";
 
@@ -21,13 +21,13 @@
         } else if (dateString.length === 4) {
             displayedDate = $_('releasingDate.inDateN', { values: { n: date.getFullYear() }});
         } else if (dateString.length === 7) {
-            const formattedDate = date.toLocaleDateString(locale, { year: 'numeric', month: 'short' });
+            const formattedDate = $dateI18N(date, { year: 'numeric', month: 'short' });
             displayedDate = $_('releasingDate.inDateN', { values: { n: formattedDate }});
         } else if (dateString.length === 10) {
             if (Math.abs(now - date) <= fourteenDaysInMs) {
                 displayedDate = $_('releasingDate.onDateN', { values: { n: getRelativeTime(locale, date) }});
             } else {
-                const formattedDate = date.toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' });
+                const formattedDate = $dateI18N(date, { year: 'numeric', month: 'short', day: 'numeric' });
                 displayedDate = $_('releasingDate.onDayN', { values: { n: formattedDate }});
             }
         }
