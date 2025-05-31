@@ -145,7 +145,7 @@ async function currentAnime(userAnimeData, fetchLastEpisode) {
 
     await Promise.all(allCurrentAnime.map(async (media) => {
         try {
-            if (media.media.status === "RELEASING" && media.media.nextAiringEpisode?.episode && fetchLastEpisode) {
+            if (media.media.status === "RELEASING" && media.media.nextAiringEpisode?.episode - 1 != media.progress && fetchLastEpisode) {
                 media.media.lastEpisode = await getPrecedingEpisode(media.media.id, media.media.nextAiringEpisode.episode);
                 if (media.media.lastEpisode.number > media.media.nextAiringEpisode?.episode) {
                     media.media.lastEpisode = undefined;

@@ -1,10 +1,24 @@
+import { cacheStore } from "$lib/server/stores/cache";
+
 const apiUrl = 'https://animeschedule.net/api/v3';
+const CACHE_KEY = "anime-release-times";
 
 export async function getAnimeReleaseTime(anilistId) {
+    const now = Date.now();
+
+    // Check cache first using the same pattern as anime endpoint
+    if (cacheStore.isFresh(CACHE_KEY, now)) {
+        const cache = cacheStore.get(CACHE_KEY);
+        if (cache?.data?.[anilistId]) {
+            console.log("animeSchedule | found cached release time for", anilistId);
+            return cache.data[anilistId];
+        }
+    }
+
     const url = `${apiUrl}/anime?anilist-ids=${anilistId}`;
     try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 1500); // 1.5 seconds timeout
+        const timeoutId = setTimeout(() => controller.abort(), 1500);
 
         const res = await fetch(url, {
             signal: controller.signal
@@ -27,7 +41,16 @@ export async function getAnimeReleaseTime(anilistId) {
         }
 
         const subTime = new Date(anime.subTime);
-        return [subTime.getUTCHours(), subTime.getUTCMinutes()];
+        const releaseTime = [subTime.getUTCHours(), subTime.getUTCMinutes()];
+        console.log("animeSchedule | fetched release time for", anilistId);
+
+        // Get existing cache or create new one
+        const existing = cacheStore.get(CACHE_KEY)?.data || {};
+        existing[anilistId] = releaseTime;
+
+        // Cache using same TTL pattern
+        cacheStore.updateWithTTL(CACHE_KEY, existing, 24 * 60 * 60 * 1000);
+        return releaseTime;
     } catch (error) {
         if (error.name === 'AbortError') {
             console.log("animeSchedule | request timeout for ID:", anilistId);
@@ -53,6 +76,5 @@ export async function applyAnimeReleaseTime(anime) {
             lastDate.setUTCHours(hours, minutes, 0, 0);
             anime.media.lastEpisode.timestamp = Math.floor(lastDate.getTime());
         }
-        console.log("animeSchedule | found release time for", anime.media.title.english || anime.media.title.romaji);
     }
 }

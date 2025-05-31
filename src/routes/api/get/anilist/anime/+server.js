@@ -2,51 +2,39 @@ import { fetchAnimeData } from "$lib/server/anilist/animeData";
 import { json } from '@sveltejs/kit';
 import { getValue } from "$lib/server/redisInteractions.js";
 import { config, accounts, secrets } from "$lib/server/config.js";
+import { cacheStore } from "$lib/server/stores/cache";
 
-console.log("anilist anime | initialised cache")
-const cache = {
-    maxTimestamp: null,
-    data: null
-}
+const CACHE_KEY = "anime";
 
 export async function GET({ request, url }) {
-    const authHeader = request.headers.get("authorization")
-    if (url.searchParams.has("clear") && (secrets.apiAuthKey && authHeader === `Bearer ${secrets.apiAuthKey}`)) {
-        cache.maxTimestamp = null;
-        cache.data = null;
-        console.log("anilist anime | cleared cache")
-        return json({ cleared: true })
+    const now = Date.now();
+
+    if (cacheStore.isFresh(CACHE_KEY, now)) {
+        console.log("anilist anime | found & served cache");
+        return json(cacheStore.get(CACHE_KEY)?.data);
     }
-
-    const time = Date.now()
-
-    if ((cache.maxTimestamp && cache.data) && time < cache.maxTimestamp) {
-        console.log("anilist anime | found & served cache")
-        return json(cache.data)
-    }
-
+    
     try {
-        let data;
-        data = await fetchAnimeData(accounts.anilistId);
-        cache.maxTimestamp = time + (config.alCacheTime * 1000);
-        cache.data = data;
-        console.log("anilist anime | updated & served new cache")
+        const data = await fetchAnimeData(accounts.anilistId);
+        cacheStore.updateWithTTL(CACHE_KEY, data, config.alCacheTime * 1000);
+        console.log("anilist anime | updated & served new cache");
         return json(data);
     } catch (error) {
         try {
             const data = await getValue("anime");
-            // Vérifier si le cache existe avant d'accéder à updatedAt
-            if (!cache.data || new Date(cache.data.updatedAt) < time) {
-                cache.maxTimestamp = time + (config.alCacheTime * 1000);
-                cache.data = data;
+            const existing = cacheStore.get(CACHE_KEY);
+            const updatedAt = new Date(data?.updatedAt ?? 0).getTime();
+            const prevUpdatedAt = new Date(existing?.data?.updatedAt ?? 0).getTime();
+
+            if (!existing?.data || prevUpdatedAt < updatedAt) {
+                cacheStore.updateWithTTL(CACHE_KEY, data, config.alCacheTime * 1000);
             }
-            console.log("anilist anime | error fetching, served from db")
-            return json(data)
+
+            console.log("anilist anime | error fetching, served from db");
+            return json(data);
         } catch (error) {
-            console.error(error)
-            return json({
-                success: false
-            }, { status: 500 });
+            console.error(error);
+            return json({ updatedAt: null, watched: [], current: [], dropped: [] }, { status: 500 });
         }
     }
 }

@@ -19,7 +19,5 @@ export async function getSynopsis(id, mediaType) {
         synopsis = synopsis.replace(/\s*\[Written by MAL Rewrite\]/, '').trim();
     }
 
-    console.log(synopsis, source);
-
     return { synopsis, source };
 }

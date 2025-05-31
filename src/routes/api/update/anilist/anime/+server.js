@@ -1,8 +1,8 @@
 import { fetchAnimeData } from "$lib/server/anilist/animeData";
-import { accounts, secrets } from "$lib/server/config.js";
+import { accounts, secrets, config } from "$lib/server/config.js";
 import { json } from '@sveltejs/kit';
 import { setValue } from "$lib/server/redisInteractions.js";
-import { createHeaders } from "$lib/server/apiHeaders.js";
+import { cacheStore } from "$lib/server/stores/cache.js";
 
 export async function GET({ request, url }) {
     const authHeader = request.headers.get("authorization")
@@ -15,11 +15,13 @@ export async function GET({ request, url }) {
     try {
         let data = await fetchAnimeData(accounts.anilistId, false);
         await setValue("anime", data);
-        await fetch(url.origin + "/api/get/anilist/anime?clear", {
-            headers: createHeaders(request.headers)
-        })
+        cacheStore.set("anime", {
+            maxTimestamp: Date.now() + config.alCacheTime * 1000,
+            data,
+        });
         return json({ success: true });
     } catch (error) {
+        console.error(error)
         return json({
             success: false
         }, { status: 500 });

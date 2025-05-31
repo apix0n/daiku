@@ -2,23 +2,23 @@ import ical from 'ical-generator';
 import { config } from '$lib/server/config';
 import { createHeaders } from '$lib/server/apiHeaders.js';
 import { getLinkFromId } from '$lib/utils/getLinkFromId.js';
+import { cacheStore } from '$lib/server/stores/cache.js';
 
-console.log("release.ics | initialised cache")
-const cache = {
-    maxTimestamp: null,
-    data: null
-}
+const CACHE_KEY = "calendar";
 
 export async function GET({ request, url }) {
-    const time = Date.now()
+    const now = Date.now();
 
-    if ((cache.maxTimestamp && cache.data) && time < cache.maxTimestamp) {
-        console.log("release.ics | found & served cache")
-        return new Response(cache.data, {
-            headers: {
-                'content-type': 'text/calendar',
-            }
-        });
+    if (cacheStore.isFresh(CACHE_KEY, now)) {
+        console.log("release.ics | found & served cache");
+        const cachedData = cacheStore.get(CACHE_KEY)?.data;
+        if (cachedData) {
+            return new Response(cachedData, {
+                headers: {
+                    'content-type': 'text/calendar',
+                }
+            });
+        }
     }
 
     const baseUrl = url.origin;
@@ -54,7 +54,11 @@ export async function GET({ request, url }) {
                 summary: anime.media.title.english || anime.media.title.romaji,
                 location: `Episode ${anime.media.episodes.last.number}`,
                 url: getLinkFromId(anime.media.id.anilist, anime.media.source, anime.media.type),
-                id: `${eventId}-ep${anime.media.episodes.last.number}`
+                id: `${eventId}-ep${anime.media.episodes.last.number}`,
+                x: {
+                    'X-COVER': anime.media.cover.medium || anime.media.cover.small,
+                    'X-MEDIA-TYPE': anime.media.type,
+                }
             });
         };
         if (anime.media.episodes.next) {
@@ -64,7 +68,11 @@ export async function GET({ request, url }) {
                 summary: anime.media.title.english || anime.media.title.romaji,
                 location: `Episode ${anime.media.episodes.next.number}`,
                 url: getLinkFromId(anime.media.id.anilist, anime.media.source, anime.media.type),
-                id: `${eventId}-ep${anime.media.episodes.next.number}`
+                id: `${eventId}-ep${anime.media.episodes.next.number}`,
+                x: {
+                    'X-COVER': anime.media.cover.medium || anime.media.cover.small,
+                    'X-MEDIA-TYPE': anime.media.type,
+                }
             });
         }
     });
@@ -75,7 +83,7 @@ export async function GET({ request, url }) {
     );
     planningData.anime.forEach(anime => {
         const eventId = anime.media.source + anime.media.id.anilist || anime.media.id.myanimelist;
-        
+
         if (anime.media.episodes.next) {
             cal.createEvent({
                 start: new Date(anime.media.episodes.next.timestamp),
@@ -83,7 +91,11 @@ export async function GET({ request, url }) {
                 summary: anime.media.title.english || anime.media.title.romaji,
                 location: `Episode ${anime.media.episodes.next.number}`,
                 url: getLinkFromId(anime.media.id.anilist, anime.media.source, anime.media.type),
-                id: `${eventId}-ep${anime.media.episodes.next.number}`
+                id: `${eventId}-ep${anime.media.episodes.next.number}`,
+                x: {
+                    'X-COVER': anime.media.cover.medium || anime.media.cover.small,
+                    'X-MEDIA-TYPE': anime.media.type,
+                }
             });
         } else if (anime.media.dates.start) {
             cal.createEvent({
@@ -91,14 +103,17 @@ export async function GET({ request, url }) {
                 allDay: true,
                 summary: anime.media.title.english || anime.media.title.romaji,
                 location: "Episode 1",
-                id: `${eventId}-start`
+                id: `${eventId}-start`,
+                x: {
+                    'X-COVER': anime.media.cover.medium || anime.media.cover.small,
+                    'X-MEDIA-TYPE': anime.media.type,
+                }
             })
         }
     })
 
-    const now = new Date();
     const sevenDaysAgo = new Date(now);
-    sevenDaysAgo.setDate(now.getDate() - 7);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
     mangacollecData.collection = mangacollecData.collection.filter(series =>
         series.editions.some(edition => {
@@ -112,26 +127,31 @@ export async function GET({ request, url }) {
     mangacollecData.collection.forEach(series => {
         series.editions.forEach(edition => {
             edition.next.forEach(volume => {
-                const eventId = `manga-${series.titre.toLowerCase().replace(/\s+/g, '-')}-${volume.numeroTome}`;
+                const eventId = `volume-${series.titre.toLowerCase().replace(/\s+/g, '-')}-${volume.numeroTome}`;
                 cal.createEvent({
                     start: new Date(volume.releaseDate),
                     allDay: true,
                     summary: `Tome ${volume.numeroTome} - ${series.titre}`,
-                    id: eventId
+                    id: eventId,
+                    x: {
+                        'X-COVER': String(volume.coverLink || ''),
+                        'X-MEDIA-TYPE': 'volume',
+                        'X-SERIES-NAME': series.titre,
+                        'X-NUMBER': String(volume.numeroTome || '')
+                    }
                 })
             })
         })
     })
 
-    if (!cache.data || cache.maxTimestamp > time) {
-        cache.maxTimestamp = time + (config.apiCacheTime);
-        cache.data = cal.toString();
-    }
-    console.log("release.ics | updated & served from cache")
+    const calendarData = cal.toString();
+    cacheStore.updateWithTTL(CACHE_KEY, calendarData, config.apiCacheTime);
+    console.log("release.ics | updated & served new cache");
 
-    return new Response(cal.toString(), {
+    return new Response(calendarData, {
         headers: {
-            'content-type': 'text/calendar',
+            'content-type': 'text/calendar; charset=utf-8',
+            'content-disposition': 'attachment; filename="daiku-calendar.ics"',
         }
     });
 }
