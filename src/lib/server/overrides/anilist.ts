@@ -1,7 +1,8 @@
 import { alternativesUrl } from '../anilist/global';
 import overridesData from '$lib/overrides/data';
+import type { AniListMedia } from '$lib/types/anilist';
 
-export function applyPosterOverrides(media) {
+export function applyPosterOverrides(media: AniListMedia): AniListMedia {
     const posterOverrides = overridesData.anilist;
     const override = posterOverrides[media.id];
     if (override) {
@@ -37,4 +38,5 @@ export function applyPosterOverrides(media) {
             media.lastEpisode.timestamp = Math.floor(new Date(media.lastEpisode.timestamp).setUTCHours(override.releaseTime[0], override.releaseTime[1] || 0));
         }
     }
+    return media;
 }

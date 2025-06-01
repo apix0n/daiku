@@ -41,7 +41,7 @@ export async function loadMangaData(update = false) {
     if (mangaData?.current) {
         const updatedManga = await Promise.all(
             mangaData.current.map(async (manga) => {
-                if (manga.media.status === "RELEASING" && manga.media.id.myanimelist) {
+                if (manga.media.status === "airing" && manga.media.id.myanimelist) {
                     const lastChapter = await getLatestChapter(manga.media.id.myanimelist, manga.lang);
                     return {
                         ...manga,
@@ -58,6 +58,7 @@ export async function loadMangaData(update = false) {
             })
         );
         mangaData.current = updatedManga;
+        mangaData.updatedAt.service += ' & MAL-Sync'
     }
 
     dataStore.set('mangaData', mangaData);

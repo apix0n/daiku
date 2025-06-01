@@ -20,6 +20,8 @@ export interface AniListMedia {
     title: AniListTitle;
     format: 'TV' | 'MOVIE' | 'OVA' | 'ONA' | 'SPECIAL' | 'MUSIC';
     episodes: number | null;
+    chapters: number | null;
+    volumes: number | null;
     duration: number | null;
     id: number;
     idMal: number | null;
@@ -27,7 +29,9 @@ export interface AniListMedia {
     coverImage: AniListCoverImage;
     bannerImage: string | null;
     nextAiringEpisode: AniListNextAiringEpisode | null;
-    lastEpisode?: any
+
+    // custom fields
+    lastEpisode?: any,
 }
 
 export const AniListMediaStatus = ['FINISHED', 'RELEASING','NOT_YET_RELEASED' ,'CANCELLED', 'HIATUS'] as const;
@@ -42,12 +46,16 @@ export interface MediaListEntry {
     media: AniListMedia;
     score: number | null;
     progress: number;
+    progressVolumes: number | null;
     notes: string | null;
-    status: typeof AniListUserMediaStatus[number];
+    status: (typeof AniListUserMediaStatus)[number];
     repeat: number;
     startedAt: AniListDate;
     completedAt: AniListDate;
     updatedAt: number;
+
+    // custom fields
+    daikuReadingLang: string | undefined;
 }
 
 export const AniListUserMediaStatus = ['CURRENT', 'PLANNING', 'COMPLETED', 'DROPPED', 'PAUSED', 'REPEATING'] as const;

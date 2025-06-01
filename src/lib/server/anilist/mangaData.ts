@@ -1,7 +1,11 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 import { config } from '$lib/server/config.js';
+import { mapAniListMediaStatus, mapAniListUserStatus } from '$lib/anilist/global';
+import type { AniListResponse, AniListUserMediaStatus } from '$lib/types/anilist';
+import type { MediaElement } from '$lib/types/media';
+import type { MangaRequest } from '$lib/types/requests';
 
-async function getUserMangaData(userId) {
+async function getUserMangaData(userId: number): Promise<AniListResponse> {
     const query = `
     query ($userId: Int) {
         MediaListCollection(userId: $userId, type: MANGA, status_not: PLANNING, sort: FINISHED_ON_DESC) {
@@ -51,7 +55,7 @@ async function getUserMangaData(userId) {
     return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
-function readManga(userMangaData) {
+function readManga(userMangaData: AniListResponse): MediaElement[] {
     const seen = new Set();
     const allReadManga = userMangaData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
@@ -74,9 +78,17 @@ function readManga(userMangaData) {
     });
 
     allReadManga.sort((a, b) => {
-        const dateA = new Date(a.completedAt.year, a.completedAt.month - 1, a.completedAt.day);
-        const dateB = new Date(b.completedAt.year, b.completedAt.month - 1, b.completedAt.day);
-        return dateB - dateA || allReadManga.indexOf(b) - allReadManga.indexOf(a);
+        const dateA = new Date(
+            (a.completedAt.year ?? 1970),
+            ((a.completedAt.month ?? 1) - 1),
+            (a.completedAt.day ?? 1)
+        );
+        const dateB = new Date(
+            (b.completedAt.year ?? 1970),
+            ((b.completedAt.month ?? 1) - 1),
+            (b.completedAt.day ?? 1)
+        );
+        return dateB.getTime() - dateA.getTime() || allReadManga.indexOf(b) - allReadManga.indexOf(a);
     });
 
     return allReadManga.map(entry => ({
@@ -89,15 +101,17 @@ function readManga(userMangaData) {
             type: 'manga',
             source: 'anilist',
             accentColor: entry.media.coverImage.color,
-            status: entry.media.status,
+            status: mapAniListMediaStatus(entry.media.status),
             cover: {
                 large: entry.media.coverImage.extraLarge,
                 medium: entry.media.coverImage.large,
                 small: entry.media.coverImage.medium,
             },
-            banner: {
+            banner: entry.media.bannerImage ? {
                 large: entry.media.bannerImage,
-            },
+                medium: entry.media.bannerImage,
+                small: entry.media.bannerImage,
+            } : undefined,
             chapters: {
                 count: entry.media.chapters,
             },
@@ -107,8 +121,10 @@ function readManga(userMangaData) {
             id: {
                 anilist: entry.media.id,
                 myanimelist: entry.media.idMal,
-            }
+            },
+            special: (entry.media.chapters ?? 0) <= 4 && (entry.media.chapters ?? 0 > 0) && !entry.media.volumes ? true : false,
         },
+        status: 'finished',
         dates: {
             started: anilistGlobal.formatDate(entry.startedAt),
             finished: anilistGlobal.formatDate(entry.completedAt),
@@ -117,10 +133,10 @@ function readManga(userMangaData) {
             rating: entry.score,
             text: entry.notes,
         }
-    }));
+    } as MediaElement));
 }
 
-async function readingManga(userMangaData) {
+function readingManga(userMangaData: AniListResponse): MediaElement[] {
     const seen = new Set();
     const allCurrentManga = userMangaData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
@@ -128,7 +144,7 @@ async function readingManga(userMangaData) {
         .filter(entry => entry.status === "CURRENT" || entry.status === "REPEATING") // Keep only current and rewatching entries
         .filter(entry => {
             const updatedAt = new Date(entry.updatedAt * 1000);
-            return (new Date() - updatedAt) / (1000 * 60 * 60 * 24) <= config.pauseAfterDays;
+            return (new Date().getTime() - updatedAt.getTime()) / (1000 * 60 * 60 * 24) <= config.pauseAfterDays;
         }) // Filter out entries that have not been updated in the last $config.pauseAfterDays days
         .filter(entry => {
             const duplicate = seen.has(entry.media.id);
@@ -139,13 +155,15 @@ async function readingManga(userMangaData) {
     for (const media of allCurrentManga) {
         anilistGlobal.applyPosterOverrides(media.media);
 
-        let readingLang = undefined;
-        const langMatch = media.notes?.match(new RegExp(config.alLangRegex));
-        if (langMatch) { // Extract language from notes
-            readingLang = langMatch[1]; 
-            media.daikuReadingLang = readingLang;
-            media.notes = media.notes.replace(langMatch[0], '').trim(); // Remove the language from notes
-        } 
+        if (media.notes) {
+            let readingLang = undefined;
+            const langMatch = media.notes.match(new RegExp(config.alLangRegex));
+            if (langMatch) { // Extract language from notes
+                readingLang = langMatch[1];
+                media.daikuReadingLang = readingLang;
+                media.notes = media.notes.replace(langMatch[0], '').trim(); // Remove the language from notes
+            }
+        }
     }
 
     return allCurrentManga.map(entry => ({
@@ -158,21 +176,24 @@ async function readingManga(userMangaData) {
             type: 'manga',
             source: 'anilist',
             accentColor: entry.media.coverImage.color,
-            status: entry.media.status,
+            status: mapAniListMediaStatus(entry.media.status),
             cover: {
                 large: entry.media.coverImage.extraLarge,
                 medium: entry.media.coverImage.large,
                 small: entry.media.coverImage.medium,
             },
-            banner: {
+            banner: entry.media.bannerImage ? {
                 large: entry.media.bannerImage,
-            },
+                medium: entry.media.bannerImage,
+                small: entry.media.bannerImage,
+            } : undefined,
             chapters: {
                 count: entry.media.chapters,
             },
             volumes: {
                 count: entry.media.volumes,
             },
+            special: false,
             id: {
                 anilist: entry.media.id,
                 myanimelist: entry.media.idMal,
@@ -185,23 +206,23 @@ async function readingManga(userMangaData) {
             chapter: entry.progress,
             volume: entry.progressVolumes,
         },
-        status: entry.status,
+        status: mapAniListUserStatus(entry.status),
         repeat: entry.repeat,
         review: {
             rating: entry.score,
-            text: entry.notes,
+            text: entry.notes || null,
         },
         lang: entry.daikuReadingLang,
-    }));
+    } as MediaElement));
 }
 
-function droppedManga(userMangaData) {
+function droppedManga(userMangaData: AniListResponse): MediaElement[] {
     const seen = new Set();
     const allDroppedManga = userMangaData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
         .map(entry => {
             const updatedAt = new Date(entry.updatedAt * 1000);
-            if ((entry.status === "CURRENT" || entry.status === "REPEATING") && (new Date() - updatedAt) / (1000 * 60 * 60 * 24) > config.pauseAfterDays) {
+            if ((entry.status === "CURRENT" || entry.status === "REPEATING") && (new Date().getTime() - updatedAt.getTime()) / (1000 * 60 * 60 * 24) > config.pauseAfterDays) {
                 return {
                     ...entry,
                     status: "PAUSED",
@@ -231,21 +252,24 @@ function droppedManga(userMangaData) {
             type: 'manga',
             source: 'anilist',
             accentColor: entry.media.coverImage.color,
-            status: entry.media.status,
+            status: mapAniListMediaStatus(entry.media.status),
             cover: {
                 large: entry.media.coverImage.extraLarge,
                 medium: entry.media.coverImage.large,
                 small: entry.media.coverImage.medium,
             },
-            banner: {
+            banner: entry.media.bannerImage ? {
                 large: entry.media.bannerImage,
-            },
+                medium: entry.media.bannerImage,
+                small: entry.media.bannerImage,
+            } : undefined,
             chapters: {
                 count: entry.media.chapters,
             },
             volumes: {
                 count: entry.media.volumes,
             },
+            special: false,
             id: {
                 anilist: entry.media.id,
                 myanimelist: entry.media.idMal,
@@ -258,19 +282,27 @@ function droppedManga(userMangaData) {
             chapter: entry.progress,
             volume: entry.progressVolumes
         },
-        status: entry.status
-    }));
+        status: mapAniListUserStatus(entry.status as typeof AniListUserMediaStatus[number]),
+        review: {
+            rating: entry.score || 0,
+            isHtml: entry.notes ? false : undefined,
+            text: entry.notes || undefined,
+        },
+    } as MediaElement));
 }
 
-export async function fetchMangaData(userId) {
+export async function fetchMangaData(userId: number) {
     try {
         const userData = await getUserMangaData(userId);
         return {
-            updatedAt: new Date().toISOString(),
-            current: await readingManga(userData),
+            updatedAt: {
+                service: 'AniList',
+                timestamp: new Date().toISOString()
+            },
+            current: readingManga(userData),
             read: readManga(userData),
             dropped: droppedManga(userData),
-        };
+        } as MangaRequest;
     } catch (error) {
         console.error('Error fetching manga data:', error);
         throw error;

@@ -44,19 +44,19 @@
           on:click={() => handleCardClick(anime)}
         >
           <!-- top -->
-          {#if anime.media.status === "airing" && anime.media.episodes.next && anime.media.episodes.next?.number - 1 === anime.progress.episode}
+          {#if anime.media.status === "airing" && anime.media.episodes?.next && anime.media.episodes.next?.number - 1 === anime.progress.episode}
             <!-- for airing/releasing anime, only show next episode in ... label if the user's is up to-date -->
             <ReleaseInfo
               episode={anime.media.episodes.next}
               mediaType={anime.media.type}
             />
-          {:else if anime.media.status === "airing" && anime.media.episodes.last && anime.progress.episode > 0 && anime.media.episodes.last.number - anime.progress.episode <= 2}
+          {:else if anime.media.status === "airing" && anime.media.episodes?.last && anime.progress.episode > 0 && anime.media.episodes.last.number - anime.progress.episode <= 2}
             <ReleaseInfo
               episode={anime.media.episodes.last}
               mediaType={anime.media.type}
               catchUp={anime.media.episodes.last.timestamp < Date.now() || anime.media.episodes.last.number - anime.progress.episode > 2}
             />
-          {:else if anime.media.status === "airing" && anime.media.episodes.next && anime.media.episodes.next.number - anime.progress.episode > 50}
+          {:else if anime.media.status === "airing" && anime.media.episodes?.next && anime.media.episodes.next.number - anime.progress.episode > 50}
             <ReleaseInfo
               episode={anime.media.episodes.next}
               mediaType={anime.media.type}
@@ -68,7 +68,7 @@
             title={anime.media.title.english || anime.media.title.romaji || anime.media.title.native}
           >
             <AnimeInfo
-              number={anime.media.episodes.count}
+              number={anime.media.episodes?.count ?? 0}
               duration={anime.media.runtime}
               rewatch={anime.repeat}
             />
@@ -76,7 +76,7 @@
               userStatus={anime.status}
               startDate={anime.dates?.started}
               progress={anime.progress.episode}
-              total={anime.media.episodes.count}
+              total={anime.media.episodes?.count ?? 0}
               mediaType={anime.media.type}
             />
           </Informations>
@@ -128,7 +128,7 @@
           title={anime.media.title.english || anime.media.title.romaji || anime.media.title.native}
         >
           <AnimeInfo
-            number={anime.media.episodes.count ?? 0}
+            number={anime.media.episodes?.count ?? 0}
             duration={anime.media.runtime}
             rewatch={anime.repeat}
           />

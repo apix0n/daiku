@@ -5,6 +5,7 @@ export type MediaElement = {
     progress?: UserMediaProgress;
     review: UserReview;
     repeat?: number | boolean;
+    lang?: string | undefined; // reading language for manga, undefined if default or for anime
 }
 
 type MediaInformation = {
@@ -16,7 +17,9 @@ type MediaInformation = {
     accentColor?: string; // hex color code
     cover: ImageWithSizes;
     banner?: ImageWithSizes;
-    episodes: MediaEpisodesInfo;
+    episodes?: MediaEpisodesInfo;
+    chapters?: MediaEpisodesInfo;
+    volumes?: MediaEpisodesInfo;
     synopsis?: MediaSynopsis;
     special: boolean; // true if the media is a special episode (ova) or chapter (oneshot, etc.)
     id: MediaIdentifiers;
@@ -75,6 +78,7 @@ export const UserMediaStatus = ['current', 'finished', 'paused', 'dropped', 'pla
 
 export type UserMediaProgress = {
     episode?: number;
+    chapter?: number;
     volume?: number;
 }
 

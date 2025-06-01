@@ -1,10 +1,10 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 import { config } from '$lib/server/config';
-import { applyAnimeReleaseTime, getAnimeReleaseTime } from '../animeSchedule/animeReleaseTime';
+import { applyAnimeReleaseTime } from '../animeSchedule/animeReleaseTime';
 import { getPrecedingEpisode } from './getPrecedingEpisode';
 import { mapAniListMediaStatus, mapAniListUserStatus } from '$lib/anilist/global';
 
-import type { AniListResponse } from '$lib/types/anilist';
+import type { AniListResponse, AniListUserMediaStatus } from '$lib/types/anilist';
 import type { MediaElement } from '$lib/types/media';
 import type { AnimeRequest } from '$lib/types/requests';
 
@@ -293,7 +293,7 @@ function droppedAnime(userAnimeData: AniListResponse) {
         progress: {
             episode: entry.progress,
         },
-        status: entry.status,
+        status: mapAniListUserStatus(entry.status as typeof AniListUserMediaStatus[number]),
         review: {
             rating: entry.score || 0,
             isHtml: entry.notes ? false : undefined,

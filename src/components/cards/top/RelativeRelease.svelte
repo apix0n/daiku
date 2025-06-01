@@ -1,16 +1,34 @@
-<script>
+<script lang="ts">
     import { getRelativeTime } from "$lib/utils/getRelativeTime";
-    import { get } from "svelte/store"
-    export let timestamp, number, mediaType;
+    import { get } from "svelte/store";
+    import { _, locale as localeStore } from "svelte-i18n";
+    import type { MediaType } from "$lib/types/media";
 
-    import { _, locale as localeStore } from "svelte-i18n"
-    const locale = get(localeStore)
+    export let timestamp: number;
+    export let number: number;
+    export let mediaType: typeof MediaType[number];
+    
+    const locale = get(localeStore) ?? 'en';
 
-    const datetimestamp = new Date(timestamp)
-    const now = new Date()
+    // Ensure timestamp is a valid number
+    const validTimestamp = typeof timestamp === 'number' ? timestamp : parseInt(timestamp);
+    
+    console.log("RelativeRelease component loaded with", { timestamp: validTimestamp, number, mediaType });
+
+    let datetimestamp = new Date(validTimestamp);
+    const now = new Date();
+
+    // Add validation check
+    if (isNaN(datetimestamp.getTime())) {
+        console.error("Invalid timestamp received:", timestamp);
+        datetimestamp = now; // Fallback to current date
+    }
+
+    console.log("Current date:", now);
+    console.log("Release date:", datetimestamp);
 
     const dict = {
-        media: null
+        media: ''
     }
 
     if (mediaType === "anime") {

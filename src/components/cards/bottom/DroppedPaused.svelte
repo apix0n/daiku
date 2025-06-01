@@ -1,9 +1,10 @@
-<script>
-    export let progress, type, mediaType
+<script lang="ts">
+    import { MediaType, UserMediaStatus } from "$lib/types/media";
+    export let progress: number, type: typeof UserMediaStatus[number], mediaType: typeof MediaType[number];
 
     const dict = {
-        dropped: null,
-        paused: null
+        dropped: '',
+        paused: '',
     }
 
     if (mediaType === "anime") {
@@ -14,10 +15,10 @@
         dict.paused = "pausedChapN"
     }
 
-    let typeKey;
-    if (type === "DROPPED") {
+    let typeKey: string;
+    if (type === "dropped") {
         typeKey = dict.dropped 
-    } else if (type === "PAUSED") {
+    } else if (type === "paused") {
         typeKey = dict.paused
     }
 

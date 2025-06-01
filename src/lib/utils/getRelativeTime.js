@@ -1,4 +1,5 @@
 export function getRelativeTime(locale = "en", date, unit = 'day') {
+    console.log(`getRelativeTime called with locale: ${locale}, date: ${date}, unit: ${unit}`);
     const now = new Date();
     const targetDate = new Date(date);
     const diff = new Date(now - targetDate);

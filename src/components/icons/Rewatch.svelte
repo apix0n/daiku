@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let Number: number | null = null;
+    export let Number: number | boolean | null = null;
 </script>
 
 <svg class="rewatched" aria-label={Number !== null ? String(Number) : undefined} viewBox="0 0 {!Number ? 18 : 43} 21" xmlns="http://www.w3.org/2000/svg">

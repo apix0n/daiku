@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
     import { _ } from "svelte-i18n";
     import Rewatch from "../../icons/Rewatch.svelte";
 
-    export let duration, rewatch, number;
+    export let duration: number = 0, rewatch: number | boolean | null = null, number: number;
 
     if (number === null) {
         number = 0
