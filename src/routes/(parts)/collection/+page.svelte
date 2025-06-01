@@ -1,6 +1,6 @@
 <script>
     import UpdatedTime from '$components/UpdatedTime.svelte';
-    import { seriesWithPossessions, totalVolumes } from '$lib/mangacollec/calculations';
+    import { seriesWithPossessions, totalVolumes } from '$lib/client/mangacollec/calculations.js';
 
     export let data
     const { collection, updatedAt } = data.mangaCollection;

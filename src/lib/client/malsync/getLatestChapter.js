@@ -1,4 +1,4 @@
-import { config } from "../config";
+import { config } from "$lib/config";
 
 export async function getLatestChapter(malMangaId, lang = config.defaultMangaLang) {
     const url = `https://api.malsync.moe/nc/mal/manga/${malMangaId}/pr`;

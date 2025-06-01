@@ -3,7 +3,7 @@
     import Informations from "./Informations.svelte";
     import RelativeRelease from "../cards/top/RelativeRelease.svelte";
     import { createEventDispatcher } from 'svelte';
-    import { getSynopsis } from '$lib/jikan/getSynopsis';
+    import { getSynopsis } from '$lib/client/jikan/getSynopsis';
     import { synopsisCache, cacheSynopsis } from '$lib/stores/synopsisStore';
     const dispatch = createEventDispatcher();
     import { onMount, onDestroy } from 'svelte';

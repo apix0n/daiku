@@ -1,5 +1,5 @@
 import { dataStore } from '$lib/stores/dataStore';
-import { getLatestChapter } from '$lib/malsync/getLatestChapter';
+import { getLatestChapter } from '$lib/client/malsync/getLatestChapter';
 import { combineMoviesLists } from '$lib/utils/combineMoviesLists';
 
 export async function loadAnimeData(update = false) {

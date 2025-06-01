@@ -1,4 +1,4 @@
-import { loadCollectionData } from '$lib/data.js';
+import { loadCollectionData } from '$lib/client/data.js';
 
 export const load = async ({ fetch }) => {
     const mangaCollection = (await loadCollectionData()).mangaCollection;
