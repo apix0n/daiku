@@ -13,8 +13,6 @@
     // Ensure timestamp is a valid number
     const validTimestamp = typeof timestamp === 'number' ? timestamp : parseInt(timestamp);
     
-    console.log("RelativeRelease component loaded with", { timestamp: validTimestamp, number, mediaType });
-
     let datetimestamp = new Date(validTimestamp);
     const now = new Date();
 
@@ -23,9 +21,6 @@
         console.error("Invalid timestamp received:", timestamp);
         datetimestamp = now; // Fallback to current date
     }
-
-    console.log("Current date:", now);
-    console.log("Release date:", datetimestamp);
 
     const dict = {
         media: ''

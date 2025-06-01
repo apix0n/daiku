@@ -10,8 +10,6 @@
     import InformationsTop from "./InformationsTop.svelte";
 
     export let catchUp: boolean = false;
-
-    console.log("ReleaseInfo", episode, mediaType, catchUp);
 </script>
 
 <InformationsTop {catchUp}>
