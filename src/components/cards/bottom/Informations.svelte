@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
     import Rewatch from "../../icons/Rewatch.svelte";
 
-    export let title, rewatch;
+    export let title: string, rewatch: boolean = false;
 </script>
 
 <div class="informations">

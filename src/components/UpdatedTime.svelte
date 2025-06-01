@@ -1,14 +1,13 @@
-<script>
-    export let date, service, margin;
+<script lang="ts">
+    import type { UpdatedAt } from "$lib/types/requests";
+    export let info: UpdatedAt, margin: boolean = true;
 
-    import { _, locale as localeStore, date as dateI18N, time } from "svelte-i18n";
-    import { get } from "svelte/store";
-    let locale = get(localeStore)
+    import { _, date as dateI18N, time } from "svelte-i18n";
 </script>
 
-<div class="updated-time" class:margin0={margin == 0}>
-    <span>{$_("updatedFromServiceAt", { values: { service: service }})}</span>
-    <span>{$dateI18N(new Date(date), { month: 'numeric', day: 'numeric', year: 'numeric' } )}, {$time(new Date(date), {format: 'medium'})}</span>
+<div class="updated-time" class:margin0={!margin}>
+    <span>{$_("updatedFromServiceAt", { values: { service: info.service }})}</span>
+    <span>{$dateI18N(new Date(info.timestamp), { month: 'numeric', day: 'numeric', year: 'numeric' } )}, {$time(new Date(info.timestamp), {format: 'medium'})}</span>
 </div>
 
 <style>

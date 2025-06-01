@@ -1,6 +1,8 @@
-<script>
+<script lang="ts">
+    import { MediaStatus } from "$lib/types/media";
+
     let cssHexAccentOpacity = "80";
-    export let accent, background, status, ova;
+    export let accent: string = '', background: string, status: typeof MediaStatus[number], ova: boolean = false;
     export let visible = false;
 </script>
 
@@ -12,8 +14,8 @@
     style={accent
         ? `--tAccentColor: ${accent + cssHexAccentOpacity}; --accentColor: ${accent}`
         : ""}
-    class:releasing={status === "RELEASING" || status === "NOT_YET_RELEASED"}
-    class:notyet={status === "NOT_YET_RELEASED"}
+    class:releasing={status === "airing" || status === "notYetReleased"}
+    class:notyet={status === "notYetReleased"}
     class:ova
     class:visible={ova && visible}
     on:click

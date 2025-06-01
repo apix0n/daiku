@@ -2,8 +2,13 @@ import * as anilistGlobal from '$lib/server/anilist/global.js'
 import { config } from '$lib/server/config';
 import { applyAnimeReleaseTime, getAnimeReleaseTime } from '../animeSchedule/animeReleaseTime';
 import { getPrecedingEpisode } from './getPrecedingEpisode';
+import { mapAniListMediaStatus, mapAniListUserStatus } from '$lib/anilist/global';
 
-async function getUserAnimeData(userId) {
+import type { AniListResponse } from '$lib/types/anilist';
+import type { MediaElement } from '$lib/types/media';
+import type { AnimeRequest } from '$lib/types/requests';
+
+async function getUserAnimeData(userId: number): Promise<AniListResponse> {
     const query = `
     query ($userId: Int) {
         MediaListCollection(userId: $userId, type: ANIME, status_not: PLANNING, sort: FINISHED_ON_DESC) {
@@ -56,7 +61,7 @@ async function getUserAnimeData(userId) {
     return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
-function watchedAnime(userAnimeData) {
+function watchedAnime(userAnimeData: AniListResponse) {
     const seen = new Set();
     const allWatchedAnime = userAnimeData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
@@ -80,9 +85,17 @@ function watchedAnime(userAnimeData) {
     });
 
     allWatchedAnime.sort((a, b) => {
-        const dateA = new Date(a.completedAt.year, a.completedAt.month - 1, a.completedAt.day);
-        const dateB = new Date(b.completedAt.year, b.completedAt.month - 1, b.completedAt.day);
-        return dateB - dateA || allWatchedAnime.indexOf(b) - allWatchedAnime.indexOf(a);
+        const dateA = new Date(
+            (a.completedAt.year ?? 1970),
+            ((a.completedAt.month ?? 1) - 1),
+            (a.completedAt.day ?? 1)
+        );
+        const dateB = new Date(
+            (b.completedAt.year ?? 1970),
+            ((b.completedAt.month ?? 1) - 1),
+            (b.completedAt.day ?? 1)
+        );
+        return dateB.getTime() - dateA.getTime() || allWatchedAnime.indexOf(b) - allWatchedAnime.indexOf(a);
     });
 
     return allWatchedAnime.map(entry => ({
@@ -94,7 +107,7 @@ function watchedAnime(userAnimeData) {
             },
             type: 'anime',
             source: 'anilist',
-            status: entry.media.status,
+            status: mapAniListMediaStatus(entry.media.status),
             runtime: entry.media.duration,
             accentColor: entry.media.coverImage.color,
             cover: {
@@ -102,12 +115,15 @@ function watchedAnime(userAnimeData) {
                 medium: entry.media.coverImage.large,
                 small: entry.media.coverImage.medium,
             },
-            banner: {
+            banner: entry.media.bannerImage ? {
                 large: entry.media.bannerImage,
-            },
+                medium: entry.media.bannerImage,
+                small: entry.media.bannerImage,
+            } : undefined,
             episodes: {
                 count: entry.media.episodes,
             },
+            special: (entry.media.episodes ?? 0) > 0 && (entry.media.episodes ?? 0) <= 3 ? true : false, // Assuming episodes <= 3 are considered specials
             id: {
                 anilist: entry.media.id,
                 myanimelist: entry.media.idMal,
@@ -118,16 +134,16 @@ function watchedAnime(userAnimeData) {
             finished: anilistGlobal.formatDate(entry.completedAt),
         },
         repeat: entry.repeat,
-        status: 'completed',
-        review: entry.score || entry.notes ? {
-            rating: entry.score || undefined,
+        status: 'finished',
+        review: {
+            rating: entry.score || 0,
             isHtml: entry.notes ? false : undefined,
             text: entry.notes || undefined,
-        } : undefined,
-    }));
+        },
+    } as MediaElement));
 }
 
-async function currentAnime(userAnimeData, fetchLastEpisode) {
+async function currentAnime(userAnimeData: AniListResponse, fetchLastEpisode: boolean = true) {
     const seen = new Set();
     const allCurrentAnime = userAnimeData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
@@ -135,7 +151,7 @@ async function currentAnime(userAnimeData, fetchLastEpisode) {
         .filter(entry => entry.status === "CURRENT" || entry.status === "REPEATING") // Keep only current and rewatching entries
         .filter(entry => {
             const updatedAt = new Date(entry.updatedAt * 1000);
-            return (new Date() - updatedAt) / (1000 * 60 * 60 * 24) <= config.pauseAfterDays;
+            return (new Date().getTime() - updatedAt.getTime()) / (1000 * 60 * 60 * 24) <= config.pauseAfterDays;
         }) // Filter out entries that have not been updated in the last $config.pauseAfterDays days
         .filter(entry => {
             const duplicate = seen.has(entry.media.id);
@@ -145,7 +161,7 @@ async function currentAnime(userAnimeData, fetchLastEpisode) {
 
     await Promise.all(allCurrentAnime.map(async (media) => {
         try {
-            if (media.media.status === "RELEASING" && media.media.nextAiringEpisode?.episode - 1 != media.progress && fetchLastEpisode) {
+            if (media.media.status === "RELEASING" && media.media.nextAiringEpisode && media.media.nextAiringEpisode.episode - 1 != media.progress && fetchLastEpisode) {
                 media.media.lastEpisode = await getPrecedingEpisode(media.media.id, media.media.nextAiringEpisode.episode);
                 if (media.media.lastEpisode.number > media.media.nextAiringEpisode?.episode) {
                     media.media.lastEpisode = undefined;
@@ -167,7 +183,7 @@ async function currentAnime(userAnimeData, fetchLastEpisode) {
             },
             type: 'anime',
             source: 'anilist',
-            status: entry.media.status,
+            status: mapAniListMediaStatus(entry.media.status),
             runtime: entry.media.duration,
             accentColor: entry.media.coverImage.color,
             cover: {
@@ -177,6 +193,8 @@ async function currentAnime(userAnimeData, fetchLastEpisode) {
             },
             banner: entry.media.bannerImage ? {
                 large: entry.media.bannerImage,
+                medium: entry.media.bannerImage,
+                small: entry.media.bannerImage,
             } : undefined,
             episodes: {
                 count: entry.media.episodes,
@@ -186,6 +204,7 @@ async function currentAnime(userAnimeData, fetchLastEpisode) {
                     timestamp: entry.media.nextAiringEpisode.airingAt * 1000,
                 } : undefined,
             },
+            special: false, // Assuming no special episodes for current anime
             id: {
                 anilist: entry.media.id,
                 myanimelist: entry.media.idMal,
@@ -195,25 +214,25 @@ async function currentAnime(userAnimeData, fetchLastEpisode) {
             started: anilistGlobal.formatDate(entry.startedAt),
         },
         repeat: entry.repeat,
-        status: entry.status,
+        status: mapAniListUserStatus(entry.status),
         progress: {
             episode: entry.progress,
         },
-        review: entry.score || entry.notes ? {
-            rating: entry.score || undefined,
+        review: {
+            rating: entry.score || 0,
             isHtml: entry.notes ? false : undefined,
             text: entry.notes || undefined,
-        } : undefined,
-    }));
+        },
+    } as MediaElement));
 }
 
-function droppedAnime(userAnimeData) {
+function droppedAnime(userAnimeData: AniListResponse) {
     const seen = new Set();
     const allDroppedAnime = userAnimeData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
         .map(entry => {
             const updatedAt = new Date(entry.updatedAt * 1000);
-            if ((entry.status === "CURRENT" || entry.status === "REPEATING") && (new Date() - updatedAt) / (1000 * 60 * 60 * 24) > config.pauseAfterDays) {
+            if ((entry.status === "CURRENT" || entry.status === "REPEATING") && (new Date().getTime() - updatedAt.getTime()) / (1000 * 60 * 60 * 24) > config.pauseAfterDays) {
                 return {
                     ...entry,
                     status: "PAUSED",
@@ -242,7 +261,7 @@ function droppedAnime(userAnimeData) {
             },
             type: 'anime',
             source: 'anilist',
-            status: entry.media.status,
+            status: mapAniListMediaStatus(entry.media.status),
             runtime: entry.media.duration,
             accentColor: entry.media.coverImage.color,
             cover: {
@@ -252,6 +271,8 @@ function droppedAnime(userAnimeData) {
             },
             banner: entry.media.bannerImage ? {
                 large: entry.media.bannerImage,
+                medium: entry.media.bannerImage,
+                small: entry.media.bannerImage,
             } : undefined,
             episodes: {
                 count: entry.media.episodes,
@@ -260,6 +281,7 @@ function droppedAnime(userAnimeData) {
                     timestamp: entry.media.nextAiringEpisode.airingAt * 1000,
                 } : undefined,
             },
+            special: false, // Assuming no special episodes for dropped anime
             id: {
                 anilist: entry.media.id,
                 myanimelist: entry.media.idMal,
@@ -272,23 +294,26 @@ function droppedAnime(userAnimeData) {
             episode: entry.progress,
         },
         status: entry.status,
-        review: entry.score || entry.notes ? {
-            rating: entry.score || undefined,
+        review: {
+            rating: entry.score || 0,
             isHtml: entry.notes ? false : undefined,
             text: entry.notes || undefined,
-        } : undefined,
-    }));
+        },
+    } as MediaElement));
 }
 
-export async function fetchAnimeData(userId, fetchLastEpisode = true) {
+export async function fetchAnimeData(userId: number, fetchLastEpisode = true) {
     try {
         const userData = await getUserAnimeData(userId);
         return {
-            updatedAt: new Date().toISOString(),
+            updatedAt: {
+                service: 'AniList',
+                timestamp: new Date().toISOString()
+            },
             current: await currentAnime(userData, fetchLastEpisode),
             watched: watchedAnime(userData),
             dropped: droppedAnime(userData),
-        };
+        } as AnimeRequest;
     } catch (error) {
         console.error('Error fetching anime data:', error);
         throw error;

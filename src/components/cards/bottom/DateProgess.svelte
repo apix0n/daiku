@@ -1,16 +1,13 @@
-<script>
+<script lang="ts">
+    import type { MediaType, UserMediaStatus } from "$lib/types/media";
     import Rewatch from "../../icons/Rewatch.svelte";
     import { formatDateLocale } from "$lib/utils/formatDateLocale";
 
-    import { _, locale as localeStore, date } from "svelte-i18n"
-    import { get } from "svelte/store";
-
-    const locale = get(localeStore)
-
-    export let userStatus, startDate, progress, total, mediaType;
+    import { _, date } from "svelte-i18n"
+    export let userStatus: typeof UserMediaStatus[number], startDate: string | undefined, progress: number, total: number, mediaType: typeof MediaType[number];
 
     let dict = {
-        re: null,
+        re: "rewatching" as string,
     }
 
     if (mediaType === "anime") {
@@ -21,7 +18,7 @@
 </script>
 
 <div class="more">
-    {#if userStatus === "REPEATING"}
+    {#if userStatus === "repeating"}
     <div class="dates">
         <div class="start-date"><Rewatch/> {$_(dict.re)}</div>
     </div>

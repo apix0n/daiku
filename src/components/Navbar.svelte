@@ -39,7 +39,6 @@
 		<a href="/anime/dropped" class:isActive={isActive("/anime/dropped")}
 			><PausedAnime /> paused</a
 		>
-		<a href="/calendar" class:isActive={isActive("/calendar")}><Book /> calendar</a>
 		<a href="/manga" class:isActive={isActive("/manga")}><Book /> manga</a>
 		<a href="/manga/dropped" class:isActive={isActive("/manga/dropped")}
 			><PausedBook />paused</a
