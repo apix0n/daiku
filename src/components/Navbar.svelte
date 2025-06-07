@@ -14,8 +14,14 @@
 	import PausedBook from "./icons/PausedBook.svelte";
 	import ShelfSparkle from "./icons/ShelfSparkle.svelte";
 
-	// Fonction pour vérifier si le lien est actif
-	const isActive = (href) => page.url.pathname === href;
+	// check if the link is active (to highlight it) and if it is, set it as lastPage for / redirect
+	const isActive = (href) => {
+		const active = page.url.pathname === href;
+		if (active) {
+			localStorage.setItem('lastPage', href);
+		}
+		return active;
+	};
 </script>
 
 <svelte:head>
