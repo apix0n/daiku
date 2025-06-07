@@ -14,6 +14,13 @@ export type MangaRequest = {
     dropped: MediaElement[];
 }
 
+export type PlannedRequest = {
+    updatedAt: UpdatedAt;
+    anime: MediaElement[];
+    manga: MediaElement[];
+    movies: MediaElement[];
+}
+
 export type UpdatedAt = {
     service: string;
     timestamp: string; // ISO 8601 format

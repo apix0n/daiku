@@ -46,6 +46,7 @@
   "releasing": "releasing",
   "releasingDate": {
     "inDateN": "releases in {n}",
+    "onDateNSingle": "releases on {n}",
     "soon": "releases soon",
     "onDateN": "starts {n}",
     "onDayN": "starts the {n}"
@@ -57,5 +58,19 @@
   "updatedFromServiceAt": "updated from {service} at",
   "Nspecials": "{n} specials",
   "continue": "continue",
-  "favourites": "favourites"
+  "favourites": "favourites",
+  "mediaType": {
+    "anime": "anime",
+    "manga": "manga",
+    "movie": "movie",
+    "volume": "manga volume"
+  },
+  "mediaStatus": {
+    "airing": "releasing",
+    "finished": "finished",
+    "notYetReleased": "not yet released",
+    "hiatus": "in hiatus",
+    "cancelled": "cancelled"
+  },
+  "moreInfo": "More info:"
 }

@@ -1,9 +1,12 @@
 export type MediaElement = {
     media: MediaInformation;
+} & UserMediaInformation;
+
+type UserMediaInformation = {
     dates?: UserDates;
     status: (typeof UserMediaStatus)[number];
     progress?: UserMediaProgress;
-    review: UserReview;
+    review: UserReview | null; // null if no review
     repeat?: number | boolean;
     lang?: string | undefined; // reading language for manga, undefined if default or for anime
 }
@@ -21,6 +24,10 @@ type MediaInformation = {
     chapters?: MediaEpisodesInfo;
     volumes?: MediaEpisodesInfo;
     synopsis?: MediaSynopsis;
+    dates?: {
+        start?: string; // ISO date string
+        end?: string; // ISO date string
+    }
     special: boolean; // true if the media is a special episode (ova) or chapter (oneshot, etc.)
     id: MediaIdentifiers;
 }
@@ -36,11 +43,13 @@ type MediaIdentifiers = {
     isbn?: number;
 }
 
-type MediaTitles = {
+export type MediaTitles = {
     locale?: string;
     english?: string;
     romaji?: string;
     native: string;
+    nativeOrigin: string; // language code, e.g., 'ja' for Japanese
+    localeLang?: string; // language code for the locale pulled title, e.g., 'en' for English
 }
 
 export const MediaType = ['anime', 'manga', 'movie', 'volume'] as const
@@ -67,7 +76,7 @@ type MediaEpisodesInfo = {
 type MediaSynopsis = {
     text: string;
     source?: string;
-}
+};
 
 type UserDates = {
     started?: string;

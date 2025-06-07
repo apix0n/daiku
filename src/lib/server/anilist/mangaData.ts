@@ -23,6 +23,7 @@ async function getUserMangaData(userId: number): Promise<AniListResponse> {
                         id
                         idMal
                         status
+                        countryOfOrigin
                         coverImage {
                             color
                             medium
@@ -97,6 +98,7 @@ function readManga(userMangaData: AniListResponse): MediaElement[] {
                 english: entry.media.title.english,
                 romaji: entry.media.title.romaji,
                 native: entry.media.title.native,
+                nativeOrigin: entry.media.countryOfOrigin?.toLowerCase() || 'jp', // Default to Japan if country of origin is not available
             },
             type: 'manga',
             source: 'anilist',
@@ -169,9 +171,10 @@ function readingManga(userMangaData: AniListResponse): MediaElement[] {
     return allCurrentManga.map(entry => ({
         media: {
             title: {
-                english: entry.media.title.english,
-                romaji: entry.media.title.romaji,
-                native: entry.media.title.native,
+                english: entry.media.title.english || undefined,
+                romaji: entry.media.title.romaji || undefined,
+                native: entry.media.title.native || undefined,
+                nativeOrigin: entry.media.countryOfOrigin?.toLowerCase() || 'jp', // Default to Japan if country of origin is not available
             },
             type: 'manga',
             source: 'anilist',
@@ -245,9 +248,10 @@ function droppedManga(userMangaData: AniListResponse): MediaElement[] {
     return allDroppedManga.map(entry => ({
         media: {
             title: {
-                english: entry.media.title.english,
-                romaji: entry.media.title.romaji,
-                native: entry.media.title.native,
+                english: entry.media.title.english || undefined,
+                romaji: entry.media.title.romaji || undefined,
+                native: entry.media.title.native || undefined,
+                nativeOrigin: entry.media.countryOfOrigin?.toLowerCase() || 'jp', // Default to Japan if country of origin is not available
             },
             type: 'manga',
             source: 'anilist',

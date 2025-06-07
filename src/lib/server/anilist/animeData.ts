@@ -4,7 +4,7 @@ import { applyAnimeReleaseTime } from '../animeSchedule/animeReleaseTime';
 import { getPrecedingEpisode } from './getPrecedingEpisode';
 import { mapAniListMediaStatus, mapAniListUserStatus } from '$lib/anilist/global';
 
-import type { AniListResponse, AniListUserMediaStatus } from '$lib/types/anilist';
+import type { AniListResponse, AniListUserMediaStatus, MediaListEntry, MediaListGroup } from '$lib/types/anilist';
 import type { MediaElement } from '$lib/types/media';
 import type { AnimeRequest } from '$lib/types/requests';
 
@@ -26,6 +26,7 @@ async function getUserAnimeData(userId: number): Promise<AniListResponse> {
                         id
                         idMal
                         status
+                        countryOfOrigin
                         coverImage {
                             color
                             extraLarge
@@ -71,7 +72,7 @@ function watchedAnime(userAnimeData: AniListResponse) {
             const duplicate = seen.has(entry.media.id);
             seen.add(entry.media.id);
             return !duplicate;
-        }); // Filter out duplicates (same media in multiple lists)
+        }) as MediaListEntry[]; // Filter out duplicates (same media in multiple lists)
 
     allWatchedAnime.forEach(media => {
         if (!media.startedAt) {
@@ -104,6 +105,7 @@ function watchedAnime(userAnimeData: AniListResponse) {
                 english: entry.media.title.english || undefined,
                 romaji: entry.media.title.romaji || undefined,
                 native: entry.media.title.native || undefined,
+                nativeOrigin: entry.media.countryOfOrigin?.toLowerCase() || 'jp', // Default to Japan if country of origin is not available
             },
             type: 'anime',
             source: 'anilist',
@@ -180,6 +182,7 @@ async function currentAnime(userAnimeData: AniListResponse, fetchLastEpisode: bo
                 english: entry.media.title.english || undefined,
                 romaji: entry.media.title.romaji || undefined,
                 native: entry.media.title.native || undefined,
+                nativeOrigin: entry.media.countryOfOrigin?.toLowerCase() || 'jp', // Default to Japan if country of origin is not available
             },
             type: 'anime',
             source: 'anilist',
@@ -258,6 +261,7 @@ function droppedAnime(userAnimeData: AniListResponse) {
                 english: entry.media.title.english || undefined,
                 romaji: entry.media.title.romaji || undefined,
                 native: entry.media.title.native || undefined,
+                nativeOrigin: entry.media.countryOfOrigin?.toLowerCase() || 'jp', // Default to Japan if country of origin is not available
             },
             type: 'anime',
             source: 'anilist',

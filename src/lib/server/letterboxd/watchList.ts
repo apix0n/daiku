@@ -3,7 +3,7 @@ import { getBoxdTMDBInfos } from './getBoxdTMDBInfos';
 
 import { ua } from './userLikes';
 
-async function fetchWatchlistPage(username, page = 1) {
+async function fetchWatchlistPage(username: string, page = 1) {
     const response = await fetch(`https://letterboxd.com/${username}/watchlist/page/${page}/`, {
         headers: { 'User-Agent': ua }
     });
@@ -15,7 +15,7 @@ async function fetchWatchlistPage(username, page = 1) {
     return await response.text();
 }
 
-async function fetchUserWatchlist(username) {
+async function fetchUserWatchlist(username: string) {
     try {
         // Fetch first page to get total pages
         const firstPageHtml = await fetchWatchlistPage(username);
@@ -23,10 +23,16 @@ async function fetchUserWatchlist(username) {
 
         // Get max page number
         const lastPageElement = $('.paginate-pages ul li.paginate-page').last();
-        const maxPages = lastPageElement.length ?
-            parseInt(lastPageElement.find('a').attr('href').match(/page\/(\d+)/)[1]) : 1;
+        let maxPages = 1;
+        if (lastPageElement.length) {
+            const href = lastPageElement.find('a').attr('href');
+            const match = href ? href.match(/page\/(\d+)/) : null;
+            if (match && match[1]) {
+                maxPages = parseInt(match[1]);
+            }
+        }
 
-        const watchlistMovies = [];
+        const watchlistMovies: string[] = [];
         const pagePromises = [];
 
         // Process first page immediately since we already have it
@@ -62,18 +68,18 @@ async function fetchUserWatchlist(username) {
 
         return watchlistMovies;
     } catch (error) {
-        console.error(`Error fetching user watchlist: ${error.message}`);
+        console.error(`Error fetching user watchlist: ${error}`);
         throw error;
     }
 }
 
-export async function makeBoxdWatchList(letterboxdUsername) {
+export async function makeBoxdWatchList(letterboxdUsername: string) {
     try {
         const userWl = await fetchUserWatchlist(letterboxdUsername);
         const movieInfos = await getBoxdTMDBInfos(userWl);
         return movieInfos;
     } catch (error) {
-        console.error(error.message)
+        console.error(error)
         return []
     }
 }

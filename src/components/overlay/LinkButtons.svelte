@@ -7,11 +7,11 @@
     import MyAnimeList from "../icons/platforms/MyAnimeList.svelte";
     import Imdb from "$components/icons/platforms/IMDB.svelte";
     import Letterboxd from "$components/icons/platforms/Letterboxd.svelte";
-    
+    import { _ } from "svelte-i18n";
 </script>
 
 <div class="buttons-wrapper">
-    More info:    
+    {$_('moreInfo')}
     <div class="buttons">
         {#each Object.entries(ids).filter(a => a[1] != null) as [key, id]}
             <a href="{getLinkFromId(id, key, mediaType)}" target="_blank">

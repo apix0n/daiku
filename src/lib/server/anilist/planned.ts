@@ -1,6 +1,11 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
+import { mapAniListMediaStatus } from '$lib/anilist/global';
 
-export async function getPlannedAnime(userId) {
+import type { AniListResponse } from '$lib/types/anilist';
+import type { MediaElement } from '$lib/types/media';
+import type { PlannedRequest } from '$lib/types/requests';
+
+export async function getPlannedAnime(userId: number): Promise<AniListResponse> {
     const query = `
     query ($userId: Int) {
         MediaListCollection(userId: $userId, type: ANIME, status: PLANNING, sort: UPDATED_TIME_DESC) {
@@ -17,6 +22,7 @@ export async function getPlannedAnime(userId) {
                         id
                         idMal
                         status
+                        countryOfOrigin
                         coverImage {
                             color
                             large
@@ -41,7 +47,7 @@ export async function getPlannedAnime(userId) {
     return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
-export async function getPlannedManga(userId) {
+export async function getPlannedManga(userId: number): Promise<AniListResponse> {
     const query = `
     query ($userId: Int) {
         MediaListCollection(userId: $userId, type: MANGA, status: PLANNING, sort: UPDATED_TIME_DESC) {
@@ -59,6 +65,7 @@ export async function getPlannedManga(userId) {
                         id
                         idMal
                         status
+                        countryOfOrigin
                         coverImage {
                             color
                             large
@@ -77,7 +84,7 @@ export async function getPlannedManga(userId) {
     return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
-export function plannedAnime(userPlannedData) {
+export function plannedAnime(userPlannedData: AniListResponse): MediaElement[] {
     const seen = new Set();
     const allPlanned = userPlannedData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
@@ -95,14 +102,15 @@ export function plannedAnime(userPlannedData) {
     return allPlanned.map(entry => ({
         media: {
             title: {
-                english: entry.media.title.english,
-                romaji: entry.media.title.romaji,
-                native: entry.media.title.native,
+                english: entry.media.title.english ?? undefined,
+                romaji: entry.media.title.romaji ?? undefined,
+                native: entry.media.title.native ?? undefined,
+                nativeOrigin: entry.media.countryOfOrigin?.toLowerCase() || 'jp', // Default to Japan if country of origin is not available
             },
             type: 'anime',
             source: 'anilist',
             accentColor: entry.media.coverImage.color,
-            status: entry.media.status,
+            status: mapAniListMediaStatus(entry.media.status),
             runtime: entry.media.duration,
             cover: {
                 large: entry.media.coverImage.extraLarge,
@@ -111,6 +119,8 @@ export function plannedAnime(userPlannedData) {
             },
             banner: {
                 large: entry.media.bannerImage,
+                medium: entry.media.bannerImage,
+                small: entry.media.bannerImage,
             },
             episodes: {
                 count: entry.media.episodes,
@@ -119,6 +129,7 @@ export function plannedAnime(userPlannedData) {
                     timestamp: entry.media.nextAiringEpisode.airingAt * 1000,
                 } : undefined,
             },
+            special: false,
             id: {
                 anilist: entry.media.id,
                 myanimelist: entry.media.idMal,
@@ -127,10 +138,12 @@ export function plannedAnime(userPlannedData) {
                 start: anilistGlobal.planningFormatDate(entry.media.startDate),
             }
         },
-    }));
+        status: "planned",
+        review: null,
+    } as MediaElement));
 }
 
-export function plannedManga(userPlannedData) {
+export function plannedManga(userPlannedData: AniListResponse): MediaElement[] {
     const seen = new Set();
     const allPlanned = userPlannedData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
@@ -147,14 +160,15 @@ export function plannedManga(userPlannedData) {
     return allPlanned.map(entry => ({
         media: {
             title: {
-                english: entry.media.title.english,
-                romaji: entry.media.title.romaji,
-                native: entry.media.title.native,
+                english: entry.media.title.english ?? undefined,
+                romaji: entry.media.title.romaji ?? undefined,
+                native: entry.media.title.native ?? undefined,
+                nativeOrigin: entry.media.countryOfOrigin?.toLowerCase() || 'jp', // Default to Japan if country of origin is not available
             },
             type: 'manga',
             source: 'anilist',
             accentColor: entry.media.coverImage.color,
-            status: entry.media.status,
+            status: mapAniListMediaStatus(entry.media.status),
             cover: {
                 large: entry.media.coverImage.extraLarge,
                 medium: entry.media.coverImage.large,
@@ -162,6 +176,8 @@ export function plannedManga(userPlannedData) {
             },
             banner: {
                 large: entry.media.bannerImage,
+                medium: entry.media.bannerImage,
+                small: entry.media.bannerImage,
             },
             chapters: {
                 count: entry.media.chapters,
@@ -169,6 +185,7 @@ export function plannedManga(userPlannedData) {
             volumes: {
                 count: entry.media.volumes,
             },
+            special: false,
             id: {
                 anilist: entry.media.id,
                 myanimelist: entry.media.idMal,
@@ -177,10 +194,12 @@ export function plannedManga(userPlannedData) {
                 start: anilistGlobal.planningFormatDate(entry.media.startDate),
             }
         },
-    }));
+        status: "planned",
+        review: null,
+    } as MediaElement));
 }
 
-export function plannedMovies(userPlannedData) {
+export function plannedMovies(userPlannedData: AniListResponse): MediaElement[] {
     const seen = new Set();
     const allPlanned = userPlannedData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
@@ -198,15 +217,16 @@ export function plannedMovies(userPlannedData) {
     return allPlanned.map(entry => ({
         media: {
             title: {
-                english: entry.media.title.english,
-                romaji: entry.media.title.romaji,
-                native: entry.media.title.native,
+                english: entry.media.title.english ?? undefined,
+                romaji: entry.media.title.romaji ?? undefined,
+                native: entry.media.title.native ?? undefined,
+                nativeOrigin: entry.media.countryOfOrigin?.toLowerCase() || 'jp', // Default to Japan if country of origin is not available
             },
             type: 'movie',
             source: 'anilist',
             accentColor: entry.media.coverImage.color,
-            status: entry.media.status,
-            runtime: entry.media.duration * entry.media.episodes,
+            status: mapAniListMediaStatus(entry.media.status),
+            runtime: (entry.media.duration ?? 0) * (entry.media.episodes ?? 1),
             cover: {
                 large: entry.media.coverImage.extraLarge,
                 medium: entry.media.coverImage.large,
@@ -214,7 +234,10 @@ export function plannedMovies(userPlannedData) {
             },
             banner: {
                 large: entry.media.bannerImage,
+                medium: entry.media.bannerImage,
+                small: entry.media.bannerImage,
             },
+            special: false,
             id: {
                 anilist: entry.media.id,
                 myanimelist: entry.media.idMal,
@@ -223,16 +246,21 @@ export function plannedMovies(userPlannedData) {
                 start: anilistGlobal.planningFormatDate(entry.media.startDate),
             }
         },
-    }));
+        status: "planned",
+        review: null,
+    } as MediaElement));
 }
 
-export async function fetchPlannedData(userId) {
+export async function fetchPlannedData(userId: number): Promise<PlannedRequest> {
     try {
         const plannedAnimeData = await getPlannedAnime(userId);
         const plannedMangaData = await getPlannedManga(userId);
 
         return {
-            updatedAt: new Date().toISOString(),
+            updatedAt: {
+                service: 'AniList',
+                timestamp: new Date().toISOString()
+            },
             anime: plannedAnime(plannedAnimeData),
             manga: plannedManga(plannedMangaData),
             movies: plannedMovies(plannedAnimeData),

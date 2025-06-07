@@ -65,7 +65,7 @@
 
           <!-- bottom -->
           <Informations
-            title={anime.media.title.english || anime.media.title.romaji || anime.media.title.native}
+            titles={anime.media.title}
           >
             <AnimeInfo
               number={anime.media.episodes?.count ?? 0}
@@ -125,7 +125,7 @@
 
         <!-- bottom -->
         <Informations
-          title={anime.media.title.english || anime.media.title.romaji || anime.media.title.native}
+        titles={anime.media.title}
         >
           <AnimeInfo
             number={anime.media.episodes?.count ?? 0}

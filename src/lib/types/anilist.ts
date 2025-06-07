@@ -28,7 +28,9 @@ export interface AniListMedia {
     status: typeof AniListMediaStatus[number];
     coverImage: AniListCoverImage;
     bannerImage: string | null;
+    countryOfOrigin: string | null;
     nextAiringEpisode: AniListNextAiringEpisode | null;
+    startDate: AniListDate | null;
 
     // custom fields
     lastEpisode?: any,

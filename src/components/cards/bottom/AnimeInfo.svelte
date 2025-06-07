@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import Rewatch from "../../icons/Rewatch.svelte";
 
-    export let duration: number = 0, rewatch: number | boolean | null = null, number: number;
+    export let duration: number = 0, rewatch: number | boolean | null = null, number: number | undefined = undefined;
 
     if (number === null) {
         number = 0

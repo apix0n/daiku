@@ -51,11 +51,26 @@
     "soon": "sort bientôt",
     "inDateN": "sort en {n}",
     "onDateN": "commence le {n}",
-    "onDayN": "commence le {n}"
+    "onDayN": "commence le {n}",
+    "onDateNSingle": "sort le {n}"
   },
   "updatedFromServiceAt": "mise à jour depuis {service} à",
   "releasing": "en diffusion",
   "specials": "spéciaux",
   "continue": "continuer",
-  "favourites": "favoris"
+  "favourites": "favoris",
+  "mediaStatus": {
+    "cancelled": "annulé",
+    "hiatus": "en pause",
+    "finished": "terminé",
+    "airing": "en cours",
+    "notYetReleased": "pas encore sorti"
+  },
+  "mediaType": {
+    "anime": "anime",
+    "manga": "manga",
+    "movie": "film",
+    "volume": "manga (tome)"
+  },
+  "moreInfo": "Plus d'informations :"
 }

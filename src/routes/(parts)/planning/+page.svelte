@@ -1,4 +1,6 @@
-<script>
+<script lang="ts">
+  import type { MediaElement } from "$lib/types/media";
+  import { _ } from "svelte-i18n";
   import BaseCard from "$components/cards/BaseCard.svelte";
   import Informations from "$components/cards/bottom/Informations.svelte";
   import AnimeInfo from "$components/cards/bottom/AnimeInfo.svelte";
@@ -6,28 +8,25 @@
   import PlanningRelease from "$components/cards/bottom/PlanningRelease.svelte";
   import UpdatedTime from "$components/UpdatedTime.svelte";
   import RelativeTimeInfo from "$components/cards/top/ReleaseInfo.svelte";
+  import Overlay from "$components/overlay/Overlay.svelte";
 
   export let data;
-  const { anime, manga, movies, updatedAt } = data.plannedData;
+  const { anime: animeList, manga, movies, updatedAt } = data.plannedData;
+  let selectedAnime: MediaElement | null = null;
 
-  import { _ } from "svelte-i18n";
-
-  import Overlay from "$components/overlay/Overlay.svelte";
-  let selectedAnime = null;
-
-  function handleCardClick(anime) {
+  function handleCardClick(anime: MediaElement) {
     selectedAnime = anime;
   }
 </script>
 
 {#if selectedAnime}
-    <Overlay entry={selectedAnime} on:close={() => selectedAnime = null} />
+  <Overlay entry={selectedAnime} on:close={() => (selectedAnime = null)} />
 {/if}
 
-<h2>anime <span>· {anime.length} planned</span></h2>
+<h2>anime <span>· {animeList.length} planned</span></h2>
 
 <div id="anime" class="elements-wrapper elements-planned">
-  {#each anime.filter((a) => a.media.status !== "NOT_YET_RELEASED") as anime}
+  {#each animeList.filter((a) => a.media.status !== "notYetReleased") as anime}
     <BaseCard
       accent={anime.media.accentColor}
       background={anime.media.cover.medium}
@@ -35,27 +34,27 @@
       on:click={() => handleCardClick(anime)}
     >
       <!-- top -->
-      {#if anime.media.status === "RELEASING"}
+      {#if anime.media.status === "airing" && anime.media.episodes?.next}
         <!-- for airing/releasing anime -->
         <RelativeTimeInfo
-          number={anime.media.episodes.next.number}
-          timestamp={anime.media.episodes.next.timestamp}
+          episode={anime.media.episodes?.next}
           mediaType={anime.media.type}
         />
       {/if}
 
       <!-- bottom -->
-      <Informations
-        title={anime.media.title.english || anime.media.title.romaji}
-      >
-        {#if anime.media.status == "NOT_YET_RELEASED" && anime.media.date.start != null}
-          <PlanningRelease dateString={anime.media.date.start} />
-        {:else if anime.media.status == "NOT_YET_RELEASED" && anime.media.date.start == null}
+      <Informations titles={anime.media.title}>
+        {#if anime.media.status === "notYetReleased" && anime.media.dates?.start != null}
+          <PlanningRelease
+            dateString={anime.media.dates.start}
+            status={anime.media.status}
+          />
+        {:else if anime.media.status === "notYetReleased" && !anime.media.dates?.start}
           <PlanningRelease status={anime.media.status} />
-        {:else if anime.media.status == "RELEASING" || anime.media.status == "FINISHED"}
-          {#if anime.media.episodes.count || anime.media.runtime}
+        {:else if anime.media.status === "airing" || anime.media.status === "finished"}
+          {#if anime.media.episodes?.count || anime.media.runtime}
             <AnimeInfo
-              number={anime.media.episodes.count}
+              number={anime.media.episodes?.count ?? 0}
               duration={anime.media.runtime}
             />
           {:else}
@@ -75,21 +74,22 @@
       accent={manga.media.accentColor}
       background={manga.media.cover.medium}
       status={manga.media.status}
-      on:click={() => handleCardClick(anime)}
+      on:click={() => handleCardClick(manga)}
     >
       <!-- bottom -->
-      <Informations
-        title={manga.media.title.english || manga.media.title.romaji}
-      >
-        {#if manga.media.status === "NOT_YET_RELEASED" && manga.media.date.start}
-          <PlanningRelease dateString={manga.media.date.start} />
-        {:else if manga.media.status === "NOT_YET_RELEASED" && !manga.media.date.start}
+      <Informations titles={manga.media.title}>
+        {#if manga.media.status === "notYetReleased" && manga.media.dates?.start}
+          <PlanningRelease
+            dateString={manga.media.dates.start}
+            status={manga.media.status}
+          />
+        {:else if manga.media.status === "notYetReleased" && !manga.media.dates?.start}
           <PlanningRelease status={manga.media.status} />
-        {:else if manga.media.status === "RELEASING" || manga.media.status === "FINISHED"}
-          {#if manga.media.chapters.count || manga.media.volumes.count}
+        {:else if manga.media.status === "airing" || manga.media.status === "finished"}
+          {#if manga.media.chapters?.count || manga.media.volumes?.count}
             <MangaInfo
-              chapters={manga.media.chapters.count}
-              volumes={manga.media.volumes.count}
+              chapters={manga.media.chapters?.count}
+              volumes={manga.media.volumes?.count}
             />
           {:else}
             <PlanningRelease status={manga.media.status} />
@@ -111,14 +111,16 @@
       on:click={() => handleCardClick(anime)}
     >
       <!-- bottom -->
-      <Informations
-        title={anime.media.title.english || anime.media.title.romaji}
-      >
-        {#if anime.media.status == "NOT_YET_RELEASED" && anime.media.date.start != null}
-          <PlanningRelease dateString={anime.media.date.start} />
-        {:else if anime.media.status == "NOT_YET_RELEASED" && anime.media.date.start == null}
+      <Informations titles={anime.media.title}>
+        {#if anime.media.status == "notYetReleased" && anime.media.dates?.start != null}
+          <PlanningRelease
+            dateString={anime.media.dates.start}
+            status={anime.media.status}
+            mediaType={anime.media.type}
+          />
+        {:else if anime.media.status == "notYetReleased" && anime.media.dates?.start == null}
           <PlanningRelease status={anime.media.status} />
-        {:else if anime.media.status == "RELEASING" || anime.media.status == "FINISHED" || !anime.media.dates}
+        {:else if anime.media.status == "airing" || anime.media.status == "finished" || !anime.media.dates}
           {#if anime.media.runtime}
             <AnimeInfo duration={anime.media.runtime} />
           {:else}
@@ -130,4 +132,4 @@
   {/each}
 </div>
 
-<UpdatedTime date={updatedAt} service="AniList" />
+<UpdatedTime info={updatedAt} />

@@ -2,9 +2,8 @@
     import type { MediaType, SingleEpisodeInfo } from "$lib/types/media";
     export let episode: SingleEpisodeInfo, mediaType: typeof MediaType[number];
     import { _, locale as localeStore } from "svelte-i18n"
-    import { get } from "svelte/store";
 
-    const locale = get(localeStore) ?? "en"
+    $: locale = $localeStore ?? "en"
 
     import RelativeRelease from "./RelativeRelease.svelte";
     import InformationsTop from "./InformationsTop.svelte";

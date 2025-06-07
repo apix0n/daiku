@@ -1,13 +1,15 @@
 <script lang="ts">
+    import Title from "$components/Title.svelte";
+    import type { MediaTitles } from "$lib/types/media";
     import Rewatch from "../../icons/Rewatch.svelte";
 
-    export let title: string, rewatch: boolean = false;
+    export let titles: MediaTitles, rewatch: boolean = false;
 </script>
 
 <div class="informations">
     <div class="upper">
         <span class="media-title">
-            {title}
+            <Title titles={titles} />
             {#if rewatch}
                 <Rewatch />
             {/if}

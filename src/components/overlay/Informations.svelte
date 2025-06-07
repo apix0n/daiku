@@ -1,10 +1,11 @@
-<script>
+<script lang="ts">
     import LinkButtons from "./LinkButtons.svelte";
     import { _ } from "svelte-i18n";
     import AnimeInfo from "../cards/bottom/AnimeInfo.svelte";
     import MangaInfo from "../cards/bottom/MangaInfo.svelte";
     import UserInfo from "./UserInfo.svelte";
-    export let entry, synopsis = undefined;
+    import type { MediaElement } from "$lib/types/media";
+    export let entry: MediaElement, synopsis = undefined;
 </script>
 
 <div class="informations">
@@ -16,13 +17,13 @@
             {#if (entry.media.title.locale?.toLowerCase() || entry.media.title.english?.toLowerCase() || entry.media.title.romaji?.toLowerCase()) !== (entry.media.title.romaji?.toLowerCase() || entry.media.title.native?.toLowerCase())}
                 <i>{entry.media.title.romaji || entry.media.title.native}</i> ·
             {/if}
-            {#if entry.media.status && entry.media.status !== "FINISHED"}
-                {entry.media.status?.toLowerCase()} ·
+            {#if entry.media.status && entry.media.status !== "finished"}
+                {$_("mediaStatus." + entry.media.status)} ·
             {/if}
-            {entry.media.type.toLowerCase()}
+            {$_("mediaType." + entry.media.type)}
             {#if entry.media.type === "anime"}
                 · <AnimeInfo
-                    number={entry.media.episodes.count}
+                    number={entry.media.episodes?.count}
                     duration={entry.media.runtime}
                 />
             {/if}
@@ -48,14 +49,17 @@
     <span class="sep" style:--accent={entry.media.accentColor}></span>
     <div class="synopsis">
         {#if entry.media.synopsis}
-            {entry.media.synopsis}
+            {entry.media.synopsis.text}
+            {#if entry.media.synopsis.source}
+                <span class="source">{entry.media.synopsis.source}</span>
+            {/if}
         {:else if synopsis}
             {#await synopsis}
                 Loading synopsis...
-            {:then text}
-                {text.synopsis}
-                {#if text.source}
-                    <span class="source">{text.source}</span>
+            {:then {synopsis, source}}
+                {synopsis}
+                {#if source}
+                    <span class="source">{source}</span>
                 {/if}
             {:catch error}
                 Failed to load synopsis
