@@ -57,13 +57,13 @@ export async function getTmdbInfos(tmdbId) {
             dates: data.status !== "Released" ? {
                 start: data.status !== "Released" ? data.release_date : undefined
             } : undefined,
-            status: data.status === "Released" ? "released" : "notYetReleased",
+            status: data.status === "Released" ? "finished" : "notYetReleased",
             synopsis: {
                 source: 'TMDB',
                 text: data.overview
             },
             id: {
-                tmdb: tmdbId,
+                tmdb: parseInt(tmdbId),
                 imdb: data.imdb_id
             }
         }

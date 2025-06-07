@@ -2,7 +2,7 @@
     import { MediaStatus } from "$lib/types/media";
 
     let cssHexAccentOpacity = "80";
-    export let accent: string = '', background: string, status: typeof MediaStatus[number], ova: boolean = false;
+    export let accent: string = '', background: string, status: typeof MediaStatus[number] = "finished", ova: boolean = false;
     export let visible = false;
 </script>
 

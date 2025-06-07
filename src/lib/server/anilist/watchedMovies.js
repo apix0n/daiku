@@ -57,7 +57,7 @@ async function getAnimeIdsFile() {
 
 const animeIdsFile = await getAnimeIdsFile();
 
-function getIdsFromAnilistId(anilistId) {
+export function getIdsFromAnilistId(anilistId) {
     for (const key in animeIdsFile) {
         if (animeIdsFile[key].anilist_id === anilistId) {
             return {

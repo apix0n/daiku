@@ -1,13 +1,31 @@
 <script lang="ts">
     import type { UpdatedAt } from "$lib/types/requests";
-    export let info: UpdatedAt, margin: boolean = true;
+    export let info: UpdatedAt | UpdatedAt[];
 
     import { _, date as dateI18N, time } from "svelte-i18n";
+
+    $: infos = Array.isArray(info) ? info : [info];
 </script>
 
-<div class="updated-time" class:margin0={!margin}>
-    <span>{$_("updatedFromServiceAt", { values: { service: info.service }})}</span>
-    <span>{$dateI18N(new Date(info.timestamp), { month: 'numeric', day: 'numeric', year: 'numeric' } )}, {$time(new Date(info.timestamp), {format: 'medium'})}</span>
+<div class="updated-times" class:single={!Array.isArray(info)}>
+    {#each infos as info}
+        <div class="updated-time">
+            <span
+                >{$_("updatedFromServiceAt", {
+                    values: { service: info.service },
+                })}</span
+            >
+            <span
+                >{$dateI18N(new Date(info.timestamp), {
+                    month: "numeric",
+                    day: "numeric",
+                    year: "numeric",
+                })}, {$time(new Date(info.timestamp), {
+                    format: "medium",
+                })}</span
+            >
+        </div>
+    {/each}
 </div>
 
 <style>
@@ -22,16 +40,23 @@
         margin-left: auto;
         margin-right: auto;
         margin-top: 1em;
-        
         background: var(--background-2);
         border-radius: 10px;
     }
 
-    .updated-time>span:first-of-type {
+    .updated-time > span:first-of-type {
         font-weight: 500;
     }
 
-    .margin0 {
+    .updated-times {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 1em;
+    }
+
+    .updated-times:not(.single) .updated-time {
         margin: 0;
     }
 </style>

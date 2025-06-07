@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     export let data;
     import UpdatedTime from '$components/UpdatedTime.svelte';
 
@@ -7,14 +7,15 @@
     import Informations from '$components/cards/bottom/Informations.svelte';
     import RuntimeDate from '$components/cards/bottom/RuntimeDate.svelte';
 
-    const { watched, boxdUpdatedAt, alUpdatedAt } = data.watchedMovies;
+    const { watched, updatedAt } = data.watchedMovies;
 
     import { _ } from 'svelte-i18n';
     import Overlay from '$components/overlay/Overlay.svelte';
+    import type { MediaElement } from '$lib/types/media.js';
 
-    let selectedMovie = null;
+    let selectedMovie: MediaElement | null = null;
 
-    function openMovie(movie) {
+    function handleCardClick(movie: MediaElement) {
         selectedMovie = movie;
     }
 </script>
@@ -28,32 +29,19 @@
 <div id="watched" class="elements-wrapper watched-movies-wrapper">
   {#each watched as movie}
   
-  <BaseCard background={movie.media.cover.medium} on:click={() => openMovie(movie)}>
+  <BaseCard background={movie.media.cover.medium} on:click={() => handleCardClick(movie)}>
     <!-- top -->
-    {#if movie.review.rating > 0}
+    {#if movie.review?.rating && movie.review.rating > 0}
       <Rating value={movie.review.rating} />
     {/if}
 
     <!-- bottom -->
-    <Informations title={movie.media.title.locale || movie.media.title.english || movie.media.title.romaji} rewatch={movie.repeat}>
-      <RuntimeDate runtime={movie.media.runtime} watchedDate={movie.dates.finished}/>
+    <Informations titles={movie.media.title} rewatch={Boolean(movie.repeat)}>
+      <RuntimeDate runtime={movie.media.runtime} watchedDate={movie.dates?.finished}/>
     </Informations>
   </BaseCard>
 
   {/each}
 </div>
 
-<div class="updated-times">
-  <UpdatedTime margin=0 date={alUpdatedAt} service="AniList"/>
-  <UpdatedTime margin=0 date={boxdUpdatedAt} service="Letterboxd"/>
-</div>
-
-<style>
-  .updated-times {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 1em;
-  }
-</style>
+<UpdatedTime info={updatedAt}/>

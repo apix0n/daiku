@@ -51,8 +51,16 @@ export function combineMoviesLists(watchedMovies, watchedAnimeMovies) {
 
     console.log("[combined movie lists]")
     return {
-        boxdUpdatedAt: watchedMovies.updatedAt,
-        alUpdatedAt: watchedAnimeMovies.updatedAt,
-        watched: combinedWatchedMovies
+        updatedAt: [
+            {
+                service: "Letterboxd",
+                timestamp: watchedMovies.updatedAt,
+            },
+            {
+                service: "AniList",
+                timestamp: watchedAnimeMovies.updatedAt,
+            }
+        ],
+        watched: combinedWatchedMovies,
     }
 }

@@ -47,7 +47,7 @@
                     >
                         <!-- bottom -->
                         <Informations
-                            title={manga.media.title.english || manga.media.title.romaji || manga.media.title.native}
+                            titles={manga.media.title}
                         >
                             <MangaInfo
                                 chapters={manga.media.chapters?.count}
@@ -84,7 +84,7 @@
                     >
                         <!-- bottom -->
                         <Informations
-                            title={manga.media.title.english || manga.media.title.romaji || manga.media.title.native}
+                            titles={manga.media.title}
                         >
                             <MangaInfo
                                 chapters={manga.media.chapters?.count}

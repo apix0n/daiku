@@ -21,6 +21,11 @@ export type PlannedRequest = {
     movies: MediaElement[];
 }
 
+export type MovieRequest = {
+    updatedAt: UpdatedAt | UpdatedAt[];
+    watched: MediaElement[];
+}
+
 export type UpdatedAt = {
     service: string;
     timestamp: string; // ISO 8601 format
