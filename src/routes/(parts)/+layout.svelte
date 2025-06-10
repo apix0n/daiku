@@ -53,7 +53,6 @@
 		}
 		@media screen and (max-width: 1000px) {
 			--padding: 0;
-			padding-inline: 0.4em;
 			padding-bottom: 1em;
 			border-radius: 0 0 var(--border-radius) var(--border-radius);
 			margin-left: env(safe-area-inset-left);

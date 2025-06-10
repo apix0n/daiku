@@ -84,7 +84,7 @@ a {
 }
 
 body {
-    background-color: var(--background);
+    background-color: var(--background-2);
     color: var(--text);
     overflow: hidden;
     margin: 0;
@@ -394,7 +394,7 @@ label {
     justify-content: center;
     height: 100vh;
     height: 100dvh;
-    background: var(--background);
+    background: var(--background-2);
 }
 
 .loader-container.hidden {
