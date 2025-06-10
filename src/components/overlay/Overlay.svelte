@@ -7,6 +7,7 @@
     import { synopsisCache, cacheSynopsis } from '$lib/stores/synopsisStore';
     const dispatch = createEventDispatcher();
     import { onMount, onDestroy } from 'svelte';
+    import { haptic } from "$lib/client/haptics";
 
     export let fullscreen = false;
     export let entry;
@@ -30,12 +31,14 @@
     function close() {
         dispatch('close');
     }
-
+    
     onMount(() => {
+        haptic();
         document.body.classList.add('noscroll');
     });
-
+    
     onDestroy(() => {
+        haptic();
         document.body.classList.remove('noscroll');
     });
 </script>

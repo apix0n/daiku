@@ -1,6 +1,7 @@
 <script>
 	import { page } from "$app/state";
 	import { version } from "$app/environment";
+	import { haptic } from "$lib/client/haptics";
 
 	// Import des icônes
 	import Anime from "./icons/Anime.svelte";
@@ -18,9 +19,13 @@
 	const isActive = (href) => {
 		const active = page.url.pathname === href;
 		if (active) {
-			localStorage.setItem('lastPage', href);
+			localStorage.setItem("lastPage", href);
 		}
 		return active;
+	};
+
+	const handleClick = (event) => {
+		haptic();
 	};
 </script>
 
@@ -41,28 +46,51 @@
 <nav class="nav">
 	<div class="navbtns">
 		<div>daiku</div>
-		<a href="/anime" class:isActive={isActive("/anime")}><Anime /> anime</a>
-		<a href="/anime/dropped" class:isActive={isActive("/anime/dropped")}
+		<a
+			href="/anime"
+			onclick={handleClick}
+			class:isActive={isActive("/anime")}><Anime /> anime</a
+		>
+		<a
+			href="/anime/dropped"
+			onclick={handleClick}
+			class:isActive={isActive("/anime/dropped")}
 			><PausedAnime /> paused</a
 		>
-		<a href="/manga" class:isActive={isActive("/manga")}><Book /> manga</a>
-		<a href="/manga/dropped" class:isActive={isActive("/manga/dropped")}
-			><PausedBook />paused</a
+		<a
+			href="/manga"
+			onclick={handleClick}
+			class:isActive={isActive("/manga")}><Book /> manga</a
 		>
-		<a href="/collection" class:isActive={isActive("/collection")}
-			><Shelf /> library</a
+		<a
+			href="/manga/dropped"
+			onclick={handleClick}
+			class:isActive={isActive("/manga/dropped")}><PausedBook />paused</a
 		>
-		<a href="/collection/next" class:isActive={isActive("/collection/next")}
+		<a
+			href="/collection"
+			onclick={handleClick}
+			class:isActive={isActive("/collection")}><Shelf /> library</a
+		>
+		<a
+			href="/collection/next"
+			onclick={handleClick}
+			class:isActive={isActive("/collection/next")}
 			><ShelfSparkle /> wished</a
 		>
-		<a href="/movies" class:isActive={isActive("/movies")}
-			><Movie /> movies</a
+		<a
+			href="/movies"
+			onclick={handleClick}
+			class:isActive={isActive("/movies")}><Movie /> movies</a
 		>
-		<a href="/planning" class:isActive={isActive("/planning")}
-			><CalendarClock /> planned</a
+		<a
+			href="/planning"
+			onclick={handleClick}
+			class:isActive={isActive("/planning")}><CalendarClock /> planned</a
 		>
 		<a
 			href="/planning/notreleased"
+			onclick={handleClick}
 			class:isActive={isActive("/planning/notreleased")}
 			><CalendarClock /> season</a
 		>
@@ -103,7 +131,7 @@
 			flex-direction: row;
 			gap: 8px;
 			width: 100%;
-			padding: 2px .5em;
+			padding: 2px 0.5em;
 			overflow-y: hidden;
 			scroll-snap-type: x mandatory;
 			scroll-padding-left: 0.5em;
@@ -118,7 +146,8 @@
 		}
 	}
 
-	.navbtns > a, .navbtns > div {
+	.navbtns > a,
+	.navbtns > div {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -138,8 +167,8 @@
 		-webkit-user-drag: none;
 		-webkit-user-select: none;
 		touch-action: manipulation; /* Optimize for taps */
-		user-drag: none;             /* Non-standard but supported */
-		pointer-events: auto;        /* Ensure normal clicks still work */
+		user-drag: none; /* Non-standard but supported */
+		pointer-events: auto; /* Ensure normal clicks still work */
 		-webkit-tap-highlight-color: transparent; /* Disable highlight on tap */
 
 		@media screen and (max-width: 1000px) {
@@ -163,10 +192,11 @@
 		width: 35%;
 	}
 
-	.navbtns > a:hover,
-	.navbtns > a:active {
-		background: var(--background-3-hover);
-		color: var(--text-2);
+	@media (hover: hover) {
+		.navbtns > a:hover {
+			background: var(--background-3-hover);
+			color: var(--text-2);
+		}
 	}
 
 	.navbtns > a:active {
