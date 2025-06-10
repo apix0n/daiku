@@ -1,4 +1,3 @@
-import { alternativesUrl } from '../anilist/global';
 import overridesData from '$lib/overrides/data';
 import type { AniListMedia } from '$lib/types/anilist';
 
@@ -8,13 +7,13 @@ export function applyPosterOverrides(media: AniListMedia): AniListMedia {
     if (override) {
         if (override.covers) {
             if (override.covers.large) {
-                media.coverImage.extraLarge = `${alternativesUrl}/${override.covers.large}`;
+                media.coverImage.extraLarge = override.covers.large;
             }
             if (override.covers.medium) {
-                media.coverImage.large = `${alternativesUrl}/${override.covers.medium}`;
+                media.coverImage.large = override.covers.medium;
             }
             if (override.covers.small) {
-                media.coverImage.medium = `${alternativesUrl}/${override.covers.small}`;
+                media.coverImage.medium = override.covers.small;
             }
         }
         if (override.title) {

@@ -2,7 +2,6 @@ export const apiUrl = 'https://graphql.anilist.co';
 export const siteUrl = 'https://anilist.co'
 
 import { config } from "$lib/config";
-export let alternativesUrl = `${config.alternativesBaseUrl}/anilist`;
 
 import { applyPosterOverrides } from '../overrides/anilist';
 export { applyPosterOverrides };

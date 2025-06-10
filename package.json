@@ -4,6 +4,9 @@
 	"version": "0.0.2",
 	"type": "module",
 	"scripts": {
+		"predev": "node scripts/fetchOverrides.js",
+		"predev0": "node scripts/fetchOverrides.js",
+		"prebuild": "node scripts/fetchOverrides.js",
 		"dev": "vite dev",
 		"dev0": "vite dev --host",
 		"build": "vite build",
