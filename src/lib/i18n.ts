@@ -10,11 +10,15 @@ export const locales = {
 
 export const defaultLocale = 'en-GB'
 
-Object.entries(locales).forEach(([locale, value]) => {
-    const [name, fileName] = value
-    register(locale, () => import(`../locales/${fileName}.json`))
-    console.log(`i18n | registered ${name} (${locale})`)
-})
+function registerLocales() {
+    if (!browser) return
+
+    Object.entries(locales).forEach(([locale, value]) => {
+        const [name, fileName] = value
+        register(locale, () => import(`../locales/${fileName}.json`))
+        console.log(`i18n | registered ${name} (${locale})`)
+    })
+}
 
 function getLanguagePreference() {
     if (!browser) return defaultLocale
@@ -31,7 +35,11 @@ function getLanguagePreference() {
     return uiLanguage
 }
 
-init({
-    fallbackLocale: defaultLocale,
-    initialLocale: getLanguagePreference(),
-})
+if (browser) {
+    registerLocales()
+
+    init({
+        fallbackLocale: defaultLocale,
+        initialLocale: getLanguagePreference(),
+    })
+}
