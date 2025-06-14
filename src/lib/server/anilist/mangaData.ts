@@ -4,6 +4,8 @@ import { mapAniListMediaStatus, mapAniListUserStatus } from '$lib/anilist/global
 import type { AniListResponse, AniListUserMediaStatus } from '$lib/types/anilist';
 import type { MediaElement } from '$lib/types/media';
 import type { MangaRequest } from '$lib/types/requests';
+import { getLatestChapter } from '$lib/server/malsync/getLatestChapter';
+import { getLastChapter } from '$lib/server/getLastChapter';
 
 async function getUserMangaData(userId: number): Promise<AniListResponse> {
     const query = `
@@ -138,7 +140,7 @@ function readManga(userMangaData: AniListResponse): MediaElement[] {
     } as MediaElement));
 }
 
-function readingManga(userMangaData: AniListResponse): MediaElement[] {
+async function readingManga(userMangaData: AniListResponse): Promise<MediaElement[]> {
     const seen = new Set();
     const allCurrentManga = userMangaData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
@@ -165,8 +167,30 @@ function readingManga(userMangaData: AniListResponse): MediaElement[] {
                 media.daikuReadingLang = readingLang;
                 media.notes = media.notes.replace(langMatch[0], '').trim(); // Remove the language from notes
             }
+
+            let lastChapterService = undefined;
+            const lastChapterMatch = media.notes.match(new RegExp(config.lastChapterServiceRegex));
+            if (lastChapterMatch) {
+                lastChapterService = lastChapterMatch[1];
+                media.daikuLastChapterSource = lastChapterService;
+                media.notes = media.notes.replace(lastChapterMatch[0], '').trim()
+            }
         }
     }
+
+    await Promise.all(allCurrentManga.map(async (media) => {
+        if (media.media.status === "RELEASING") {
+            try {
+                if (media.daikuLastChapterSource) {
+                    media.media.lastEpisode = await getLastChapter(media.daikuLastChapterSource);
+                } else if (media.media.idMal) {
+                    media.media.lastEpisode = await getLatestChapter(media.media.idMal, media.daikuReadingLang);
+                }
+            } catch (error) {
+                console.error("Error processing manga:", media.media.title.english || media.media.title.romaji, error);
+            }
+        }
+    }));
 
     return allCurrentManga.map(entry => ({
         media: {
@@ -192,6 +216,7 @@ function readingManga(userMangaData: AniListResponse): MediaElement[] {
             } : undefined,
             chapters: {
                 count: entry.media.chapters,
+                last: entry.media.lastEpisode,
             },
             volumes: {
                 count: entry.media.volumes,
@@ -300,10 +325,10 @@ export async function fetchMangaData(userId: number) {
         const userData = await getUserMangaData(userId);
         return {
             updatedAt: {
-                service: 'AniList',
+                service: 'AniList & MAL-Sync',
                 timestamp: new Date().toISOString()
             },
-            current: readingManga(userData),
+            current: await readingManga(userData),
             read: readManga(userData),
             dropped: droppedManga(userData),
         } as MangaRequest;

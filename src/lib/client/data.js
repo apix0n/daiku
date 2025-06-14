@@ -1,5 +1,4 @@
 import { dataStore } from '$lib/stores/dataStore';
-import { getLatestChapter } from '$lib/client/malsync/getLatestChapter';
 import { combineMoviesLists } from '$lib/utils/combineMoviesLists';
 
 export async function loadAnimeData(update = false) {
@@ -37,30 +36,6 @@ export async function loadMangaData(update = false) {
     }
 
     const mangaData = await fetch('/api/get/anilist/manga').then(r => r.json());
-
-    if (mangaData?.current) {
-        const updatedManga = await Promise.all(
-            mangaData.current.map(async (manga) => {
-                if (manga.media.status === "airing" && manga.media.id.myanimelist) {
-                    const lastChapter = await getLatestChapter(manga.media.id.myanimelist, manga.lang);
-                    return {
-                        ...manga,
-                        media: {
-                            ...manga.media,
-                            chapters: {
-                                ...manga.media.chapters,
-                                last: lastChapter
-                            }
-                        }
-                    };
-                }
-                return manga;
-            })
-        );
-        mangaData.current = updatedManga;
-        mangaData.updatedAt.service += ' & MAL-Sync'
-    }
-
     dataStore.set('mangaData', mangaData);
     return { mangaData };
 };

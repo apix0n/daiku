@@ -64,6 +64,7 @@ another media dashboard
 | DAIKU__APP_ACCENT_SECOND | defines the second accent color used in the app | `#62544e` |
 | DAIKU_API_AUTH_KEY_VARIABLE | defines from which environment variable the api authorization key will be set | `undefined` |
 | DAIKU__ALTERNATIVES_BASE_URL | defines the base URL for the daiku-alternatives API | `undefined` |
+| DAIKU_LMC_URL | defines the URL for the [last-manga-chapter](https://github.com/apix0n/last-manga-chapter) API | `undefined` |
 
 ## other credits
 

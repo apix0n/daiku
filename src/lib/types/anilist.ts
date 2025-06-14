@@ -58,6 +58,7 @@ export interface MediaListEntry {
 
     // custom fields
     daikuReadingLang: string | undefined;
+    daikuLastChapterSource: string | undefined;
 }
 
 export const AniListUserMediaStatus = ['CURRENT', 'PLANNING', 'COMPLETED', 'DROPPED', 'PAUSED', 'REPEATING'] as const;
