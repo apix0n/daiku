@@ -5,7 +5,7 @@ import type { AniListResponse, AniListUserMediaStatus } from '$lib/types/anilist
 import type { MediaElement } from '$lib/types/media';
 import type { MangaRequest } from '$lib/types/requests';
 import { getLatestChapter } from '$lib/server/malsync/getLatestChapter';
-import { getLastChapter } from '$lib/server/getLastChapter';
+import { getLastChapter } from '$lib/server/lmc/getLastChapter';
 
 async function getUserMangaData(userId: number): Promise<AniListResponse> {
     const query = `
