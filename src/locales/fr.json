@@ -29,7 +29,7 @@
   "watched": "regardés",
   "specialsOVAsToggle": "Afficher les épisodes spéciaux/OVA",
   "specialsOneShotsToggle": "Afficher les one-shot/chapitres spéciaux",
-  "Nchapters": "{n, plural, =1 {1 chapitre} other {# chapitres}}",
+  "Nchapters": "{n, plural, =1 {one shot} other {# chapitres}}",
   "Nvolumes": "{n, plural, =1 {1 tome} other {# tomes}}",
   "Nanime": "{n} anime",
   "Nspecials": "{n} spéciaux",

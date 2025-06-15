@@ -18,7 +18,7 @@ function findChapterfromLanguage(chapterList: MALSyncElement[], lang: string) {
 
     return {
         number: chapter.lastEp.total,
-        timestamp: chapter.lastEp.timestamp
+        timestamp: parseInt(chapter.lastEp.timestamp),
     }
 }
 

@@ -31,12 +31,35 @@ export interface AniListMedia {
     countryOfOrigin: string | null;
     nextAiringEpisode: AniListNextAiringEpisode | null;
     startDate: AniListDate | null;
+    relations: {
+        edges: AniListRelationEdge[],
+        nodes: AniListMedia[],
+    },
 
     // custom fields
     lastEpisode?: any,
 }
 
-export const AniListMediaStatus = ['FINISHED', 'RELEASING','NOT_YET_RELEASED' ,'CANCELLED', 'HIATUS'] as const;
+type AniListRelationEdge = {
+    relationType: typeof AniListRelationType[number];
+}
+
+export const AniListRelationType = ['ADAPTATION',
+    'PREQUEL',
+    'SEQUEL',
+    'PARENT',
+    'SIDE_STORY',
+    'CHARACTER',
+    'SUMMARY',
+    'ALTERNATIVE',
+    'SPIN_OFF',
+    'OTHER',
+    'SOURCE',
+    'COMPILATION',
+    'CONTAINS',
+] as const;
+
+export const AniListMediaStatus = ['FINISHED', 'RELEASING', 'NOT_YET_RELEASED', 'CANCELLED', 'HIATUS'] as const;
 
 export interface AniListDate {
     year: number | null;

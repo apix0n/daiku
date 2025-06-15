@@ -9,11 +9,7 @@
 
     $: locale = $localeStore ?? "en";
 
-    // Ensure timestamp is a valid number
-    const validTimestamp =
-        typeof timestamp === "number" ? timestamp : parseInt(timestamp);
-
-    let datetimestamp = new Date(validTimestamp);
+    let datetimestamp = new Date(timestamp);
     const now = new Date();
 
     // Add validation check

@@ -33,6 +33,11 @@ async function getUserMangaData(userId: number): Promise<AniListResponse> {
                             large
                         }
                         bannerImage
+                        relations {
+                            edges {
+                              relationType
+                            }
+                        }
                     }
                     score(format: POINT_10)
                     progress
@@ -126,7 +131,8 @@ function readManga(userMangaData: AniListResponse): MediaElement[] {
                 anilist: entry.media.id,
                 myanimelist: entry.media.idMal,
             },
-            special: (entry.media.chapters ?? 0) <= 4 && (entry.media.chapters ?? 0 > 0) && !entry.media.volumes ? true : false,
+            special: ((entry.media.chapters ?? 0) <= 4 && (entry.media.chapters ?? 0 > 0) && !entry.media.volumes) && 
+                entry.media.relations.edges.some(edge => edge.relationType === 'PARENT'),
         },
         status: 'finished',
         dates: {

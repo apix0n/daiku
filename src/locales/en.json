@@ -39,7 +39,7 @@
   "pausedEpN": "paused at ep. {n}",
   "droppedChapN": "dropped after chap. {n}",
   "pausedChapN": "paused at chap. {n}",
-  "Nchapters": "{n, plural, =1 {1 chapter} other {# chapters}}",
+  "Nchapters": "{n, plural, =1 {one-shot} other {# chapters}}",
   "Nvolumes": "{n, plural, =1 {1 volume} other {# volumes}}",
   "todayAt": "at {time}",
   "announced": "announced",

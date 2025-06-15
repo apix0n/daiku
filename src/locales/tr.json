@@ -31,7 +31,7 @@
   "read": "okunan",
   "specialsOVAsToggle": "Özel bölümleri/OVA'ları göster",
   "NepisodesShort": "{n} böl.",
-  "Nchapters": "{n} bölüm",
+  "Nchapters": "{n, plural, =1 {one shot} other {# bölüm}}",
   "Nvolumes": "{n} cilt",
   "chapterNumberN": "bölüm {n}",
   "todayAt": "saat {time}'de",
