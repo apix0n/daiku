@@ -6,24 +6,25 @@
 	let containerElem: HTMLElement;
 
 	import { afterNavigate } from "$app/navigation";
-  	afterNavigate(() => {
-  	  containerElem.scrollTo({ top: 0, behavior: 'auto' });
-  	});
+	afterNavigate(() => {
+		containerElem.scrollTo({ top: 0, behavior: "auto" });
+	});
 </script>
 
 <svelte:head>
 	<title>
-		{[...page.url.pathname.split("/").slice(1)]
-			.filter(Boolean)
-			.join(" - ")} | daiku</title
+		{[...page.url.pathname.split("/").slice(1)].filter(Boolean).join(" - ")}
+		| daiku</title
 	>
 </svelte:head>
 
 <div class="layout">
 	<Navbar />
-	<div class="container" data-section="parts" bind:this={containerElem}>
-		<slot></slot>
-		<Footer />
+	<div class="parts-container" bind:this={containerElem}>
+		<div class="container" data-section="parts">
+			<slot></slot>
+			<Footer />
+		</div>
 	</div>
 </div>
 
@@ -39,15 +40,36 @@
 		}
 	}
 
+	@media all and (display-mode: standalone) {
+		.layout {
+			height: calc(
+				100vh - env(safe-area-inset-top) - 1px
+			); /* -1px cuz else we could scroll on the container... for some reason? */
+			margin-top: env(safe-area-inset-top);
+		}
+	}
+
+	.parts-container {
+		flex-grow: 1;
+		overflow-x: hidden;
+		overflow-y: auto;
+		height: 100%;
+		width: 100%;
+		border-radius: var(--border-radius) 0 0 var(--border-radius);
+		@media screen and (max-width: 1000px) {
+			border-radius: 0 0 var(--border-radius) var(--border-radius);
+		}
+		@media screen and (max-height: 600px) {
+			background-color: var(--background);
+		}
+	}
+
 	.container {
 		background-color: var(--background);
-		border-radius: var(--border-radius) 0 0 var(--border-radius);
-		overflow-y: auto;
-		overflow-x: hidden;
-		flex-grow: 1;
 		--padding: 5vw;
 		padding: 0 var(--padding);
 		padding-right: calc(var(--navbar-width) + var(--padding));
+		min-height: 100%;
 		@media screen and (max-width: 1400px) {
 			--padding: 2.5vw;
 		}
@@ -72,20 +94,20 @@
 			align-items: center;
 			margin-left: auto;
 			margin-right: auto;
-			gap: 0 .3em;
+			gap: 0 0.3em;
 			width: fit-content;
 			box-sizing: border-box;
 			min-width: 100%;
 			max-width: 100%;
 			background-color: var(--background-2);
-			padding: 0 .8em;
+			padding: 0 0.8em;
 			border-radius: 5em;
 			font-size: 1.3rem;
 			text-align: center;
 			&:first-of-type {
 				margin-top: 0;
 				&::before {
-					content: '';
+					content: "";
 					position: absolute;
 					top: 0;
 					left: 0;
@@ -110,7 +132,7 @@
 		}
 
 		h2 span {
-			font-size: .8em;
+			font-size: 0.8em;
 			font-weight: 400;
 			color: var(--app-accent);
 		}

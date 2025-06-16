@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import Image from "./Image.svelte";
     import Informations from "./Informations.svelte";
     import RelativeRelease from "../cards/top/RelativeRelease.svelte";
@@ -8,10 +8,11 @@
     const dispatch = createEventDispatcher();
     import { onMount, onDestroy } from 'svelte';
     import { haptic } from "$lib/client/haptics";
+    import type { MediaElement, MediaSynopsis } from "$lib/types/media";
 
     export let fullscreen = false;
-    export let entry;
-    let synopsisPromise;
+    export let entry: MediaElement;
+    let synopsisPromise: Promise<MediaSynopsis>;
 
     // Check cache first, then fetch if needed
     $: if (entry?.media?.id?.myanimelist && !entry.media.synopsis) {
@@ -22,9 +23,17 @@
             synopsisPromise = getSynopsis(malId, entry.media.type).then(synopsis => {
                 if (synopsis) {  // Only cache if synopsis is not null
                     cacheSynopsis(malId, synopsis);
+                    return synopsis;
                 }
-                return synopsis || 'No synopsis available.';  // Provide fallback text
-            }).catch(() => 'Failed to load synopsis.');  // Handle potential errors
+                // Provide fallback MediaSynopsis object
+                return {
+                    text: 'No synopsis available.',
+                    source: '',
+                } as MediaSynopsis;
+            }).catch(() => ({
+                text: 'Failed to load synopsis.',
+                source: '',
+            } as MediaSynopsis));  // Handle potential errors
         }
     }
 
@@ -34,12 +43,10 @@
     
     onMount(() => {
         haptic();
-        document.body.classList.add('noscroll');
     });
     
     onDestroy(() => {
         haptic();
-        document.body.classList.remove('noscroll');
     });
 </script>
 
@@ -49,10 +56,10 @@
             <button class="close" on:click={close}>×</button>
         {/if}
         <div class="content">
-            <Image background={entry.media.cover.large || entry.media.cover.medium} status={entry.media.status}>
-                {#if entry.media.type === "anime" && entry.media.episodes?.next && entry.media.status === "RELEASING"}
+            <Image background={entry.media.cover.large || entry.media.cover.medium} status={entry.media.status} mediaType={entry.media.type}>
+                {#if entry.media.type === "anime" && entry.media.episodes?.next && entry.media.status === "airing"}
                     <RelativeRelease timestamp={Math.floor(entry.media.episodes?.next?.timestamp)} number={entry.media.episodes?.next?.number} mediaType={entry.media.type}/>
-                {:else if entry.media.type === "manga" && entry.media.chapters?.last && entry.media.status === "RELEASING"}
+                {:else if entry.media.type === "manga" && entry.media.chapters?.last && entry.media.status === "airing"}
                     <RelativeRelease timestamp={Math.floor(entry.media.chapters?.last?.timestamp)} number={entry.media.chapters?.last?.number} mediaType={entry.media.type}/>
                 {/if}
             </Image>
@@ -61,7 +68,7 @@
                 synopsis={synopsisPromise}
             />
         </div>
-        <div class="banner" style:--image-link="url({entry.media.banner?.large || entry.media.cover.large})" data-nobanner={!entry.media.banner?.large} alt=""></div>
+        <div class="banner" style:--image-link="url({entry.media.banner?.large || entry.media.cover.large})" data-nobanner={!entry.media.banner?.large}></div>
     </div>
 </div>
 
@@ -168,6 +175,9 @@
         }
         
         .content {
+            margin-top: env(safe-area-inset-top);
+            margin-left: env(safe-area-inset-left);
+            margin-right: env(safe-area-inset-right);
             justify-content: unset;
             flex-direction: column;
             gap: 20px;
@@ -180,9 +190,26 @@
         }
 
         .close {
-            top: 0.5rem;
-            right: 0.5rem;
+            padding: 1em;
+            top: -.5em;
+            right: .5em;
+            margin-top: env(safe-area-inset-top);
             position: fixed;
+        }
+    }
+
+    @media screen and (max-width: 900px) and (display-mode: standalone) {
+        .overlay::before {
+            /* progressive blur for the ios status */
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: env(safe-area-inset-top);
+            z-index: 5;
+            mask: linear-gradient(black, black, transparent);
+            backdrop-filter: blur(10px);
         }
     }
 </style>

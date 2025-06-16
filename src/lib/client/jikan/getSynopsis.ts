@@ -1,4 +1,6 @@
-export async function getSynopsis(id, mediaType) {
+import type { MediaSynopsis, MediaType } from "$lib/types/media";
+
+export async function getSynopsis(id: number, mediaType: typeof MediaType[number]): Promise <MediaSynopsis> {
     mediaType = mediaType === "movie" ? "anime" : mediaType;
     const response = await fetch(`https://api.jikan.moe/v4/${mediaType}/${id}/full`);
     const data = await response.json();
@@ -17,7 +19,9 @@ export async function getSynopsis(id, mediaType) {
     } else if (malRewriteMatch) {
         source = 'MAL Rewrite';
         synopsis = synopsis.replace(/\s*\[Written by MAL Rewrite\]/, '').trim();
+    } else {
+        source = undefined;
     }
 
-    return { synopsis, source };
+    return { text: synopsis, source };
 }

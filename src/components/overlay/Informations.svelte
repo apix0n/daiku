@@ -4,8 +4,8 @@
     import AnimeInfo from "../cards/bottom/AnimeInfo.svelte";
     import MangaInfo from "../cards/bottom/MangaInfo.svelte";
     import UserInfo from "./UserInfo.svelte";
-    import type { MediaElement } from "$lib/types/media";
-    export let entry: MediaElement, synopsis = undefined;
+    import type { MediaElement, MediaSynopsis } from "$lib/types/media";
+    export let entry: MediaElement, synopsis: Promise<MediaSynopsis> | MediaSynopsis | undefined = undefined;
 </script>
 
 <div class="informations">
@@ -56,13 +56,11 @@
         {:else if synopsis}
             {#await synopsis}
                 Loading synopsis...
-            {:then {synopsis, source}}
-                {synopsis}
+            {:then {text, source}}
+                {text}
                 {#if source}
                     <span class="source">{source}</span>
                 {/if}
-            {:catch error}
-                Failed to load synopsis
             {/await}
         {/if}
     </div>
@@ -136,12 +134,17 @@
     }
 
     @media screen and (max-width: 900px) {
-        h1 {
+        .top {
+            margin-left: 0;
+        }
+
+        .title {
             margin-top: -2rem;
+            font-size: .8rem;
         }
 
         .informations {
-            width: 100%;
+            /* width: 100%; */
         }
     }
 </style>

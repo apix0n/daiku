@@ -39,6 +39,7 @@
 ::-webkit-scrollbar {
     width: 15px;
     background: var(--background-2);
+    z-index: 5;
 }
 
 ::-webkit-scrollbar:vertical {
@@ -393,7 +394,6 @@ label {
     align-items: center;
     justify-content: center;
     height: 100vh;
-    height: 100dvh;
     background: var(--background-2);
 }
 

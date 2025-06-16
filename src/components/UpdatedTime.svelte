@@ -39,7 +39,6 @@
         width: fit-content;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 1em;
         background: var(--background-2);
         border-radius: 10px;
     }

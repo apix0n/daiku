@@ -72,5 +72,15 @@
     "movie": "film",
     "volume": "manga (tome)"
   },
-  "moreInfo": "Plus d'informations :"
+  "moreInfo": "Plus d'informations :",
+  "navigation": {
+    "anime": "anime",
+    "manga": "manga",
+    "paused": "en pause",
+    "library": "bibliothèque",
+    "wished": "wished",
+    "movies": "films",
+    "planned": "planned",
+    "season": "saison"
+  }
 }

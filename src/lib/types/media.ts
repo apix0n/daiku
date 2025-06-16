@@ -40,6 +40,7 @@ type MediaIdentifiers = {
     imdb?: string;
     mangacollec?: string;
     letterboxd?: string;
+    boxdit?: string,
     isbn?: number;
 }
 
@@ -48,7 +49,7 @@ export type MediaTitles = {
     english?: string;
     romaji?: string;
     native: string;
-    nativeOrigin: string; // language code, e.g., 'ja' for Japanese
+    nativeOrigin?: string; // language code, e.g., 'ja' for Japanese
     localeLang?: string; // language code for the locale pulled title, e.g., 'en' for English
 }
 
@@ -73,7 +74,7 @@ type MediaEpisodesInfo = {
     next?: SingleEpisodeInfo;
 }
 
-type MediaSynopsis = {
+export type MediaSynopsis = {
     text: string;
     source?: string;
 };

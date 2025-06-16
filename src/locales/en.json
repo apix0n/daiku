@@ -72,5 +72,15 @@
     "hiatus": "in hiatus",
     "cancelled": "cancelled"
   },
-  "moreInfo": "More info:"
+  "moreInfo": "More info:",
+  "navigation": {
+    "anime": "anime",
+    "manga": "manga",
+    "paused": "paused",
+    "library": "library",
+    "wished": "wished",
+    "movies": "movies",
+    "planned": "planned",
+    "season": "season"
+  }
 }

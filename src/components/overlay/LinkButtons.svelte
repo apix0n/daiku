@@ -23,7 +23,7 @@
                 <AniList />
             {:else if key === "imdb"}
                 <Imdb />
-            {:else if key === "letterboxd"}
+            {:else if key === "letterboxd" || key === "boxdit"}
                 <Letterboxd />
             {/if}
             </a>

@@ -44,5 +44,15 @@
     "onDayN": "{n} gününde başlıyor"
   },
   "updatedFromServiceAt": "{service} tarafından güncellendi",
-  "continue": "devam et"
+  "continue": "devam et",
+  "navigation": {
+    "anime": "anime",
+    "manga": "manga",
+    "paused": "duraklatıldı",
+    "library": "kütüphane",
+    "wished": "istenen",
+    "movies": "filmler",
+    "planned": "planlanan",
+    "season": "sezon"
+  }
 }

@@ -3,6 +3,8 @@
 	import { version } from "$app/environment";
 	import { haptic } from "$lib/client/haptics";
 
+	import { _ } from "svelte-i18n";
+
 	// Import des icônes
 	import Anime from "./icons/Anime.svelte";
 	import Back from "./icons/Back.svelte";
@@ -49,50 +51,56 @@
 		<a
 			href="/anime"
 			onclick={handleClick}
-			class:isActive={isActive("/anime")}><Anime /> anime</a
+			class:isActive={isActive("/anime")}
+			><Anime />{$_("navigation.anime")}</a
 		>
 		<a
 			href="/anime/dropped"
 			onclick={handleClick}
 			class:isActive={isActive("/anime/dropped")}
-			><PausedAnime /> paused</a
+			><PausedAnime />{$_("navigation.paused")}</a
 		>
 		<a
 			href="/manga"
 			onclick={handleClick}
-			class:isActive={isActive("/manga")}><Book /> manga</a
+			class:isActive={isActive("/manga")}
+			><Book />{$_("navigation.manga")}</a
 		>
 		<a
 			href="/manga/dropped"
 			onclick={handleClick}
-			class:isActive={isActive("/manga/dropped")}><PausedBook />paused</a
+			class:isActive={isActive("/manga/dropped")}
+			><PausedBook />{$_("navigation.paused")}</a
 		>
 		<a
 			href="/collection"
 			onclick={handleClick}
-			class:isActive={isActive("/collection")}><Shelf /> library</a
+			class:isActive={isActive("/collection")}
+			><Shelf />{$_("navigation.library")}</a
 		>
 		<a
 			href="/collection/next"
 			onclick={handleClick}
 			class:isActive={isActive("/collection/next")}
-			><ShelfSparkle /> wished</a
+			><ShelfSparkle />{$_("navigation.wished")}</a
 		>
 		<a
 			href="/movies"
 			onclick={handleClick}
-			class:isActive={isActive("/movies")}><Movie /> movies</a
+			class:isActive={isActive("/movies")}
+			><Movie />{$_("navigation.movies")}</a
 		>
 		<a
 			href="/planning"
 			onclick={handleClick}
-			class:isActive={isActive("/planning")}><CalendarClock /> planned</a
+			class:isActive={isActive("/planning")}
+			><CalendarClock />{$_("navigation.planned")}</a
 		>
 		<a
 			href="/planning/notreleased"
 			onclick={handleClick}
 			class:isActive={isActive("/planning/notreleased")}
-			><CalendarClock /> season</a
+			><CalendarClock />{$_("navigation.season")}</a
 		>
 	</div>
 </nav>
@@ -154,7 +162,6 @@
 		align-items: center;
 		padding: 4px 0;
 		width: 100%;
-		aspect-ratio: 12 / 9;
 		box-sizing: border-box;
 		border-radius: 14px;
 		position: relative;
@@ -184,6 +191,7 @@
 		}
 		&:first-child {
 			margin-top: 0.5em;
+			aspect-ratio: 12 / 9;
 		}
 	}
 
