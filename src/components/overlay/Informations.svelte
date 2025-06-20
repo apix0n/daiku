@@ -5,13 +5,14 @@
     import MangaInfo from "../cards/bottom/MangaInfo.svelte";
     import UserInfo from "./UserInfo.svelte";
     import type { MediaElement, MediaSynopsis } from "$lib/types/media";
+    import Title from "$components/Title.svelte";
     export let entry: MediaElement, synopsis: Promise<MediaSynopsis> | MediaSynopsis | undefined = undefined;
 </script>
 
 <div class="informations">
     <div class="top">
         <div class="title">
-            <h1>{entry.media.title.locale || entry.media.title.english || entry.media.title.romaji}</h1>
+            <h1><Title titles={entry.media.title}/></h1>
         </div>
         <span class="sub">
             {#if (entry.media.title.locale?.toLowerCase() || entry.media.title.english?.toLowerCase() || entry.media.title.romaji?.toLowerCase()) !== (entry.media.title.romaji?.toLowerCase() || entry.media.title.native?.toLowerCase())}

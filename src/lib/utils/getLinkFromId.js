@@ -14,6 +14,8 @@ export function getLinkFromId(id, platform, mediaType='') {
             }
         case 'letterboxd':
             return `https://letterboxd.com/film/${id}`
+        case 'boxdit':
+            return `https://boxd.it/${id}`
         case 'imdb':
             return `https://www.imdb.com/title/${id}`
         case 'tmdb':

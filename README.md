@@ -39,8 +39,7 @@ another media dashboard
     > queried client side;
     > unofficial, free and auth-less API for MyAnimeList
 * [Letterboxd](https://letterboxd.com/) for movies (+ liked),
-    > * movies: through the user diary RSS feed and limited to 50 entries (counts movies, series & lists)
-    > * likes: parses the Letterboxd user page & respective movie pages for the TMDB id
+    > official API using guest authentication from the iOS app
 * [The Movie Database (TMDB) API](https://www.themoviedb.org/) for localised movie titles, runtimes & clean movie posters,
 * [Mangacollec](https://www.mangacollec.com/) for the manga library,
     > private API
@@ -70,8 +69,7 @@ another media dashboard
 
 * loading/progress bar inspiration: [@scosman/sveltekit-navigation-loader](https://github.com/scosman/sveltekit-navigation-loader),
 * watch time circular chart inspiration: [@sergiopedercini](https://codepen.io/sergiopedercini/pen/jmKdbj),
-* Letterboxd RSS feed parser: [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser),
-* HTML characters decoder for the Letterboxd RSS feed: [he](https://www.npmjs.com/package/he),
+* iOS notch sticker: [@imputnet/cobalt](https://github.com/imputnet/cobalt),
 * HTML parser for Letterboxd liked movies: [cheerio](https://cheerio.js.org/),
 * iCalendar generator: [ical-generator](https://www.npmjs.com/package/ical-generator),
 * icons: [Google Material Symbols Rounded](https://fonts.google.com/icons?icon.style=Rounded) or custom-made

@@ -42,7 +42,7 @@
     top: 0;
     right: 0;
     left: 0;
-    height: 4px;
+    height: max(env(safe-area-inset-top), 4px);
     z-index: 10;
     background-color: var(--app-accent);
   }

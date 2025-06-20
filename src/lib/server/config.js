@@ -17,6 +17,7 @@ export let accounts = {
     anilistId: env.ANILIST_ID ? parseInt(env.ANILIST_ID) : null,
     mangacollecUsername: env.MANGACOLLEC_USERNAME ?? null,
     letterboxdUsername: env.LETTERBOXD_USERNAME ?? null,
+    letterboxdLid: env.LETTERBOXD_LID ?? null,
 };
 
 export let secrets = {

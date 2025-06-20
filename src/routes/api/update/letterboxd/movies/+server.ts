@@ -1,9 +1,9 @@
-import { fetchWatchedMovies } from "$lib/server/letterboxd/watchedMovies";
 import { json } from '@sveltejs/kit';
 import { replaceByTmdb } from "$lib/server/tmdb/replaceByTmdb";
 import { accounts, secrets } from "$lib/server/config.js";
 import { setValue } from "$lib/server/redisInteractions";
 import { cacheStore } from "$lib/server/stores/cache.js";
+import { boxdWatchedMovies } from "$lib/server/letterboxd/watchedMovies";
 
 export async function GET({ request, url }) {
     const authHeader = request.headers.get("authorization")
@@ -14,7 +14,7 @@ export async function GET({ request, url }) {
     }
 
     try {
-        let data = await replaceByTmdb(await fetchWatchedMovies(accounts.letterboxdUsername));
+        let data = await replaceByTmdb(await boxdWatchedMovies(accounts.letterboxdLid));
         await setValue("lbMovies", data);
         cacheStore.set("lbMovies", { data });
         return json({ success: true });

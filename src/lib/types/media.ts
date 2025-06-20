@@ -3,12 +3,19 @@ export type MediaElement = {
 } & UserMediaInformation;
 
 type UserMediaInformation = {
+    /**
+     * Dates at which the user interacted with the entries (started/finished watching/reading).
+     */
     dates?: UserDates;
     status: (typeof UserMediaStatus)[number];
     progress?: UserMediaProgress;
     review: UserReview | null; // null if no review
     repeat?: number | boolean;
-    lang?: string | undefined; // reading language for manga, undefined if default or for anime
+
+    /**
+     * A 2-character ISO 369-1 string referring to the language in which the manga was read; `undefined` if default or for anime entries.
+     */
+    lang?: string | undefined;
 }
 
 type MediaInformation = {
@@ -16,19 +23,47 @@ type MediaInformation = {
     type: (typeof MediaType)[number];
     source: (typeof MediaSource)[number];
     status: (typeof MediaStatus)[number];
-    runtime?: number; // in minutes
+
+    /**
+     * The movie or per episode runtime in minutes.
+     */
+    runtime?: number;
+
+    /**
+     * Hexadecimal color code.
+     */
     accentColor?: string; // hex color code
+
     cover: ImageWithSizes;
     banner?: ImageWithSizes;
     episodes?: MediaEpisodesInfo;
     chapters?: MediaEpisodesInfo;
     volumes?: MediaEpisodesInfo;
     synopsis?: MediaSynopsis;
+
+    /**
+     * Dates when the media started or ended.
+     */
     dates?: {
-        start?: string; // ISO date string
-        end?: string; // ISO date string
-    }
-    special: boolean; // true if the media is a special episode (ova) or chapter (oneshot, etc.)
+        /**
+         * A date in ISO 8601 format, i.e. `YYYY-MM-DD`, referring to when the media started airing.
+         */
+        start?: string;
+
+        /**
+         * A date in ISO 8601 format, i.e. `YYYY-MM-DD`, referring to when the media released or finished airing.
+         */
+        end?: string;
+    };
+
+    /**
+     * If the media is a special episode (OVA) or chapter.
+     */
+    special: boolean;
+
+    /**
+     * Identifiers linking this entry to other services.
+     */
     id: MediaIdentifiers;
 }
 

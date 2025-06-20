@@ -140,7 +140,10 @@ export async function fetchWatchedAnimeMovies(userId) {
     try {
         const userData = await getUserWatchedAnime(userId);
         return {
-            updatedAt: new Date().toISOString(),
+            updatedAt: {
+                service: 'AniList',
+                timestamp: new Date().toISOString()
+            },
             watched: await watchedMovies(userData),
         };
     } catch (error) {

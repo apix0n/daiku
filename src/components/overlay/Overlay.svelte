@@ -121,9 +121,9 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 40%;
+        height: 50%;
         z-index: 0;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, var(--background-2) 90%), var(--image-link) center/cover no-repeat;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, var(--background-2) 90%), var(--image-link) top/cover no-repeat;
         opacity: .7;
     }
 

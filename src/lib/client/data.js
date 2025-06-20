@@ -1,5 +1,4 @@
 import { dataStore } from '$lib/stores/dataStore';
-import { combineMoviesLists } from '$lib/utils/combineMoviesLists';
 
 export async function loadAnimeData(update = false) {
     if (!update) {
@@ -48,14 +47,8 @@ export async function loadMovieData(update = false) {
         }
     }
 
-    const [letterboxdData, anilistData] = await Promise.all([
-        fetch('/api/get/letterboxd').then(r => r.json()),
-        fetch('/api/get/anilist/movies').then(r => r.json())
-    ]);
-
-    const watchedMovies = combineMoviesLists(letterboxdData, anilistData);
+    const watchedMovies = await fetch('/api/get/movies').then(r => r.json());
     dataStore.set('watchedMovies', watchedMovies);
-
     return { watchedMovies };
 }
 
