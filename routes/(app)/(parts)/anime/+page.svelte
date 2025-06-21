@@ -119,8 +119,8 @@
         on:click={() => handleCardClick(anime)}
       >
         <!-- top -->
-        {#if anime.review?.rating}
-          <Rating value={anime.review.rating} />
+        {#if anime.review && anime.review.rating !== 0}
+          <Rating value={anime.review.rating} hasReview={Boolean(anime.review.text)} />
         {/if}
 
         <!-- bottom -->

@@ -6,6 +6,7 @@
 	let containerElem: HTMLElement;
 
 	import { afterNavigate } from "$app/navigation";
+    import NotchSticker from "$components/NotchSticker.svelte";
 	afterNavigate(() => {
 		containerElem.scrollTo({ top: 0, behavior: "auto" });
 	});
@@ -28,6 +29,8 @@
 	</div>
 </div>
 
+<NotchSticker/>
+
 <style>
 	.layout {
 		display: flex;
@@ -45,7 +48,7 @@
 			height: calc(
 				100vh - env(safe-area-inset-top) - 1px
 			); /* -1px cuz else we could scroll on the container... for some reason? */
-			margin-top: env(safe-area-inset-top);
+			padding-top: env(safe-area-inset-top);
 		}
 	}
 

@@ -10,7 +10,7 @@ const defaultData = {
 if (!alternativesBaseUrl) {
     console.log("No alternatives URL set, using empty data");
     const data = defaultData;
-    fs.writeFileSync('./src/lib/overrides/overrides.json', JSON.stringify(data, null, 2));
+    fs.writeFileSync('./lib/overrides/overrides.json', JSON.stringify(data, null, 2));
     console.log("Empty overrides saved to static/overrides.json");
     process.exit(0);
 }
@@ -49,9 +49,9 @@ async function fetchOverrides() {
     const data = { anilist, tmdb, mangacollec };
 
     // Save data to a JSON file inside the static folder
-    fs.writeFileSync('./src/lib/overrides/overrides.json', JSON.stringify(data, null, 2));
+    fs.writeFileSync('./lib/overrides/overrides.json', JSON.stringify(data, null, 2));
 
-    console.log("Overrides saved to src/lib/overrides/overrides.json");
+    console.log("Overrides saved to lib/overrides/overrides.json");
 }
 
 fetchOverrides();

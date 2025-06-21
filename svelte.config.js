@@ -20,11 +20,22 @@ const config = {
 			publicPrefix: "DAIKU__"
 		},
 		alias: {
-			$components: 'src/components',
+			$components: 'components',
 		},
 		prerender: {
 			entries: ['*'],
 			handleMissingId: 'ignore',
+		},
+		files: {
+			lib: "./lib",
+			routes: './routes',
+			appTemplate: './routes/(app)/app.html',
+			hooks: {
+				server: 'routes/hooks.server'
+			}
+		},
+		output: {
+			bundleStrategy: "inline"
 		}
 	}
 };

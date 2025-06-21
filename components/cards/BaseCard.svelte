@@ -39,6 +39,7 @@
         color: var(--white);
         cursor: pointer;
         transition: all 0.1s ease-in-out;
+        background-color: var(--background-2);
     }
 
     @media (hover: hover) and (pointer: fine) {

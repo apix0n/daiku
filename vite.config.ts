@@ -1,16 +1,12 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { SvelteKitPWA } from "@vite-pwa/sveltekit"
-import { defineConfig } from 'vite';
+import { defineConfig, searchForWorkspaceRoot } from 'vite';
 
 export default defineConfig({
     plugins: [
         sveltekit(),
         SvelteKitPWA({
             registerType: 'autoUpdate',
-            injectRegister: 'auto',
-            devOptions: {
-                enabled: true
-            },
         })
     ],
     preview: {
@@ -18,6 +14,9 @@ export default defineConfig({
     },
     server: {
         port: parseInt(process.env.PORT || '5173'),
-        allowedHosts: true
+        allowedHosts: true,
+        fs: {
+            allow: [searchForWorkspaceRoot(process.cwd())]
+        }
     }
 });

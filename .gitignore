@@ -27,4 +27,4 @@ vite.config.ts.timestamp-*
 *.local
 .vscode/
 
-src/lib/overrides/overrides.json
+lib/overrides/overrides.json
