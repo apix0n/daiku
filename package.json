@@ -27,6 +27,7 @@
 		"vite": "^6.2.5"
 	},
 	"dependencies": {
+		"@fontsource-variable/jost": "^5.2.6",
 		"@upstash/redis": "^1.34.3",
 		"cheerio": "^1.0.0",
 		"cookie": "^1.0.2",

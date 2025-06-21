@@ -1,10 +1,11 @@
 <!-- loading animation: updated version of https://github.com/scosman/sveltekit-navigation-loader -->
 
 <script lang="ts">
+	import '@fontsource-variable/jost';
+
 	import { navigating } from "$app/state";
 	import { expoOut } from "svelte/easing";
 	import { slide } from "svelte/transition";
-
 	import { onMount } from "svelte";
 
 	import { locale, locales } from "svelte-i18n";

@@ -34,9 +34,6 @@ const config = {
 				server: 'routes/hooks.server'
 			}
 		},
-		output: {
-			bundleStrategy: "inline"
-		}
 	}
 };
 
