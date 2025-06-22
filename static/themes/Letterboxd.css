@@ -1,0 +1,33 @@
+:root {
+    --background: #14181c;
+    --background-2: #2c3440;
+    --background-3: #3a434c;
+    --background-3-hover: #445566;
+    --border-radius: .5em;
+    --text: #fff;
+    --text-2: #9ab;
+    --text-3: #678;
+    --app-accent: #00e054;
+    --app-accent-contrast: var(--background-2);
+    --app-accent-dark: #ff9010;
+}
+
+.container {
+    background: url(https://s.ltrbxd.com/static/img/content-bg-CFRqxbz-.png) 0 -1px repeat-x;
+}
+
+.elements-wrapper.elements-manga .element {
+    --border-radius: .5em;
+}
+
+.parts-container {
+    border-radius: 0 !important;
+}
+
+.element {
+    outline-width: 1px !important;
+}
+
+h2 {
+    border-radius: .5em;
+}

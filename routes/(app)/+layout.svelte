@@ -1,7 +1,7 @@
 <!-- loading animation: updated version of https://github.com/scosman/sveltekit-navigation-loader -->
 
 <script lang="ts">
-	import '@fontsource-variable/jost';
+	import "@fontsource-variable/jost";
 
 	import { navigating } from "$app/state";
 	import { expoOut } from "svelte/easing";
@@ -11,6 +11,8 @@
 	import { locale, locales } from "svelte-i18n";
 	import { defaultLocale } from "$lib/i18n";
 	import { get } from "svelte/store";
+
+	import { settings } from "$lib/client/stores/settings";
 
 	let currentLocale = get(locale) || "en";
 	currentLocale =
@@ -45,6 +47,12 @@
 	});
 </script>
 
+<svelte:head>
+	{#if $settings.theme}
+		<link rel="stylesheet" href="/themes/{$settings.theme}.css" />
+	{/if}
+</svelte:head>
+
 {#if navigating.to}
 	<!-- 
     Loading animation for next page since svelte doesn't show any indicator. 
@@ -61,7 +69,6 @@
 <slot />
 
 <style>
-
 	.navigation-loader {
 		position: fixed;
 		top: 0;

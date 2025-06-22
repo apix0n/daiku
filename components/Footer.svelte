@@ -1,11 +1,9 @@
-<script>
+<script lang="ts">
     import { version } from '$app/environment';
-    import LanguagePicker from './LanguagePicker.svelte';
 </script>
 
 <footer>
-    <a target="_blank">made by apix</a> <span>·</span> {version}
-    <LanguagePicker />
+    <a href="https://github.com/apix0n" target="_blank">made by apix</a> <span>·</span> {version}
 </footer>
 
 <style>
@@ -22,16 +20,18 @@
         margin: 1.5em auto 0;
         box-sizing: border-box;
     }
-
+    
     @media (min-width: 1000px) {
         footer {
-            margin-bottom: -16px;
             border-radius: var(--border-radius) var(--border-radius) 0 0;
         }
     }
 
+    a {
+        transition: all .2s ease-in-out;
+    }
+
     a[href]:hover, span {
         color: var(--app-accent);
-        font-weight: 650;
     }
 </style>

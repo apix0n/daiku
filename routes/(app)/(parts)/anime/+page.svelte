@@ -10,11 +10,12 @@
   import Overlay from "$components/overlay/Overlay.svelte";
   import { _ } from "svelte-i18n";
 
+  import { settings } from "$lib/client/stores/settings";
+
   import type { MediaElement } from "$lib/types/media";
 
   export let data;
   const { current, watched, updatedAt } = data.animeData;
-  let isChecked = false;
   let selectedAnime: MediaElement | null = null;
 
   function handleCardClick(anime: MediaElement) {
@@ -100,12 +101,6 @@
         },
       })}</span
     >
-    <div class="checkboxdiv">
-      <input type="checkbox" id="toggle" bind:checked={isChecked} /><label
-        for="toggle"
-        class="toggle-label">{$_("specialsOVAsToggle")}</label
-      >
-    </div>
   </h2>
 
   <div id="watched" class="elements-wrapper">
@@ -115,7 +110,7 @@
         background={anime.media.cover.medium}
         status={anime.media.status}
         ova={anime.media.special}
-        bind:visible={isChecked}
+        bind:visible={$settings.showSpecials}
         on:click={() => handleCardClick(anime)}
       >
         <!-- top -->

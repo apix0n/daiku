@@ -15,7 +15,7 @@ function registerLocales() {
 
     Object.entries(locales).forEach(([locale, value]) => {
         const [name, fileName] = value
-        register(locale, () => import(`$lib/locales/${fileName}.json`))
+        register(locale, () => import(`$locales/${fileName}.json`))
         console.log(`i18n | registered ${name} (${locale})`)
     })
 }

@@ -16,6 +16,7 @@
 	import Document from "./icons/Document.svelte";
 	import PausedBook from "./icons/PausedBook.svelte";
 	import ShelfSparkle from "./icons/ShelfSparkle.svelte";
+	import SettingsIcon from "./icons/Settings.svelte";
 
 	// check if the link is active (to highlight it) and if it is, set it as lastPage for / redirect
 	const isActive = (href) => {
@@ -29,6 +30,10 @@
 	const handleClick = (event) => {
 		haptic();
 	};
+
+	import Settings from "$components/Settings.svelte";
+
+	let settingsOpen = false;
 </script>
 
 <svelte:head>
@@ -102,12 +107,22 @@
 			class:isActive={isActive("/planning/notreleased")}
 			><CalendarClock />{$_("navigation.season")}</a
 		>
+		<!-- svelte-ignore a11y_missing_attribute -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<a onclick={() => (settingsOpen = !settingsOpen)}
+			class:settingsActive={settingsOpen}
+			><SettingsIcon />{$_("navigation.settings")}</a
+		>
 	</div>
 </nav>
+
+<Settings open={settingsOpen} onClose={() => (settingsOpen = false)} />
 
 <style>
 	nav {
 		width: calc(var(--navbar-width) - env(safe-area-inset-left));
+		background: var(--background-2);
 		margin-left: env(safe-area-inset-left);
 		display: flex;
 		flex-direction: column;
@@ -117,6 +132,7 @@
 		position: relative;
 		text-align: center;
 		overflow-y: auto;
+		z-index: 7;
 
 		@media screen and (max-width: 1000px) {
 			width: 100%;
@@ -134,6 +150,7 @@
 		flex-direction: column;
 		gap: 10px;
 		width: 100%;
+		height: 100%;
 
 		@media screen and (max-width: 1000px) {
 			flex-direction: row;
@@ -193,6 +210,14 @@
 			margin-top: 0.5em;
 			aspect-ratio: 12 / 9;
 		}
+		&:last-child {
+			margin-top: auto;
+			margin-bottom: 4px;
+		}
+	}
+
+	.navbtns a {
+		cursor: pointer;
 	}
 
 	:global .navbtns > a > svg {
@@ -218,7 +243,11 @@
 	.isActive {
 		background: var(--app-accent) !important;
 		color: var(--app-accent-contrast) !important;
-		/* box-shadow: inset 0 0 0 1px var(--background-3); */
+	}
+
+	.settingsActive {
+		background: var(--background-3-hover) !important;
+		color: var(--text-2) !important;
 	}
 
 	@media screen and (max-width: 1000px) {

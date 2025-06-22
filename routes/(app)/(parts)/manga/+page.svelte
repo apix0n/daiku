@@ -11,7 +11,7 @@
   export let data;
   const { current, read, updatedAt } = data.mangaData;
 
-  let isChecked = false;
+  import { settings } from "$lib/client/stores/settings";
   let selectedManga: MediaElement | null = null;
 
   function handleCardClick(manga: MediaElement) {
@@ -76,16 +76,16 @@
   <h2>
     {$_("read")}
     <span
-      >· {read.filter((manga) => !manga.media.special).length} manga & {read.filter(
-        (manga) => manga.media.special,
-      ).length} specials</span
+      >· {$_("Nmanga", {
+        values: {
+          n: read.filter((manga) => !manga.media.special).length,
+        },
+      })} & {$_("Nspecials", {
+        values: {
+          n: read.filter((manga) => manga.media.special).length,
+        },
+      })}</span
     >
-    <div class="checkboxdiv">
-      <input type="checkbox" id="toggle" bind:checked={isChecked} /><label
-        for="toggle"
-        class="toggle-label">{$_("specialsOneShotsToggle")}</label
-      >
-    </div>
   </h2>
 
   <div id="watched" class="elements-wrapper elements-manga">
@@ -96,7 +96,7 @@
           background={manga.media.cover.medium}
           status={manga.media.status}
           ova={manga.media.special}
-          bind:visible={isChecked}
+          bind:visible={$settings.showSpecials}
           on:click={() => handleCardClick(manga)}
         >
           <!-- top -->

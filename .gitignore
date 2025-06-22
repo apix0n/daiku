@@ -23,8 +23,9 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-.vercel
 *.local
-.vscode/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
 
 lib/overrides/overrides.json

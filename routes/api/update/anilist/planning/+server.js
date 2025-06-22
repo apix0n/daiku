@@ -14,7 +14,7 @@ export async function GET({ request, url }) {
 
     try {
         let data = await fetchPlannedData(accounts.anilistId);
-        await setValue("planning", data);
+        await setValue("alPlanning", data);
         cacheStore.set("alPlanning", { data });
         return json({ success: true });
     } catch (error) {

@@ -2,9 +2,10 @@ import { getTmdbInfos } from "./getTmdbInfos.js";
 import { config } from "$lib/config";
 import { applyPosterOverrides } from '$lib/server/overrides/tmdb';
 import { getTmdbIdFromImdbId } from "./getTmdbIdFromImdb.js";
+import type { MediaElement } from "$lib/types/media.js";
 
-export async function replaceByTmdb(movieList) {
-    const moviePromises = movieList.watched.map(async (movie) => {
+export async function replaceByTmdb(movieList: MediaElement[])  {
+    const moviePromises = movieList.map(async (movie) => {
         const title = movie.media.title?.english || 'Unknown Title';
 
         if (!movie.media.id.tmdb) {
@@ -43,19 +44,22 @@ export async function replaceByTmdb(movieList) {
             return updatedMovie;
         } catch (error) {
             console.error(`Failed to fetch TMDB info for movie ID ${movie.media.id.tmdb}:`, error);
-            if (error.message.includes("status: 401")) throw error;
+            if (typeof error === "object" && error !== null && "message" in error && typeof (error as any).message === "string" && (error as any).message.includes("status: 401")) throw error;
             return movie;
         }
     });
 
     try {
         const updatedMovieList = await Promise.all(moviePromises);
-        return {
-            ...movieList,
-            watched: updatedMovieList
-        };
+        return updatedMovieList
     } catch (error) {
-        if (error.message.includes("status: 401")) {
+        if (
+            typeof error === "object" &&
+            error !== null &&
+            "message" in error &&
+            typeof (error as any).message === "string" &&
+            (error as any).message.includes("status: 401")
+        ) {
             console.error('Received 401 Unauthorized error, stopping all requests.');
         }
         throw error;

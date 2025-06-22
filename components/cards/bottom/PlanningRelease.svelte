@@ -1,13 +1,11 @@
 <script lang="ts">
     import { _, locale as localeStore, date as dateI18N } from 'svelte-i18n';
-    import { get } from 'svelte/store';
     import { getRelativeTime } from "$lib/utils/getRelativeTime";
     import type { MediaStatus, MediaType } from "$lib/types/media";
 
     export let dateString: string | undefined = undefined, status: typeof MediaStatus[number], mediaType: typeof MediaType[number] | undefined = undefined;
 
-    // Get the current locale from the store.
-    let locale = get(localeStore) as string;
+    $: locale = $localeStore ?? "en";
     let displayedDate = '';
 
     $: {

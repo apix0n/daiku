@@ -9,7 +9,8 @@ export default defineConfig({
             registerType: 'autoUpdate',
             manifest: false,
             workbox: {
-                globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,webmanifest,woff2}', 'prerendered/**/*.{html,json}']
+                globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,webmanifest,woff2}', 'prerendered/**/*.{html,json}'],
+                navigateFallbackDenylist: [/^\/api\//],
             }
         })
     ],

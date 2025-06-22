@@ -32,7 +32,6 @@
   "specials": "specials",
   "watched": "watched",
   "read": "read",
-  "specialsOVAsToggle": "Show specials/OVAs",
   "rewatching": "rewatching",
   "rereading": "re-reading",
   "droppedEpN": "dropped after ep. {n}",
@@ -51,12 +50,11 @@
     "onDateN": "starts {n}",
     "onDayN": "starts the {n}"
   },
-  "specialsOneShotsToggle": "Show one-shots/specials",
   "dropped": "dropped",
   "paused": "paused",
   "Nanime": "{n} anime",
   "updatedFromServiceAt": "updated from {service} at",
-  "Nspecials": "{n} specials",
+  "Nspecials": "{n, plural, =1 {# special} other {# specials}}",
   "continue": "continue",
   "favourites": "favourites",
   "mediaType": {
@@ -81,6 +79,13 @@
     "wished": "wished",
     "movies": "movies",
     "planned": "planned",
-    "season": "season"
-  }
+    "season": "season",
+    "settings": "settings"
+  },
+  "settings": {
+    "theme": "Theme:",
+    "language": "Language:",
+    "specials": "Show special episodes and chapters"
+  },
+  "Nmanga": "{n} manga"
 }

@@ -6,6 +6,19 @@ export interface LogEntriesResponse {
     next?: string;
 }
 
+
+export interface FilmsResponse {
+    /**
+     * The list of films.
+     */
+    items: FilmSummary[];
+
+    /**
+     * The cursor to the next page of results.
+     */
+    next?: string;
+  }
+
 export interface Image {
     sizes: ImageSize[];
 }

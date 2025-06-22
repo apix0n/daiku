@@ -29,7 +29,6 @@
   "episodeNumberN": "bölüm {n}",
   "watched": "izlenen",
   "read": "okunan",
-  "specialsOVAsToggle": "Özel bölümleri/OVA'ları göster",
   "NepisodesShort": "{n} böl.",
   "Nchapters": "{n, plural, =1 {one shot} other {# bölüm}}",
   "Nvolumes": "{n} cilt",
@@ -53,6 +52,21 @@
     "wished": "istenen",
     "movies": "filmler",
     "planned": "planlanan",
-    "season": "sezon"
-  }
+    "season": "sezon",
+    "settings": "ayarlar"
+  },
+  "mediaStatus": {
+    "airing": "yayınlanıyor",
+    "finished": "tamamlandı",
+    "notYetReleased": "henüz yayınlanmadı",
+    "hiatus": "ara verildi",
+    "cancelled": "iptal edildi"
+  },
+  "settings": {
+    "theme": "Tema:",
+    "language": "Dil:",
+    "specials": "Özel bölümleri göster"
+  },
+  "Nspecials": "{n} özel bölüm",
+  "Nmanga": "{n} manga"
 }

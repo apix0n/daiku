@@ -27,12 +27,10 @@
   "currentlyWatching": "en cours de visionnage",
   "episodeNumberN": "épisode {n}",
   "watched": "regardés",
-  "specialsOVAsToggle": "Afficher les épisodes spéciaux/OVA",
-  "specialsOneShotsToggle": "Afficher les one-shot/chapitres spéciaux",
   "Nchapters": "{n, plural, =1 {one shot} other {# chapitres}}",
   "Nvolumes": "{n, plural, =1 {1 tome} other {# tomes}}",
   "Nanime": "{n} anime",
-  "Nspecials": "{n} spéciaux",
+  "Nspecials": "{n, plural, =1 {# spécial} other {# spéciaux}}",
   "chapterNumberN": "chapitre {n}",
   "NepisodesShort": "{n} ép.",
   "announced": "annoncé",
@@ -50,7 +48,7 @@
   "releasingDate": {
     "soon": "sort bientôt",
     "inDateN": "sort en {n}",
-    "onDateN": "commence le {n}",
+    "onDateN": "commence {n}",
     "onDayN": "commence le {n}",
     "onDateNSingle": "sort le {n}"
   },
@@ -81,6 +79,12 @@
     "wished": "wished",
     "movies": "films",
     "planned": "planned",
-    "season": "saison"
+    "season": "saison",
+    "settings": "paramètres"
+  },
+  "settings": {
+    "theme": "Thème :",
+    "language": "Langue :",
+    "specials": "Afficher les épisodes et chapitres spéciaux"
   }
 }

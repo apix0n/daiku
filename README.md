@@ -70,6 +70,7 @@ another media dashboard
 * loading/progress bar inspiration: [@scosman/sveltekit-navigation-loader](https://github.com/scosman/sveltekit-navigation-loader),
 * watch time circular chart inspiration: [@sergiopedercini](https://codepen.io/sergiopedercini/pen/jmKdbj),
 * iOS notch sticker: [@imputnet/cobalt](https://github.com/imputnet/cobalt),
+* iOS haptics: [@imputnet/cobalt](https://github.com/imputnet/cobalt),
 * HTML parser for Letterboxd liked movies: [cheerio](https://cheerio.js.org/),
 * iCalendar generator: [ical-generator](https://www.npmjs.com/package/ical-generator),
 * icons: [Google Material Symbols Rounded](https://fonts.google.com/icons?icon.style=Rounded) or custom-made

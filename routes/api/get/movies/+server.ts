@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { getValue } from "$lib/server/redisInteractions";
 import { cacheStore } from "$lib/server/stores/cache.js";
-import { combineMoviesLists } from '$lib/utils/combineMoviesLists';
+import { combineMoviesLists, mergeMovieIds } from '$lib/server/utils/combineMoviesLists';
 
 const CACHE_KEY = "movies";
 
@@ -18,7 +18,11 @@ export async function GET({ request, url }) {
             await getValue("alMovies"),
         ]);
 
-        const data = combineMoviesLists(letterboxdData, anilistData);
+        const combinedLists = combineMoviesLists(letterboxdData, anilistData)
+        const data = {
+            ...combinedLists,
+            watched: mergeMovieIds(combinedLists.watched),
+        };
         cacheStore.set(CACHE_KEY, { maxTimestamp: 0, data });
         console.log("movies | fetched & served from db");
         return json(data);

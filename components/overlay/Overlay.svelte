@@ -4,7 +4,7 @@
     import RelativeRelease from "../cards/top/RelativeRelease.svelte";
     import { createEventDispatcher } from 'svelte';
     import { getSynopsis } from '$lib/client/jikan/getSynopsis';
-    import { synopsisCache, cacheSynopsis } from '$lib/stores/synopsisStore';
+    import { synopsisCache, cacheSynopsis } from '$lib/client/stores/synopsisStore';
     const dispatch = createEventDispatcher();
     import { onMount, onDestroy } from 'svelte';
     import { haptic } from "$lib/client/haptics";

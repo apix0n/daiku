@@ -50,7 +50,7 @@ export function mapAniListUserStatus(status: typeof AniListUserMediaStatus[numbe
         case 'PAUSED':
             return 'paused';
         case 'REPEATING':
-            return 'repeating'; // Assuming repeating means it's currently airing
+            return 'repeating';
         default:
             return 'finished';
     }

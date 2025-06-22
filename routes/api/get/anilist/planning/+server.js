@@ -13,7 +13,7 @@ export async function GET({ request, url }) {
     }
 
     try {
-        const data = await getValue("planning");
+        const data = await getValue("alPlanning");
         cacheStore.set(CACHE_KEY, { data });
         console.log("anilist planning | fetched & served from db");
         return json(data);

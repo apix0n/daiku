@@ -1,85 +1,96 @@
-import * as cheerio from 'cheerio';
-import { getBoxdTMDBInfos } from './getBoxdTMDBInfos';
+import { getToken, selectBestImageUrls, ua } from "./global";
+import type { FilmSummary, FilmsResponse } from "$lib/types/letterboxd";
+import type { MediaElement } from "$lib/types/media";
+import type { MovieRequest } from "$lib/types/requests";
 
-import { ua } from './userLikes';
-
-async function fetchWatchlistPage(username: string, page = 1) {
-    const response = await fetch(`https://letterboxd.com/${username}/watchlist/page/${page}/`, {
-        headers: { 'User-Agent': ua }
+async function fetchWatchListPage(lid: string, token: string, cursor?: string): Promise<FilmsResponse | null> {
+    const params = new URLSearchParams({
+        "perPage": "100",
     });
 
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+    if (cursor) {
+        params.append("cursor", cursor);
     }
 
-    return await response.text();
-}
-
-async function fetchUserWatchlist(username: string) {
     try {
-        // Fetch first page to get total pages
-        const firstPageHtml = await fetchWatchlistPage(username);
-        const $ = cheerio.load(firstPageHtml);
-
-        // Get max page number
-        const lastPageElement = $('.paginate-pages ul li.paginate-page').last();
-        let maxPages = 1;
-        if (lastPageElement.length) {
-            const href = lastPageElement.find('a').attr('href');
-            const match = href ? href.match(/page\/(\d+)/) : null;
-            if (match && match[1]) {
-                maxPages = parseInt(match[1]);
+        const response = await fetch(`https://api.letterboxd.com/api/v0/member/${lid}/watchlist?` + params.toString(), {
+            headers: {
+                'user-agent': ua,
+                'authorization': token,
             }
-        }
-
-        const watchlistMovies: string[] = [];
-        const pagePromises = [];
-
-        // Process first page immediately since we already have it
-        const $firstPage = $;
-        $firstPage('ul.poster-list > li').each((_, li) => {
-            const filmPoster = $firstPage(li).find('.film-poster');
-            watchlistMovies.push(
-                "https://letterboxd.com/" +
-                $firstPage(filmPoster).attr("data-type") + "/" +
-                $firstPage(filmPoster).attr('data-film-slug') + "/"
-            );
         });
-
-        // Fetch remaining pages (2 to maxPages)
-        for (let page = 2; page <= maxPages; page++) {
-            pagePromises.push(fetchWatchlistPage(username, page));
+        if (!response.ok) {
+            throw new Error(response.statusText);
         }
-
-        const pages = await Promise.all(pagePromises);
-
-        // Process each page
-        pages.forEach(html => {
-            const $page = cheerio.load(html);
-            $page('ul.poster-list > li').each((_, li) => {
-                const filmPoster = $page(li).find('.film-poster');
-                watchlistMovies.push(
-                    "https://letterboxd.com/" +
-                    $page(filmPoster).attr("data-type") + "/" +
-                    $page(filmPoster).attr('data-film-slug') + "/"
-                );
-            });
-        });
-
-        return watchlistMovies;
+        return await response.json();
     } catch (error) {
-        console.error(`Error fetching user watchlist: ${error}`);
-        throw error;
+        console.error(error);
+        return null;
     }
 }
 
-export async function makeBoxdWatchList(letterboxdUsername: string) {
+export async function fetchWatchList(lid: string): Promise<FilmsResponse & { total: number }> {
+    const token = await getToken();
+    let allItems: FilmSummary[] = [];
+    let nextCursor: string | undefined = undefined;
+
+    do {
+        const data = await fetchWatchListPage(lid, token, nextCursor);
+
+        if (!data) {
+            break;
+        }
+
+        allItems = [...allItems, ...data.items];
+        nextCursor = data.next;
+    } while (nextCursor);
+
+    return {
+        items: allItems,
+        total: allItems.length
+    };
+}
+
+export function makeWatchList(entriesList: FilmsResponse & { total: number }): MovieRequest {
+    const WatchList = entriesList.items.filter(entry => {
+        // Filter out TV shows
+        const tmdbLink = entry.links.find(l => l.type === 'tmdb');
+        return tmdbLink && !tmdbLink.url.includes('/tv/');
+    }).map(entry => ({
+        media: {
+            title: {
+                english: entry.name,
+                native: entry.originalName || entry.name,
+            },
+            type: 'movie',
+            source: 'letterboxd',
+            cover: selectBestImageUrls(entry.poster.sizes),
+            id: {
+                tmdb: entry.links.find(l => l.type === 'tmdb')?.id,
+                boxdit: entry.links.find(l => l.type === 'letterboxd')?.id,
+            },
+            runtime: entry.runTime,
+            status: 'finished',
+            special: false,
+        },
+        status: "finished",
+    })) as MediaElement[];
+
+    return {
+        updatedAt: {
+            service: 'Letterboxd',
+            timestamp: new Date().toISOString(),
+        },
+        watched: WatchList,
+    };
+}
+
+export async function boxdWatchList(lid: string): Promise<MovieRequest> {
     try {
-        const userWl = await fetchUserWatchlist(letterboxdUsername);
-        const movieInfos = await getBoxdTMDBInfos(userWl);
-        return movieInfos;
+        const data = await fetchWatchList(lid);
+        return makeWatchList(data);
     } catch (error) {
-        console.error(error)
-        return []
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        throw new Error(`Failed to fetch Letterboxd watched movies: ${errorMessage}`);
     }
 }

@@ -21,6 +21,7 @@ const config = {
 		},
 		alias: {
 			$components: 'components',
+			$locales: 'locales',
 		},
 		prerender: {
 			entries: ['*'],
