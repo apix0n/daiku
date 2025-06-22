@@ -3,11 +3,13 @@ import { writable } from 'svelte/store';
 export type Settings = {
     theme: string;
     showSpecials: boolean;
+    showNotchSticker: boolean;
 };
 
 const defaultSettings: Settings = {
     theme: '',
-    showSpecials: false
+    showSpecials: false,
+    showNotchSticker: true,
 };
 
 function createSettingsStore() {

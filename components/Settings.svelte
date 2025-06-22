@@ -33,6 +33,11 @@
             <input type="checkbox" bind:checked={$settings.showSpecials} />
             {$_("settings.specials")}
         </label>
+
+        <label>
+            <input type="checkbox" bind:checked={$settings.showNotchSticker} />
+            {$_("settings.notchSticker")}
+        </label>
     </div>
 {/if}
 

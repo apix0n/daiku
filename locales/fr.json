@@ -85,6 +85,7 @@
   "settings": {
     "theme": "Thème :",
     "language": "Langue :",
-    "specials": "Afficher les épisodes et chapitres spéciaux"
+    "specials": "Afficher les épisodes et chapitres spéciaux",
+    "notchSticker": "(iOS uniquement) Afficher le logo daiku dans l'encoche ou dans Dynamic Island"
   }
 }

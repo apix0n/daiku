@@ -65,7 +65,8 @@
   "settings": {
     "theme": "Tema:",
     "language": "Dil:",
-    "specials": "Özel bölümleri göster"
+    "specials": "Özel bölümleri göster",
+    "notchSticker": "(Yalnızca iOS) daiku logosunu çentikte veya Dynamic Island'da göster"
   },
   "Nspecials": "{n} özel bölüm",
   "Nmanga": "{n} manga"

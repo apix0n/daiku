@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { settings } from "$lib/client/stores/settings";
 
     // edited version of NotchSticker.svelte from cobalt (https://github.com/imputnet/cobalt)
     // thanks for their incredible work
@@ -60,7 +61,7 @@
     }
 </script>
 
-{#if state !== "hidden"}
+{#if state !== "hidden" && $settings.showNotchSticker}
     <div id="notch-sticker" aria-hidden="true" class={state}>
         <svg width="236" height="70" viewBox="0 0 236 70" xmlns="http://www.w3.org/2000/svg">
             <path id="bg" d="M 200.5,0 H 35 C 15.67,0 0,15.67 0,35 0,54.33 15.67,70 35,70 h 165.5 c 19.33,0 35,-15.67 35,-35 0,-19.33 -15.67,-35 -35,-35 z" fill="currentColor" />
