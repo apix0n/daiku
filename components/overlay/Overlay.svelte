@@ -2,11 +2,14 @@
     import Image from "./Image.svelte";
     import Informations from "./Informations.svelte";
     import RelativeRelease from "../cards/top/RelativeRelease.svelte";
-    import { createEventDispatcher } from 'svelte';
-    import { getSynopsis } from '$lib/client/jikan/getSynopsis';
-    import { synopsisCache, cacheSynopsis } from '$lib/client/stores/synopsisStore';
+    import { createEventDispatcher } from "svelte";
+    import { getSynopsis } from "$lib/client/jikan/getSynopsis";
+    import {
+        synopsisCache,
+        cacheSynopsis,
+    } from "$lib/client/stores/synopsisStore";
     const dispatch = createEventDispatcher();
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount, onDestroy } from "svelte";
     import { haptic } from "$lib/client/haptics";
     import type { MediaElement, MediaSynopsis } from "$lib/types/media";
 
@@ -20,31 +23,37 @@
         if ($synopsisCache[malId]) {
             synopsisPromise = Promise.resolve($synopsisCache[malId]);
         } else {
-            synopsisPromise = getSynopsis(malId, entry.media.type).then(synopsis => {
-                if (synopsis) {  // Only cache if synopsis is not null
-                    cacheSynopsis(malId, synopsis);
-                    return synopsis;
-                }
-                // Provide fallback MediaSynopsis object
-                return {
-                    text: 'No synopsis available.',
-                    source: '',
-                } as MediaSynopsis;
-            }).catch(() => ({
-                text: 'Failed to load synopsis.',
-                source: '',
-            } as MediaSynopsis));  // Handle potential errors
+            synopsisPromise = getSynopsis(malId, entry.media.type)
+                .then((synopsis) => {
+                    if (synopsis) {
+                        // Only cache if synopsis is not null
+                        cacheSynopsis(malId, synopsis);
+                        return synopsis;
+                    }
+                    // Provide fallback MediaSynopsis object
+                    return {
+                        text: "No synopsis available.",
+                        source: "",
+                    } as MediaSynopsis;
+                })
+                .catch(
+                    () =>
+                        ({
+                            text: "Failed to load synopsis.",
+                            source: "",
+                        }) as MediaSynopsis,
+                ); // Handle potential errors
         }
     }
 
     function close() {
-        dispatch('close');
+        dispatch("close");
     }
-    
+
     onMount(() => {
         haptic();
     });
-    
+
     onDestroy(() => {
         haptic();
     });
@@ -56,19 +65,37 @@
             <button class="close" on:click={close}>×</button>
         {/if}
         <div class="content">
-            <Image background={entry.media.cover.large || entry.media.cover.medium} status={entry.media.status} mediaType={entry.media.type}>
+            <Image
+                background={entry.media.cover.large || entry.media.cover.medium}
+                status={entry.media.status}
+                mediaType={entry.media.type}
+            >
                 {#if entry.media.type === "anime" && entry.media.episodes?.next && entry.media.status === "airing"}
-                    <RelativeRelease timestamp={Math.floor(entry.media.episodes?.next?.timestamp)} number={entry.media.episodes?.next?.number} mediaType={entry.media.type}/>
+                    <RelativeRelease
+                        timestamp={Math.floor(
+                            entry.media.episodes?.next?.timestamp,
+                        )}
+                        number={entry.media.episodes?.next?.number}
+                        mediaType={entry.media.type}
+                    />
                 {:else if entry.media.type === "manga" && entry.media.chapters?.last && entry.media.status === "airing"}
-                    <RelativeRelease timestamp={Math.floor(entry.media.chapters?.last?.timestamp)} number={entry.media.chapters?.last?.number} mediaType={entry.media.type}/>
+                    <RelativeRelease
+                        timestamp={Math.floor(
+                            entry.media.chapters?.last?.timestamp,
+                        )}
+                        number={entry.media.chapters?.last?.number}
+                        mediaType={entry.media.type}
+                    />
                 {/if}
             </Image>
-            <Informations 
-                {entry} 
-                synopsis={synopsisPromise}
-            />
+            <Informations {entry} synopsis={synopsisPromise} />
         </div>
-        <div class="banner" style:--image-link="url({entry.media.banner?.large || entry.media.cover.large})" data-nobanner={!entry.media.banner?.large}></div>
+        <div
+            class="banner"
+            style:--image-link="url({entry.media.banner?.large ||
+                entry.media.cover.large})"
+            data-nobanner={!entry.media.banner?.large}
+        ></div>
     </div>
 </div>
 
@@ -76,35 +103,35 @@
     .wrapper {
         position: fixed;
         top: 0;
-        left: 0;
-        z-index: 10;
+        right: 0;
+        z-index: 5;
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 100%;
+        width: calc(100% - var(--navbar-width) - 8px);
         height: 100vh;
         height: 100dvh;
         background-color: rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(5px);
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
+        overflow: hidden;
     }
 
     .overlay {
-        border-radius: var(--border-radius);
-        max-width: 90%;
-        height: 90%;
-        aspect-ratio: 2/1;
         background-color: var(--background-2);
         position: relative;
         overflow-y: hidden;
         font-size: 1.1em;
+        height: 100%;
+        width: 100%;
     }
-    
+
     .wrapper[data-fullscreen="true"] .overlay {
         max-width: 100%;
         height: 100%;
         border-radius: 0;
     }
-    
+
     .content {
         height: 100%;
         display: flex;
@@ -123,8 +150,14 @@
         width: 100%;
         height: 50%;
         z-index: 0;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, var(--background-2) 90%), var(--image-link) top/cover no-repeat;
-        opacity: .7;
+        background:
+            linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0.3) 0%,
+                var(--background-2) 90%
+            ),
+            var(--image-link) top/cover no-repeat;
+        opacity: 0.7;
     }
 
     .banner[data-nobanner="true"] {
@@ -154,17 +187,18 @@
     }
 
     @media screen and (max-width: 1200px) {
-        .overlay {
-            width: 95%;
-            height: 95%;
-        }
-
         .content {
             padding: 0 2rem;
         }
     }
 
-    @media screen and (max-width: 900px) {
+    @media screen and (max-width: 1000px) {
+        .wrapper {
+            width: 100%;
+            border-radius: 0;
+            z-index: 10;
+        }
+
         .overlay {
             max-width: unset;
             width: 100%;
@@ -173,7 +207,7 @@
             font-size: revert;
             overflow-y: auto;
         }
-        
+
         .content {
             margin-top: env(safe-area-inset-top);
             margin-left: env(safe-area-inset-left);
@@ -191,17 +225,17 @@
 
         .close {
             padding: 1em;
-            top: -.5em;
-            right: .5em;
+            top: -0.5em;
+            right: 0.5em;
             margin-top: env(safe-area-inset-top);
             position: fixed;
         }
     }
 
-    @media screen and (max-width: 900px) and (display-mode: standalone) {
+    @media screen and (max-width: 100px) and (display-mode: standalone) {
         .overlay::before {
             /* progressive blur for the ios status */
-            content: '';
+            content: "";
             position: fixed;
             top: 0;
             left: 0;

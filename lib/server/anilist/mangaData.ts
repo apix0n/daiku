@@ -1,6 +1,6 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
 import { config } from '$lib/server/config.js';
-import { mapAniListMediaStatus, mapAniListUserStatus } from '$lib/anilist/global';
+import { mapAniListMediaStatus, mapAniListUserStatus } from '$lib/server/anilist/global';
 import type { AniListResponse, AniListUserMediaStatus } from '$lib/types/anilist';
 import type { MediaElement } from '$lib/types/media';
 import type { MangaRequest } from '$lib/types/requests';

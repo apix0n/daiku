@@ -31,3 +31,17 @@
 h2 {
     border-radius: .5em;
 }
+
+#settingsBackdrop {
+    border-radius: 0;
+}
+
+@media screen and (max-width: 430px) {
+    #settings {
+        width: calc(100% - env(safe-area-inset-left) - env(safe-area-inset-right));
+    }
+}
+
+.wrapper:has(.overlay) {
+    border-radius: 0;
+}

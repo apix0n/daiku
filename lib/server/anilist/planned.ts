@@ -1,5 +1,5 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js'
-import { mapAniListMediaStatus } from '$lib/anilist/global';
+import { mapAniListMediaStatus } from '$lib/server/anilist/global';
 
 import type { AniListResponse } from '$lib/types/anilist';
 import type { MediaElement } from '$lib/types/media';

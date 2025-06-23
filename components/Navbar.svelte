@@ -34,6 +34,41 @@
 	import Settings from "$components/Settings.svelte";
 
 	let settingsOpen = false;
+
+	function scrollActive(node) {
+		// Scroll on mount
+		setTimeout(() => {
+			const active = node.querySelector(".isActive");
+			if (active)
+				active.scrollIntoView({
+					block: "nearest",
+					inline: "center",
+				});
+		}, 0);
+
+		// observe for class changes (so route changes)
+		const observer = new MutationObserver(() => {
+			const active = node.querySelector(".isActive");
+			const settings = node.querySelector(".settingsActive");
+			if (active && !settings)
+				active.scrollIntoView({
+					behavior: "smooth",
+					block: "nearest",
+					inline: "center",
+				});
+		});
+		observer.observe(node, {
+			subtree: true,
+			attributes: true,
+			attributeFilter: ["class"],
+		});
+
+		return {
+			destroy() {
+				observer.disconnect();
+			},
+		};
+	}
 </script>
 
 <svelte:head>
@@ -51,7 +86,7 @@
 </svelte:head>
 
 <nav class="nav">
-	<div class="navbtns">
+	<div class="navbtns" use:scrollActive>
 		<div>daiku</div>
 		<a
 			href="/anime"
@@ -110,7 +145,11 @@
 		<!-- svelte-ignore a11y_missing_attribute -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<a onclick={() => (settingsOpen = !settingsOpen)}
+		<a
+			onclick={() => {
+				settingsOpen = !settingsOpen;
+				handleClick();
+			}}
 			class:settingsActive={settingsOpen}
 			><SettingsIcon />{$_("navigation.settings")}</a
 		>

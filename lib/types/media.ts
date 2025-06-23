@@ -13,7 +13,7 @@ type UserMediaInformation = {
     repeat?: number | boolean;
 
     /**
-     * A 2-character ISO 369-1 string referring to the language in which the manga was read; `undefined` if default or for anime entries.
+     * A 2-character ISO 369-1 string referring to the language in which the media was watched, manga was read; `undefined` if default. 
      */
     lang?: string | undefined;
 }
@@ -67,7 +67,7 @@ type MediaInformation = {
     id: MediaIdentifiers;
 }
 
-type MediaIdentifiers = {
+export type MediaIdentifiers = {
     // daiku: string;
     anilist?: number;
     myanimelist?: number;
@@ -85,7 +85,6 @@ export type MediaTitles = {
     romaji?: string;
     native: string;
     nativeOrigin?: string; // language code, e.g., 'ja' for Japanese
-    localeLang?: string; // language code for the locale pulled title, e.g., 'en' for English
 }
 
 export const MediaType = ['anime', 'manga', 'movie', 'volume'] as const

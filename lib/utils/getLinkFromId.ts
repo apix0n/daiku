@@ -1,4 +1,4 @@
-export function getLinkFromId(id, platform, mediaType='') {
+export function getLinkFromId(id: string | number, platform: string, mediaType = '') {
     switch (platform) {
         case 'anilist':
             if (mediaType === 'manga') {

@@ -2,9 +2,9 @@ import * as anilistGlobal from '$lib/server/anilist/global.js'
 import { config } from '$lib/server/config';
 import { applyAnimeReleaseTime } from '../animeSchedule/animeReleaseTime';
 import { getPrecedingEpisode } from './getPrecedingEpisode';
-import { mapAniListMediaStatus, mapAniListUserStatus } from '$lib/anilist/global';
+import { mapAniListMediaStatus, mapAniListUserStatus } from '$lib/server/anilist/global';
 
-import type { AniListResponse, AniListUserMediaStatus, MediaListEntry, MediaListGroup } from '$lib/types/anilist';
+import type { AniListResponse, AniListUserMediaStatus, MediaListEntry } from '$lib/types/anilist';
 import type { MediaElement } from '$lib/types/media';
 import type { AnimeRequest } from '$lib/types/requests';
 

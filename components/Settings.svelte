@@ -11,10 +11,10 @@
 {#if open}
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div class="backdrop" on:click={onClose}></div>
+    <div id="settingsBackdrop" class="backdrop" on:click={onClose}></div>
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div class="modal" on:click|stopPropagation>
+    <div id="settings" class="modal" on:click|stopPropagation>
         <label>
             {$_("settings.language")}
             <LanguagePicker />
@@ -54,7 +54,7 @@
 		@media screen and (max-width: 1000px) {
 			border-radius: 0 0 var(--border-radius) var(--border-radius);
             width: revert;
-            height: calc(100% - var(--navbar-width));
+            height: calc(100% - var(--navbar-width) - env(safe-area-inset-bottom));
             left: 0;
 		}
     }
@@ -64,7 +64,7 @@
         bottom: 0;
         left: calc(var(--navbar-width) + 8px);
         margin: 1em;
-        background: var(--background-3);
+        background: var(--background-2);
         padding: 1rem;
         border-radius: var(--border-radius);
         z-index: 7;
@@ -72,7 +72,7 @@
         width: 400px;
         @media screen and (max-width: 1000px) {
             & {
-                width: calc(100% - 2em);
+                width: calc(100% - 2em - env(safe-area-inset-left) - env(safe-area-inset-right));
                 left: 50%;
                 transform: translateX(-50%);
                 margin: 0;
