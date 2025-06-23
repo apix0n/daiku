@@ -19,13 +19,14 @@
 	import SettingsIcon from "./icons/Settings.svelte";
 
 	// check if the link is active (to highlight it) and if it is, set it as lastPage for / redirect
-	const isActive = (href) => {
+
+	function isActive(href, saveInStorage = true) {
 		const active = page.url.pathname === href;
-		if (active) {
+		if (active && saveInStorage) {
 			localStorage.setItem("lastPage", href);
 		}
 		return active;
-	};
+	}
 
 	const handleClick = (event) => {
 		haptic();
@@ -97,7 +98,8 @@
 		<a
 			href="/anime/dropped"
 			onclick={handleClick}
-			class:isActive={isActive("/anime/dropped")}
+			class="hidden-button"
+			class:isActive={isActive("/anime/dropped", false)}
 			><PausedAnime />{$_("navigation.paused")}</a
 		>
 		<a
@@ -109,7 +111,8 @@
 		<a
 			href="/manga/dropped"
 			onclick={handleClick}
-			class:isActive={isActive("/manga/dropped")}
+			class="hidden-button"
+			class:isActive={isActive("/manga/dropped", false)}
 			><PausedBook />{$_("navigation.paused")}</a
 		>
 		<a
@@ -265,7 +268,7 @@
 	}
 
 	@media (hover: hover) {
-		.navbtns > a:hover {
+		.navbtns > a:not(.isActive):hover {
 			background: var(--background-3-hover);
 			color: var(--text-2);
 		}
@@ -279,9 +282,19 @@
 		all: unset;
 	}
 
-	.isActive {
-		background: var(--app-accent) !important;
-		color: var(--app-accent-contrast) !important;
+	a.isActive {
+		background: var(--app-accent);
+		color: var(--app-accent-contrast);
+	}
+
+	a.hidden-button {
+		display: none;
+	}
+
+	a.hidden-button.isActive {
+		display: inherit;
+		background: var(--background-3-hover);
+		color: var(--app-accent);
 	}
 
 	.settingsActive {

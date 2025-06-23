@@ -13,10 +13,6 @@
     z-index: 1 !important;
 }
 
-.element:not(.ova) {
-    outline: none !important;
-}
-
 .element:hover {
     scale: unset !important;
 }

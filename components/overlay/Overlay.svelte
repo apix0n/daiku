@@ -111,8 +111,6 @@
         width: calc(100% - var(--navbar-width) - 8px);
         height: 100vh;
         height: 100dvh;
-        background-color: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(5px);
         border-radius: var(--border-radius) 0 0 var(--border-radius);
         overflow: hidden;
     }

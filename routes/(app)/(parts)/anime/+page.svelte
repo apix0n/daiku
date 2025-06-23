@@ -10,12 +10,14 @@
   import Overlay from "$components/overlay/Overlay.svelte";
   import { _ } from "svelte-i18n";
 
+  import DroppedPausedCard from "$components/cards/DroppedPausedCard.svelte"
+
   import { settings } from "$lib/client/stores/settings";
 
   import type { MediaElement } from "$lib/types/media";
 
   export let data;
-  const { current, watched, updatedAt } = data.animeData;
+  const { current, watched, dropped, updatedAt } = data.animeData;
   let selectedAnime: MediaElement | null = null;
 
   function handleCardClick(anime: MediaElement) {
@@ -130,6 +132,7 @@
         </Informations>
       </BaseCard>
     {/each}
+    <DroppedPausedCard destination="/anime/dropped" {dropped}/>
   </div>
 {/if}
 
