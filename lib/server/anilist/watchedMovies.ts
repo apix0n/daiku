@@ -1,10 +1,13 @@
 import * as anilistGlobal from '$lib/server/anilist/global.js';
 import { getTmdbInfos } from '$lib/server/tmdb/getTmdbInfos.js';
+import type { AniListResponse } from '$lib/types/anilist';
+import type { MediaElement } from '$lib/types/media';
+import type { MovieRequest } from '$lib/types/requests';
 
 let cachedAnimeIdsFile = null;
 let cacheTimestamp = null;
 
-async function getUserWatchedAnime(userId) {
+async function getUserWatchedAnime(userId: number) {
     const query = `
     query ($userId: Int) {
         MediaListCollection(userId: $userId, type: ANIME, status: COMPLETED, sort: UPDATED_TIME_DESC) {
@@ -57,7 +60,7 @@ async function getAnimeIdsFile() {
 
 const animeIdsFile = await getAnimeIdsFile();
 
-export function getIdsFromAnilistId(anilistId) {
+export function getIdsFromAnilistId(anilistId: number) {
     for (const key in animeIdsFile) {
         if (animeIdsFile[key].anilist_id === anilistId) {
             return {
@@ -69,7 +72,7 @@ export function getIdsFromAnilistId(anilistId) {
     return null;
 }
 
-async function watchedMovies(userMovieData) {
+async function watchedMovies(userMovieData: AniListResponse): Promise<MediaElement[]> {
     const seen = new Set();
     const allWatchedMovies = userMovieData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
@@ -91,52 +94,66 @@ async function watchedMovies(userMovieData) {
     });
 
     allWatchedMovies.sort((a, b) => {
-        const dateA = new Date(a.completedAt.year, a.completedAt.month - 1, a.completedAt.day);
-        const dateB = new Date(b.completedAt.year, b.completedAt.month - 1, b.completedAt.day);
-        return dateB - dateA || allWatchedMovies.indexOf(b) - allWatchedMovies.indexOf(a);
+        const dateA = new Date(
+            (a.completedAt.year ?? 1970),
+            ((a.completedAt.month ?? 1) - 1),
+            (a.completedAt.day ?? 1)
+        );
+        const dateB = new Date(
+            (b.completedAt.year ?? 1970),
+            ((b.completedAt.month ?? 1) - 1),
+            (b.completedAt.day ?? 1)
+        );
+        return dateB.getTime() - dateA.getTime() || allWatchedMovies.indexOf(b) - allWatchedMovies.indexOf(a);
     });
 
     return await Promise.all(allWatchedMovies.map(async entry => {
-        const ids = await getIdsFromAnilistId(entry.media.id);
+        const ids = getIdsFromAnilistId(entry.media.id);
 
         return {
             media: {
                 title: {
-                    romaji: entry.media.title.romaji,
-                    english: entry.media.title.english,
-                    native: entry.media.title.native
+                    english: entry.media.title.english || undefined,
+                    romaji: entry.media.title.romaji || undefined,
+                    native: entry.media.title.native || undefined,
                 },
+                type: 'movie',
+                source: 'anilist',
+                status: anilistGlobal.mapAniListMediaStatus(entry.media.status),
+                runtime: (entry.media.episodes ?? 0) * (entry.media.duration ?? 0) || null,
+                accentColor: entry.media.coverImage.color,
                 cover: {
                     large: entry.media.coverImage.extraLarge,
                     medium: entry.media.coverImage.large,
                     small: entry.media.coverImage.medium,
                 },
-                banner: {
-                    large: entry.media.bannerImage
-                },
-                accentColor: entry.media.coverImage.color,
-                type: 'movie',
-                source: 'anilist',
-                runtime: entry.media.episodes * entry.media.duration || null,
+                banner: entry.media.bannerImage ? {
+                    large: entry.media.bannerImage,
+                    medium: entry.media.bannerImage,
+                    small: entry.media.bannerImage,
+                } : undefined,
+                special: false,
                 id: {
                     anilist: entry.media.id,
                     myanimelist: entry.media.idMal,
                     ...ids
-                }
+                },
             },
             dates: {
                 finished: anilistGlobal.formatDate(entry.completedAt),
             },
             review: {
-                rating: entry.score,
-                text: entry.notes,
+                rating: entry.score || 0,
+                isHtml: entry.notes ? false : undefined,
+                text: entry.notes || undefined,
             },
+            status: 'finished',
             repeat: entry.repeat,
-        };
+        } as MediaElement;
     }));
 }
 
-export async function fetchWatchedAnimeMovies(userId) {
+export async function fetchWatchedAnimeMovies(userId: number) {
     try {
         const userData = await getUserWatchedAnime(userId);
         return {
@@ -145,9 +162,9 @@ export async function fetchWatchedAnimeMovies(userId) {
                 timestamp: new Date().toISOString()
             },
             watched: await watchedMovies(userData),
-        };
+        } as MovieRequest;
     } catch (error) {
         console.error('Error fetching movie data:', error);
-        return [];
+        throw error;
     }
 }

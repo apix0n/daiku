@@ -21,6 +21,16 @@
         </label>
 
         <label>
+            {$_("settings.title")}
+            <select bind:value={$settings.titleLanguage}>
+                <option value="locale">Locale</option>
+                <option value="english">English</option>
+                <option value="romaji">Romaji</option>
+                <option value="native">Native</option>
+            </select>
+        </label>
+
+        <label>
             {$_("settings.theme")}
             <select bind:value={$settings.theme}>
                 <option value="">daiku</option>
@@ -48,15 +58,17 @@
         z-index: 6;
         width: calc(100% - var(--navbar-width) - 8px);
         left: calc(var(--navbar-width) + 8px);
-        background: rgba(0, 0, 0, .5);
+        background: rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(1px);
         border-radius: var(--border-radius) 0 0 var(--border-radius);
-		@media screen and (max-width: 1000px) {
-			border-radius: 0 0 var(--border-radius) var(--border-radius);
+        @media screen and (max-width: 1000px) {
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
             width: revert;
-            height: calc(100% - var(--navbar-width) - env(safe-area-inset-bottom));
+            height: calc(
+                100% - var(--navbar-width) - env(safe-area-inset-bottom)
+            );
             left: 0;
-		}
+        }
     }
 
     .modal {
@@ -72,11 +84,16 @@
         width: 400px;
         @media screen and (max-width: 1000px) {
             & {
-                width: calc(100% - 2em - env(safe-area-inset-left) - env(safe-area-inset-right));
+                width: calc(
+                    100% - 2em - env(safe-area-inset-left) -
+                        env(safe-area-inset-right)
+                );
                 left: 50%;
                 transform: translateX(-50%);
                 margin: 0;
-                bottom: calc(var(--navbar-width) + env(safe-area-inset-bottom) + 1em);
+                bottom: calc(
+                    var(--navbar-width) + env(safe-area-inset-bottom) + 1em
+                );
             }
         }
     }

@@ -1,16 +1,8 @@
 import { json } from "@sveltejs/kit"
-import { secrets } from "$lib/server/config.js";
 import { createHeaders } from "$lib/server/apiHeaders.js";
 
 export async function GET({ request, url }) {
     const baseUrl = url.origin;
-
-    const authHeader = request.headers.get("authorization") 
-    if (!secrets.apiAuthKey || authHeader !== `Bearer ${secrets.apiAuthKey}`) {
-        return json({ success: false, error: "Forbidden" }, {
-            status: 403
-        })
-    }
 
     const endpoints = [
         "/api/update/anilist/anime",

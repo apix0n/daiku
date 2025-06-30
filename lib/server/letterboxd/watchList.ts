@@ -1,4 +1,4 @@
-import { getToken, selectBestImageUrls, ua } from "./global";
+import { getToken, mapLinksToIdentifiers, selectBestImageUrls, ua } from "./global";
 import type { FilmSummary, FilmsResponse } from "$lib/types/letterboxd";
 import type { MediaElement } from "$lib/types/media";
 import type { MovieRequest } from "$lib/types/requests";
@@ -65,15 +65,12 @@ export function makeWatchList(entriesList: FilmsResponse & { total: number }): M
             type: 'movie',
             source: 'letterboxd',
             cover: selectBestImageUrls(entry.poster.sizes),
-            id: {
-                tmdb: entry.links.find(l => l.type === 'tmdb')?.id,
-                boxdit: entry.links.find(l => l.type === 'letterboxd')?.id,
-            },
+            id: mapLinksToIdentifiers(entry.links),
             runtime: entry.runTime,
             status: 'finished',
             special: false,
         },
-        status: "finished",
+        status: "planned",
     })) as MediaElement[];
 
     return {

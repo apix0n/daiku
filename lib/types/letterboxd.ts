@@ -17,7 +17,7 @@ export interface FilmsResponse {
      * The cursor to the next page of results.
      */
     next?: string;
-  }
+}
 
 export interface Image {
     sizes: ImageSize[];
@@ -292,4 +292,160 @@ export interface Tag {
      * @see Tag.displayTag
      */
     tag: string;
+}
+
+export interface Member {
+    /**
+     * The member's account status.
+     */
+    accountStatus: 'Active' | 'Locked' | 'Memorialized';
+
+    /**
+     * The member's avatar image at multiple sizes. Avatar images to not have an enforced aspect
+     * ratio, so should be center-cropped to a square if they are not 1:1.
+     */
+    avatar: Image;
+
+    /**
+     * The member's backdrop image at multiple sizes, sourced from the first film in the member's
+     * list of favorite films, if available. Only returned for
+     * [Patron](https://letterboxd.com/patrons/) members.
+     */
+    backdrop: Image;
+
+    /**
+     * The vertical focal point of the member's backdrop image, if available. Expressed as a
+     * proportion of the image's height, using values between 0.0 and 1.0. Use when cropping the
+     * image into a shorter space, such as in the page for a film on the Letterboxd site.
+     */
+    backdropFocalPoint: number;
+
+    /**
+     * The member's bio formatted as HTML.
+     */
+    bio: string;
+
+    /**
+     * The member's bio in LBML. May contain the following HTML tags: `<br>` `<strong>` `<em>` `<b>`
+     * `<i>` `<a href="">` `<blockquote>`.
+     */
+    bioLbml: string;
+
+    /**
+     * The member's default policy determing who can post comments to their content. Supported
+     * options are `Anyone`, `Friends` and `You`. `You` in this context refers to the content owner.
+     * Use the `commentThreadState` property of the `ListRelationship` to determine the signed-in
+     * member's ability to comment (or not).
+     *
+     * @see ListRelationship.commentThreadState
+     */
+    commentPolicy: 'Anyone' | 'Friends' | 'You';
+
+    /**
+     * A convenience method that returns the member's given name and family name concatenated with a
+     * space, if both are set, or just their given name or family name, if one is set, or their
+     * username, if neither is set. Will never be empty.
+     */
+    displayName: string;
+
+    /**
+     * The family name of the member.
+     */
+    familyName: string;
+
+    /**
+     * A summary of the member's favorite films, up to a maximum of four.
+     */
+    favoriteFilms: FilmSummary[];
+
+    /**
+     * The given name of the member.
+     */
+    givenName: string;
+
+    /**
+     * `true` if member should not be shown ads.
+     */
+    hideAds: boolean;
+
+    /**
+     * `true` if ads should not be shown on the member's content.
+     */
+    hideAdsInContent: boolean;
+
+    /**
+     * The LID of the member.
+     */
+    id: string;
+
+    /**
+     * A link to the member's profile page on the Letterboxd website.
+     */
+    links: Link[];
+
+    /**
+     * The member's location.
+     */
+    location: string;
+
+    /**
+     * The member's account type.
+     */
+    memberStatus: 'Alum' | 'Crew' | 'Hq' | 'Member' | 'Patron' | 'Pro';
+
+    /**
+     * The member's organisation type. Only returned for HQ members.
+     */
+    orgType:
+    | 'Association'
+    | 'Educator'
+    | 'Exhibitor'
+    | 'Festival'
+    | 'Genre'
+    | 'Media_Publisher'
+    | 'Podcast'
+    | 'Product_Platform'
+    | 'Single_Film'
+    | 'Society'
+    | 'Streamer'
+    | 'Studio';
+
+    /**
+     * The reviews the member has pinned on their profile page, up to a maximum of two. *Only
+     * returned for paying members.*
+     */
+    pinnedReviews: LogEntry[];
+
+    /**
+     * Defaults to `false` for new accounts. Indicates whether the member has elected to hide their
+     * watchlist from other members.
+     */
+    privateWatchlist: boolean;
+
+    /**
+     * A convenience method that returns the member's given name, if set, or their username. Will
+     * never be empty.
+     */
+    shortName: string;
+
+    /**
+     * A summary of the member's team members. Only returned for HQ members.
+     */
+    teamMembers: MemberSummary[];
+
+    /**
+     * The member's Twitter username, if they have authenticated their account.
+     */
+    twitterUsername: string;
+
+    /**
+     * The member's Letterboxd username. Usernames must be between 2 and 15 characters long and may
+     * only contain upper or lowercase letters, numbers or the underscore (`_`) character.
+     */
+    username: string;
+
+    /**
+     * The member's website URL. URLs are not validated, so sanitizing may be required.
+     */
+    website: string;
 }

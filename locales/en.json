@@ -86,7 +86,8 @@
     "theme": "Theme:",
     "language": "Language:",
     "specials": "Show special episodes and chapters",
-    "notchSticker": "(iOS only) Show the daiku logo in the notch or Dynamic Island"
+    "notchSticker": "(iOS only) Show the daiku logo in the notch or Dynamic Island",
+    "title": "Title language:"
   },
   "Nmanga": "{n} manga"
 }

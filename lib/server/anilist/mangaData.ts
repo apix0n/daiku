@@ -105,7 +105,6 @@ function readManga(userMangaData: AniListResponse): MediaElement[] {
                 english: entry.media.title.english,
                 romaji: entry.media.title.romaji,
                 native: entry.media.title.native,
-                nativeOrigin: entry.media.countryOfOrigin?.toLowerCase() || 'jp', // Default to Japan if country of origin is not available
             },
             type: 'manga',
             source: 'anilist',

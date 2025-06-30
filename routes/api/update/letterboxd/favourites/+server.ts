@@ -1,19 +1,12 @@
 import { makeBoxdFavouritesList } from "$lib/server/letterboxd/userLikes";
-import { accounts, secrets } from "$lib/server/config.js";
+import { accounts } from "$lib/server/config.js";
 import { json } from '@sveltejs/kit';
 import { setValue } from "$lib/server/redisInteractions.js";
 import { cacheStore } from "$lib/server/stores/cache.js";
 
 export async function GET({ request, url }) {
-    const authHeader = request.headers.get("authorization")
-    if (!secrets.apiAuthKey || authHeader !== `Bearer ${secrets.apiAuthKey}`) {
-        return json({ success: false, error: "Forbidden" }, {
-            status: 403
-        })
-    }
-
     try {
-        let data = await makeBoxdFavouritesList(accounts.letterboxdUsername);
+        let data = await makeBoxdFavouritesList(accounts.letterboxdLid);
         await setValue("lbFavourites", data);
         cacheStore.set("lbFavourites", { data });
         return json({ success: true });

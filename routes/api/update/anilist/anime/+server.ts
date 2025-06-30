@@ -1,18 +1,12 @@
 import { fetchAnimeData } from "$lib/server/anilist/animeData";
-import { accounts, secrets, config } from "$lib/server/config.js";
+import { accounts, config } from "$lib/server/config.js";
 import { json } from '@sveltejs/kit';
 import { setValue } from "$lib/server/redisInteractions.js";
 import { cacheStore } from "$lib/server/stores/cache.js";
 
 export async function GET({ request, url }) {
-    const authHeader = request.headers.get("authorization")
-    if (!secrets.apiAuthKey || authHeader !== `Bearer ${secrets.apiAuthKey}`) {
-        return json({ success: false, error: "Forbidden" }, {
-            status: 403
-        })
-    }
-
     try {
+        if (typeof accounts.anilistId !== "number") throw new Error("Anilist ID is not set or is not a number");
         let data = await fetchAnimeData(accounts.anilistId, false);
         await setValue("anime", data);
         cacheStore.set("anime", {

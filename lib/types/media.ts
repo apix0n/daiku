@@ -84,10 +84,9 @@ export type MediaTitles = {
     english?: string;
     romaji?: string;
     native: string;
-    nativeOrigin?: string; // language code, e.g., 'ja' for Japanese
 }
 
-export const MediaType = ['anime', 'manga', 'movie', 'volume'] as const
+export const MediaType = ['anime', 'manga', 'movie', 'book'] as const
 const MediaSource = ['anilist', 'letterboxd', 'mangacollec'] as const
 export const MediaStatus = ['airing', 'finished', 'notYetReleased', 'hiatus', 'cancelled'] as const
 
@@ -118,7 +117,7 @@ type UserDates = {
     finished?: string;
 }
 
-export const UserMediaStatus = ['current', 'finished', 'paused', 'dropped', 'planned', 'repeating'] as const
+export const UserMediaStatus = ['current', 'finished', 'paused', 'dropped', 'planned', 'repeating', 'favourite'] as const
 
 export type UserMediaProgress = {
     episode?: number;
@@ -131,4 +130,16 @@ type UserReview = {
     text?: string;
     spoiler?: boolean;
     isHtml?: boolean;
+}
+
+export type FavouritesElement = {
+    cover: ImageWithSizes;
+    name: MediaTitles;
+    id?: MediaIdentifiers;
+    source: (typeof MediaSource)[number];
+}
+
+export type FavouritesGroup = {
+    type: (typeof MediaType)[number];
+    favourites: FavouritesElement[];
 }

@@ -1,4 +1,4 @@
-import type { MediaElement } from "./media";
+import type { MediaElement, FavouritesGroup } from "./media";
 
 export type AnimeRequest = {
     updatedAt: UpdatedAt;
@@ -24,6 +24,11 @@ export type PlannedRequest = {
 export type MovieRequest = {
     updatedAt: UpdatedAt | UpdatedAt[];
     watched: MediaElement[];
+}
+
+export type FavouritesRequest = {
+    updatedAt: UpdatedAt;
+    favourites: FavouritesGroup[];
 }
 
 export type UpdatedAt = {

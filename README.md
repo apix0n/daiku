@@ -4,7 +4,9 @@
 
 another media dashboard
 
-> this is in active development and mostly a personal project, but feel free to contribute if you want—help is always appreciated! 
+> this is in active development and mostly a personal project, but feel free to contribute if you want — help is always appreciated!
+>
+> check [the to-do list](TODO.md) for the roadmap 
 
 ## features / pages
 
@@ -25,7 +27,6 @@ another media dashboard
 ## requirements
 
 * a Redis-type database to store the data,
-  > thus avoiding getting 429'd or banned from using the services
 * a hosting provider
   > i recommend Vercel because the functions can make a lot of outside calls which is needed for TMDB querying
 
@@ -34,7 +35,7 @@ another media dashboard
 * [AniList](https://anilist.co/) for anime (series, movies), manga and favourites (anime, manga & characters),
 * [AnimeSchedule](https://animeschedule.net/) for correct (international) releasing anime airing time, 
 * [MAL-Sync](https://malsync.moe/) API for getting the last released chapter of a manga,
-    > queried client-side, private API
+    > queried server-side, private API
 * [Jikan](https://jikan.moe/) for anime and manga synopsis,
     > queried client side;
     > unofficial, free and auth-less API for MyAnimeList
@@ -43,7 +44,7 @@ another media dashboard
 * [The Movie Database (TMDB) API](https://www.themoviedb.org/) for localised movie titles, runtimes & clean movie posters,
 * [Mangacollec](https://www.mangacollec.com/) for the manga library,
     > private API
-* [@Kometa-Team/Anime-IDs](https://github.com/Kometa-Team/Anime-IDs) for linking anime to other platforms (anime to TMDB conversion), 
+* [@Kometa-Team/Anime-IDs](https://github.com/Kometa-Team/Anime-IDs) for linking anime to other platforms (anime to IMDB & TMDB conversion), 
 * [@apix0n/daiku-alternatives](https://github.com/apix0n/daiku-alternatives) for alternative titles, covers and additional information to override on the media
 
 ## configuration
@@ -71,7 +72,7 @@ another media dashboard
 * watch time circular chart inspiration: [@sergiopedercini](https://codepen.io/sergiopedercini/pen/jmKdbj),
 * iOS notch sticker: [@imputnet/cobalt](https://github.com/imputnet/cobalt),
 * iOS haptics: [@imputnet/cobalt](https://github.com/imputnet/cobalt),
-* HTML parser for Letterboxd liked movies: [cheerio](https://cheerio.js.org/),
+* Letterboxd API requests types: [@erunion/letterboxd-client](https://github.com/erunion/letterboxd-client),
 * iCalendar generator: [ical-generator](https://www.npmjs.com/package/ical-generator),
 * icons: [Google Material Symbols Rounded](https://fonts.google.com/icons?icon.style=Rounded) or custom-made
 <!-- w: 400; 48px -->

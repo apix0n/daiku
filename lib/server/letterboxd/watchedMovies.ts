@@ -1,4 +1,4 @@
-import { getToken, selectBestImageUrls, ua } from "./global";
+import { getToken, mapLinksToIdentifiers, selectBestImageUrls, ua } from "./global";
 import type { LogEntriesResponse, LogEntry } from "$lib/types/letterboxd";
 import type { MediaElement } from "$lib/types/media";
 import type { MovieRequest } from "$lib/types/requests";
@@ -67,10 +67,7 @@ export function makeWatchedMoviesList(entriesList: LogEntriesResponse & { total:
             type: 'movie',
             source: 'letterboxd',
             cover: selectBestImageUrls(entry.film.poster.sizes),
-            id: {
-                tmdb: entry.film.links.find(l => l.type === 'tmdb')?.id,
-                boxdit: entry.film.links.find(l => l.type === 'letterboxd')?.id,
-            },
+            id: mapLinksToIdentifiers(entry.film.links),
             runtime: entry.film.runTime,
             status: 'finished',
             special: false,

@@ -1,13 +1,15 @@
 <script lang="ts">
     import type { MediaTitles } from "$lib/types/media";
-    import { locale } from "svelte-i18n";
-    import { get } from "svelte/store";
-
-    $: localeValue = get(locale);
+    import { settings } from "$lib/client/stores/settings";
 
     export let titles: MediaTitles;
 
-    $: title = titles.english || titles.romaji || titles.native;
+    $: title =
+        $settings.titleLanguage === "locale" ? titles.locale || titles.english || titles.romaji || titles.native :
+        $settings.titleLanguage === "english" ? titles.english || titles.romaji || titles.native :
+        $settings.titleLanguage === "romaji" ? titles.romaji || titles.english || titles.native :
+        $settings.titleLanguage === "native" ? titles.native :
+        titles.english || titles.romaji || titles.native;
 </script>
 
 {title}

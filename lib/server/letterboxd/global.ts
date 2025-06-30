@@ -1,4 +1,5 @@
-import type { ImageSize } from "$lib/types/letterboxd";
+import type { ImageSize, Link } from "$lib/types/letterboxd";
+import type { MediaIdentifiers } from "$lib/types/media";
 
 export const ua = "Letterboxd/6519 CFNetwork/3826.500.131 Darwin/24.5.0";
 
@@ -44,4 +45,19 @@ export function selectBestImageUrls(images: ImageSize[]) {
         medium: findBestMatch(250),
         large: findBestMatch(500)
     };
+}
+
+/**
+ * Maps an array of links from Letterboxd media to a MediaIdentifiers object.
+ * @param links - Array of links from Letterboxd media
+ * @returns An object containing identifiers for TMDB, IMDB (if present), and Letterboxd
+ */
+export function mapLinksToIdentifiers(links: Link[]): MediaIdentifiers {
+    const identifiers: Record<string, string> = {};
+    links.forEach(link => {
+        if (link.type === 'tmdb') identifiers.tmdb = link.id;
+        if (link.type === 'imdb') identifiers.imdb = link.id;
+        if (link.type === 'letterboxd') identifiers.boxdit = link.id;
+    });
+    return identifiers;
 }

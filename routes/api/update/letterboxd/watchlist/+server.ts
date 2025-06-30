@@ -1,18 +1,11 @@
 import { boxdWatchList } from "$lib/server/letterboxd/watchList.js";
 import { json } from '@sveltejs/kit';
-import { accounts, secrets } from "$lib/server/config.js";
+import { accounts } from "$lib/server/config.js";
 import { setValue } from "$lib/server/redisInteractions";
 import { cacheStore } from "$lib/server/stores/cache.js";
 import { replaceByTmdb } from "$lib/server/tmdb/replaceByTmdb.js";
 
 export async function GET({ request, url }) {
-    const authHeader = request.headers.get("authorization")
-    if (!secrets.apiAuthKey || authHeader !== `Bearer ${secrets.apiAuthKey}`) {
-        return json({ success: false, error: "Forbidden" }, {
-            status: 403
-        })
-    }
-
     try {
         const boxdData = await boxdWatchList(accounts.letterboxdLid)
         let moviesData = await replaceByTmdb(boxdData.watched);

@@ -4,12 +4,16 @@ export type Settings = {
     theme: string;
     showSpecials: boolean;
     showNotchSticker: boolean;
+    titleLanguage: TitleSelect;
 };
+
+export type TitleSelect = 'locale' | 'english' | 'romaji' | 'native';
 
 const defaultSettings: Settings = {
     theme: '',
     showSpecials: false,
     showNotchSticker: true,
+    titleLanguage: 'english'
 };
 
 function createSettingsStore() {
