@@ -1,5 +1,7 @@
 import { redirect, error } from '@sveltejs/kit';
 
+export const prerender = false;
+
 export function load({ params }) {
     const path = params.catchAll;
 
