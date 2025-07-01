@@ -9,19 +9,21 @@
     import { _ } from "svelte-i18n";
 
     import { locale, date } from "svelte-i18n";
+    import { formatDateLocale } from "$lib/utils/formatDateLocale";
 
+    const now = new Date();
     const independentBooksCount = new Set(books.map((a) => a.number)).size;
     const toReleaseCount = bookGroup.next.filter(
-        (e) => !e.releaseDate || new Date(e.releaseDate) > new Date(),
+        (e) => !e.releaseDate || formatDateLocale(e.releaseDate) > now,
     ).length;
     const firstNext =
         bookGroup.next.length > 0
             ? bookGroup.next.find(
-                  (e) => e.releaseDate && new Date(e.releaseDate) > new Date(),
+                  (e) => e.releaseDate && formatDateLocale(e.releaseDate) > now,
               )
             : null;
     const firstNextDate = firstNext?.releaseDate
-        ? new Date(firstNext.releaseDate)
+        ? formatDateLocale(firstNext.releaseDate)
         : null;
 </script>
 
@@ -57,14 +59,14 @@
                 </span>
             {/if}
         {/if}
-        {#if firstNextDate && firstNextDate > new Date()}
+        {#if firstNextDate && firstNextDate > now}
             <span
                 class="series-number-info"
                 class:grey={bookType === "books"}
                 title={$date(firstNextDate, { dateStyle: "full" })}
             >
                 {firstNext?.number}
-                {#if firstNextDate?.getTime() - new Date().getTime() < 30 * 24 * 60 * 60 * 1000}
+                {#if firstNextDate?.getTime() - now.getTime() < 30 * 24 * 60 * 60 * 1000}
                     {getRelativeTime(
                         $locale ?? "en",
                         firstNextDate.toDateString(),
@@ -100,8 +102,8 @@
                 data-number={book.number}
                 data-date={"releaseDate" in book &&
                 book.releaseDate &&
-                new Date(book.releaseDate) > new Date()
-                    ? $date(new Date(book.releaseDate), {
+                formatDateLocale(book.releaseDate) > now
+                    ? $date(formatDateLocale(book.releaseDate), {
                           month: "numeric",
                           day: "numeric",
                           year: "numeric",
@@ -118,7 +120,7 @@
                     alt=""
                     class:notYetReleased={"releaseDate" in book &&
                     book.releaseDate
-                        ? new Date(book.releaseDate) > new Date()
+                        ? formatDateLocale(book.releaseDate) > now
                         : 0}
                 />
             </div>

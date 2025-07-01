@@ -47,8 +47,8 @@
 
     .buttons {
         display: flex;
+        flex-wrap: wrap;
         gap: 8px;
-        height: 35px;
     }
 
     a {
@@ -56,7 +56,7 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        height: 100%;
+        height: 35px;
         padding: 0px;
         border-radius: 6px;
         transition: all .2s;

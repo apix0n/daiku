@@ -128,15 +128,15 @@
 			><PausedBook />{$_("navigation.paused")}</a
 		>
 		<a
-			href="/collection"
+			href="/books"
 			onclick={handleClick}
-			class:isActive={isActive("/collection")}
+			class:isActive={isActive("/books")}
 			><Shelf />{$_("navigation.library")}</a
 		>
 		<a
-			href="/collection/next"
+			href="/books/next"
 			onclick={handleClick}
-			class:isActive={isActive("/collection/next")}
+			class:isActive={isActive("/books/next")}
 			><ShelfSparkle />{$_("navigation.wished")}</a
 		>
 		<a
@@ -152,9 +152,9 @@
 			><CalendarClock />{$_("navigation.planned")}</a
 		>
 		<a
-			href="/planning/notreleased"
+			href="/planning/season"
 			onclick={handleClick}
-			class:isActive={isActive("/planning/notreleased")}
+			class:isActive={isActive("/planning/season")}
 			><CalendarClock />{$_("navigation.season")}</a
 		>
 		<!-- svelte-ignore a11y_missing_attribute -->

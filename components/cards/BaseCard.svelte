@@ -64,6 +64,13 @@
             --element-width: 150px;
         }
     }
+
+    @media screen and (max-width: 400px) {
+        .element {
+            --element-width: 140px
+        }
+    }
+
     .element.ova {
         display: none;
         outline: 2px var(--accentColor, var(--background-4)) solid;
