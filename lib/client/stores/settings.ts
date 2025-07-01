@@ -5,6 +5,9 @@ export type Settings = {
     showSpecials: boolean;
     showNotchSticker: boolean;
     titleLanguage: TitleSelect;
+    multiLineBooks: boolean;
+    showBookType: boolean;
+    showNextBooksCount: boolean;
 };
 
 export type TitleSelect = 'locale' | 'english' | 'romaji' | 'native';
@@ -13,7 +16,10 @@ const defaultSettings: Settings = {
     theme: '',
     showSpecials: false,
     showNotchSticker: true,
-    titleLanguage: 'english'
+    titleLanguage: 'english',
+    multiLineBooks: false,
+    showBookType: true,
+    showNextBooksCount: false
 };
 
 function createSettingsStore() {

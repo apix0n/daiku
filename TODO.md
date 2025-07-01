@@ -1,6 +1,7 @@
 # daiku to-do list
 
-- [ ] fix manga/book collection data format & display
+- [x] fix manga/book collection data format & display
+- [x] don't add `next` manga if edition isn't followed
 - [ ] make everything typescript
 - [x] use a middleware for api requests authentication instead of manual checking
 - [x] use letterboxd api instead of rss & html parsing
@@ -11,10 +12,10 @@
 - [ ] better error handling
 - [ ] find a logo
 - [ ] "continue" tab (soon-to-release media, episodes & books, recently released episodes & chapters, next episode or chapter to read...)
-- [ ] add hiatus (anilist) handling
 - [ ] statistics tab
 - [ ] favourites tab
-- [ ] upgrade & rename season view
+- [ ] add hiatus (anilist) handling
+- [ ] rework season view
 - [ ] more immersive desktop pwa (with the window controls overlay api)
 - [ ] unpause media if up-to-date with the episode and new episode released
 - [ ] fetch release time for planned seasonal anime
@@ -23,7 +24,9 @@
 
 ## later / not sure
 
-- [ ] default settings for web ui (language, theme, name..?)
+- [ ] fix book styles that rely on hacks
+- [ ] compare data with other daiku users tab
+- [ ] customisable default settings for web ui (language, theme, name..?)
 - [ ] remove dependency on tmdb
 - [ ] horizontal navigation bar
 - [ ] add size choices for media display

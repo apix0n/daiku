@@ -7,7 +7,7 @@
     import NoEntriesMessage from "$components/NoEntriesMessage.svelte";
     import UpdatedTime from "$components/UpdatedTime.svelte";
     import type { MediaElement } from "$lib/types/media.js";
-    
+
     export let data;
     const { dropped, updatedAt } = data.mangaData;
 
@@ -19,11 +19,11 @@
         selectedManga = manga;
     }
 
-    import Overlay from '$components/overlay/Overlay.svelte';
+    import Overlay from "$components/overlay/Overlay.svelte";
 </script>
 
 {#if selectedManga}
-    <Overlay entry={selectedManga} on:close={() => selectedManga = null} />
+    <Overlay entry={selectedManga} on:close={() => (selectedManga = null)} />
 {/if}
 
 {#if dropped.length > 0}
@@ -31,9 +31,13 @@
         <h2>
             {$_("paused")}
             <span
-                >· {dropped.filter((manga) => manga.status === "paused")
-                    .length} manga</span
-            >
+                >· {$_("Nmanga", {
+                    values: {
+                        n: dropped.filter((manga) => manga.status === "paused")
+                            .length,
+                    },
+                })}
+            </span>
         </h2>
 
         <div id="paused" class="elements-wrapper elements-manga">
@@ -46,9 +50,7 @@
                         on:click={() => handleCardClick(manga)}
                     >
                         <!-- bottom -->
-                        <Informations
-                            titles={manga.media.title}
-                        >
+                        <Informations titles={manga.media.title}>
                             <MangaInfo
                                 chapters={manga.media.chapters?.count}
                                 volumes={manga.media.volumes?.count}
@@ -69,8 +71,12 @@
         <h2>
             {$_("dropped")}
             <span
-                >· {dropped.filter((manga) => manga.status === "dropped")
-                    .length} manga</span
+                >· {$_("Nmanga", {
+                    values: {
+                        n: dropped.filter((manga) => manga.status === "dropped")
+                            .length,
+                    },
+                })}</span
             >
         </h2>
         <div id="dropped" class="elements-wrapper elements-manga">
@@ -83,9 +89,7 @@
                         on:click={() => handleCardClick(manga)}
                     >
                         <!-- bottom -->
-                        <Informations
-                            titles={manga.media.title}
-                        >
+                        <Informations titles={manga.media.title}>
                             <MangaInfo
                                 chapters={manga.media.chapters?.count}
                                 volumes={manga.media.volumes?.count}

@@ -101,7 +101,10 @@
     <Overlay entry={selectedAnime} on:close={() => (selectedAnime = null)} />
 {/if}
 
-<h2>anime <span>· {animePlanned.length} planned</span></h2>
+<h2>
+    {$_("navigation.anime")}
+    <span>· {$_("Nplanned", { values: { n: animePlanned.length } })}</span>
+</h2>
 
 {#each seasons as season}
     <h3>{season}</h3>

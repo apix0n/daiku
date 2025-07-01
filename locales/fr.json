@@ -86,6 +86,14 @@
     "theme": "Thème :",
     "language": "Langue :",
     "specials": "Afficher les épisodes et chapitres spéciaux",
-    "notchSticker": "(iOS uniquement) Afficher le logo daiku dans l'encoche ou dans Dynamic Island"
-  }
+    "notchSticker": "(iOS uniquement) Afficher le logo daiku dans l'encoche ou dans Dynamic Island",
+    "title": "Langue des titres :",
+    "showNextBookCount": "Afficher le nombre de livres manquants par série",
+    "multiLineBooks": "Afficher les livres sur plusieurs lignes",
+    "showBookType": "Afficher le type des livres"
+  },
+  "Nmanga": "{n} manga",
+  "seriesOfNVol": "{n, plural, =1 {série finie en 1 tome} other {série finie en # tomes}}",
+  "Nseries": "{n, plural, =0 {0 séries} =1 {1 série} other {# séries}}",
+  "Nmovies": "{n, plural, =0 {0 film} =1 {1 film} other {# films}}"
 }

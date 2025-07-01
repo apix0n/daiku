@@ -23,7 +23,10 @@
   <Overlay entry={selectedAnime} on:close={() => (selectedAnime = null)} />
 {/if}
 
-<h2>anime <span>· {animeList.length} planned</span></h2>
+<h2>
+  {$_("navigation.anime")}
+  <span>· {$_("Nplanned", { values: { n: animeList.length } })}</span>
+</h2>
 
 <div id="anime" class="elements-wrapper elements-planned">
   {#each animeList.filter((a) => a.media.status !== "notYetReleased") as anime}
@@ -66,7 +69,10 @@
   {/each}
 </div>
 
-<h2>manga <span>· {manga.length} planned</span></h2>
+<h2>
+  {$_("navigation.manga")}
+  <span>· {$_("Nplanned", { values: { n: manga.length } })}</span>
+</h2>
 
 <div id="watched" class="elements-wrapper elements-planned elements-manga">
   {#each manga as manga}
@@ -100,7 +106,10 @@
   {/each}
 </div>
 
-<h2>movies <span>· {movies.length} planned</span></h2>
+<h2>
+  {$_("navigation.movies")}
+  <span>· {$_("Nplanned", { values: { n: movies.length } })}</span>
+</h2>
 
 <div id="movie" class="elements-wrapper elements-planned">
   {#each movies as anime}

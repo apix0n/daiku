@@ -3,6 +3,7 @@
     --background-2: #2c3440;
     --background-3: #3a434c;
     --background-3-hover: #445566;
+    --background-4: var(--background-3-hover);
     --border-radius: .5em;
     --text: #fff;
     --text-2: #9ab;
@@ -10,6 +11,7 @@
     --app-accent: #00e054;
     --app-accent-contrast: var(--background-2);
     --app-accent-dark: #ff9010;
+    --app-accent-dark-contrast: var(--background-2);
 }
 
 .container {

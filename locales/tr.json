@@ -69,5 +69,13 @@
     "notchSticker": "(Yalnızca iOS) daiku logosunu çentikte veya Dynamic Island'da göster"
   },
   "Nspecials": "{n} özel bölüm",
-  "Nmanga": "{n} manga"
+  "Nmanga": "{n} manga",
+  "Nmovies": "{n} film",
+  "Nseries": "{n} seri",
+  "mediaType": {
+    "volume": "kitap",
+    "manga": "manga",
+    "movie": "film",
+    "anime": "anime"
+  }
 }

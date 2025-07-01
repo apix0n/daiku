@@ -24,7 +24,7 @@
   <Overlay entry={selectedMovie} on:close={() => selectedMovie = null} />
 {/if}
 
-<h2>{$_("watched")} <span>· {watched.length} movies</span></h2>
+<h2>{$_("watched")} <span>· {$_("Nmovies", { values: { n: watched.length } })}</span></h2>
 
 <div id="watched" class="elements-wrapper watched-movies-wrapper">
   {#each watched as movie}

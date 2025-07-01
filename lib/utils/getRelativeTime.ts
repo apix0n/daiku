@@ -24,5 +24,11 @@ export function getRelativeTime(locale: string = "en", date: string, unit: strin
         }
         const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'always' });
         return rtf.format(-diffInMinutes, 'minute');
+    } else if (unit === "month") {
+        const years = now.getFullYear() - targetDate.getFullYear();
+        const months = now.getMonth() - targetDate.getMonth();
+        const diffInMonths = years * 12 + months;
+        const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
+        return rtf.format(-diffInMonths, 'month');
     }
 }

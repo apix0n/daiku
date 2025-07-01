@@ -48,6 +48,21 @@
             <input type="checkbox" bind:checked={$settings.showNotchSticker} />
             {$_("settings.notchSticker")}
         </label>
+
+        <label>
+            <input type="checkbox" bind:checked={$settings.multiLineBooks} />
+            {$_("settings.multiLineBooks")}
+        </label>
+
+        <label>
+            <input type="checkbox" bind:checked={$settings.showBookType} />
+            {$_("settings.showBookType")}
+        </label>
+
+        <label>
+            <input type="checkbox" bind:checked={$settings.showNextBooksCount} />
+            {$_("settings.showNextBookCount")}
+        </label>
     </div>
 {/if}
 

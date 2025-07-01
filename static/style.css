@@ -278,90 +278,6 @@ svg {
     }
 }
 
-.manga {
-    margin-bottom: 20px;
-}
-
-.edition {
-    margin-left: 15px;
-    border-left: 2px solid #ccc;
-    padding-left: 10px;
-    margin-bottom: 15px;
-}
-
-.edition-info {
-    display: flex;
-    /* Use flexbox for the title and volume info */
-    align-items: center;
-    /* Center items vertically */
-    margin-bottom: 1em;
-    gap: 5px 10px;
-    flex-wrap: wrap;
-}
-
-.volume-info {
-    background-color: grey;
-    color: white;
-    padding: 2px 5px;
-    border-radius: .3em;
-}
-
-.possessed.volume-info {
-    background-color: var(--app-accent);
-    color: var(--app-accent-contrast);
-}
-
-.possessions {
-    display: flex;
-    /* Use flexbox for the possessions */
-    flex-wrap: wrap;
-    /* Allow wrapping to the next line */
-    gap: 10px;
-}
-
-.possession {
-    /* margin-right: 10px; */
-    /* Space between possessions */
-    text-align: center;
-    /* Center the text under the cover */
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.possession span {
-    line-height: 1.2;
-}
-
-.cover {
-    width: auto;
-    max-width: 100px;
-    border-radius: 2px;
-}
-
-@media screen and (max-width: 600px) {
-    .cover {
-        max-width: 75px;
-    }
-
-    .edition {
-        margin-left: 10px;
-    }
-}
-
-.manga-list {
-    padding: 0 10px;
-}
-
-.manga-list h3 {
-    margin: 0;
-    font-weight: 500;
-}
-
-.manga-list h2 {
-    margin-bottom: 10px;
-}
-
 input {
     accent-color: var(--app-accent-dark);
 }
@@ -369,21 +285,6 @@ input {
 label {
     user-select: none;
     margin-left: 3px;
-}
-
-.checkboxdiv {
-    font-size: initial;
-    font-weight: initial;
-    position: absolute;
-    right: 0;
-    margin-right: 1em;
-}
-
-@media screen and (max-width: 1200px) {
-    .checkboxdiv {
-        position: unset;
-        margin-right: usnet;
-    }
 }
 
 .loader-container {
@@ -439,19 +340,6 @@ label {
 
 h3>.series-info {
     font-size: 1em;
-}
-
-.series-info {
-    font-size: .85em;
-    font-weight: normal;
-    margin-left: 0.3em;
-    color: var(--text-2);
-    position: revert;
-}
-
-.series-info::before {
-    content: '·';
-    margin-right: 0.3em;
 }
 
 .elements-wrapper.elements-manga .element {

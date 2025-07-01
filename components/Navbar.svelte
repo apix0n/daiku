@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { page } from "$app/state";
 	import { version } from "$app/environment";
 	import { haptic } from "$lib/client/haptics";
@@ -20,7 +20,7 @@
 
 	// check if the link is active (to highlight it) and if it is, set it as lastPage for / redirect
 
-	function isActive(href, saveInStorage = true) {
+	function isActive(href: string, saveInStorage = true) {
 		const active = page.url.pathname === href;
 		if (active && saveInStorage) {
 			localStorage.setItem("lastPage", href);
@@ -28,7 +28,7 @@
 		return active;
 	}
 
-	const handleClick = (event) => {
+	const handleClick = () => {
 		haptic();
 	};
 
@@ -36,40 +36,52 @@
 
 	let settingsOpen = false;
 
-	function scrollActive(node) {
-		// Scroll on mount
-		setTimeout(() => {
-			const active = node.querySelector(".isActive");
-			if (active)
-				active.scrollIntoView({
-					block: "nearest",
-					inline: "center",
-				});
-		}, 0);
+	function scrollActive(node: HTMLElement) {
+    // Scroll on mount
+    setTimeout(() => {
+        const active = node.querySelector(".isActive");
+        if (active) {
+            const rect = active.getBoundingClientRect();
+            const parentRect = node.getBoundingClientRect();
+            const dx = Math.abs(rect.left - parentRect.left - (parentRect.width / 2 - rect.width / 2));
+            if (dx > 50) {
+                active.scrollIntoView({
+                    block: "nearest",
+                    inline: "center",
+                });
+            }
+        }
+    }, 0);
 
-		// observe for class changes (so route changes)
-		const observer = new MutationObserver(() => {
-			const active = node.querySelector(".isActive");
-			const settings = node.querySelector(".settingsActive");
-			if (active && !settings)
-				active.scrollIntoView({
-					behavior: "smooth",
-					block: "nearest",
-					inline: "center",
-				});
-		});
-		observer.observe(node, {
-			subtree: true,
-			attributes: true,
-			attributeFilter: ["class"],
-		});
+    // observe for class changes (so route changes)
+    const observer = new MutationObserver(() => {
+        const active = node.querySelector(".isActive");
+        const settings = node.querySelector(".settingsActive");
+        if (active && !settings) {
+            const rect = active.getBoundingClientRect();
+            const parentRect = node.getBoundingClientRect();
+            const dx = Math.abs(rect.left - parentRect.left - (parentRect.width / 2 - rect.width / 2));
+            if (dx > 50) {
+                active.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                    inline: "center",
+                });
+            }
+        }
+    });
+    observer.observe(node, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["class"],
+    });
 
-		return {
-			destroy() {
-				observer.disconnect();
-			},
-		};
-	}
+    return {
+        destroy() {
+            observer.disconnect();
+        },
+    };
+}
 </script>
 
 <svelte:head>

@@ -31,7 +31,7 @@
 {#if current.length !== 0}
 	<h2>
 		{$_("currentlyReading")}
-		<span>· {current.length} manga</span>
+		<span>· {$_("Nmanga", { values: { n: current.length } })}</span>
 	</h2>
 
 	<div id="current" class="elements-wrapper elements-manga">

@@ -1,145 +1,174 @@
 export type MediaElement = {
-    media: MediaInformation;
+	media: MediaInformation;
 } & UserMediaInformation;
 
 type UserMediaInformation = {
-    /**
-     * Dates at which the user interacted with the entries (started/finished watching/reading).
-     */
-    dates?: UserDates;
-    status: (typeof UserMediaStatus)[number];
-    progress?: UserMediaProgress;
-    review: UserReview | null; // null if no review
-    repeat?: number | boolean;
+	/**
+	 * Dates at which the user interacted with the entries (started/finished watching/reading).
+	 */
+	dates?: UserDates;
+	status: (typeof UserMediaStatus)[number];
+	progress?: UserMediaProgress;
+	review: UserReview | null; // null if no review
+	repeat?: number | boolean;
 
-    /**
-     * A 2-character ISO 369-1 string referring to the language in which the media was watched, manga was read; `undefined` if default. 
-     */
-    lang?: string | undefined;
+	/**
+	 * A 2-character ISO 369-1 string referring to the language in which the media was watched, manga was read; `undefined` if default. 
+	 */
+	lang?: string | undefined;
 }
 
 type MediaInformation = {
-    title: MediaTitles;
-    type: (typeof MediaType)[number];
-    source: (typeof MediaSource)[number];
-    status: (typeof MediaStatus)[number];
+	title: MediaTitles;
+	type: (typeof MediaType)[number];
+	source: (typeof MediaSource)[number];
+	status: (typeof MediaStatus)[number];
 
-    /**
-     * The movie or per episode runtime in minutes.
-     */
-    runtime?: number;
+	/**
+	 * The movie or per episode runtime in minutes.
+	 */
+	runtime?: number;
 
-    /**
-     * Hexadecimal color code.
-     */
-    accentColor?: string; // hex color code
+	/**
+	 * Hexadecimal color code.
+	 */
+	accentColor?: string; // hex color code
 
-    cover: ImageWithSizes;
-    banner?: ImageWithSizes;
-    episodes?: MediaEpisodesInfo;
-    chapters?: MediaEpisodesInfo;
-    volumes?: MediaEpisodesInfo;
-    synopsis?: MediaSynopsis;
+	cover: ImageWithSizes;
+	banner?: ImageWithSizes;
+	episodes?: MediaEpisodesInfo;
+	chapters?: MediaEpisodesInfo;
+	volumes?: MediaEpisodesInfo;
+	synopsis?: MediaSynopsis;
 
-    /**
-     * Dates when the media started or ended.
-     */
-    dates?: {
-        /**
-         * A date in ISO 8601 format, i.e. `YYYY-MM-DD`, referring to when the media started airing.
-         */
-        start?: string;
+	/**
+	 * Dates when the media started or ended.
+	 */
+	dates?: {
+		/**
+		 * A date in ISO 8601 format, i.e. `YYYY-MM-DD`, referring to when the media started airing.
+		 */
+		start?: string;
 
-        /**
-         * A date in ISO 8601 format, i.e. `YYYY-MM-DD`, referring to when the media released or finished airing.
-         */
-        end?: string;
-    };
+		/**
+		 * A date in ISO 8601 format, i.e. `YYYY-MM-DD`, referring to when the media released or finished airing.
+		 */
+		end?: string;
+	};
 
-    /**
-     * If the media is a special episode (OVA) or chapter.
-     */
-    special: boolean;
+	/**
+	 * If the media is a special episode (OVA) or chapter.
+	 */
+	special: boolean;
 
-    /**
-     * Identifiers linking this entry to other services.
-     */
-    id: MediaIdentifiers;
+	/**
+	 * Identifiers linking this entry to other services.
+	 */
+	id: MediaIdentifiers;
 }
 
 export type MediaIdentifiers = {
-    // daiku: string;
-    anilist?: number;
-    myanimelist?: number;
-    tmdb?: number;
-    imdb?: string;
-    mangacollec?: string;
-    letterboxd?: string;
-    boxdit?: string,
-    isbn?: number;
+	// daiku: string;
+	anilist?: number;
+	myanimelist?: number;
+	tmdb?: number;
+	imdb?: string;
+	mangacollec?: string;
+	letterboxd?: string;
+	boxdit?: string,
+	isbn?: number;
 }
 
 export type MediaTitles = {
-    locale?: string;
-    english?: string;
-    romaji?: string;
-    native: string;
+	locale?: string;
+	english?: string;
+	romaji?: string;
+	native: string;
 }
 
-export const MediaType = ['anime', 'manga', 'movie', 'book'] as const
+export const MediaType = ['anime', 'manga', 'movie', 'book', 'book-group'] as const
 const MediaSource = ['anilist', 'letterboxd', 'mangacollec'] as const
 export const MediaStatus = ['airing', 'finished', 'notYetReleased', 'hiatus', 'cancelled'] as const
 
 type ImageWithSizes = {
-    small: string;
-    medium: string;
-    large: string;
+	small: string;
+	medium: string;
+	large: string;
 }
 
 export type SingleEpisodeInfo = {
-    number: number;
-    timestamp: number; // Unix timestamp in milliseconds
+	number: number;
+	timestamp: number; // Unix timestamp in milliseconds
 }
 
 type MediaEpisodesInfo = {
-    count: number;
-    last?: SingleEpisodeInfo;
-    next?: SingleEpisodeInfo;
+	count: number;
+	last?: SingleEpisodeInfo;
+	next?: SingleEpisodeInfo;
 }
 
 export type MediaSynopsis = {
-    text: string;
-    source?: string;
+	text: string;
+	source?: string;
 };
 
 type UserDates = {
-    started?: string;
-    finished?: string;
+	started?: string;
+	finished?: string;
 }
 
 export const UserMediaStatus = ['current', 'finished', 'paused', 'dropped', 'planned', 'repeating', 'favourite'] as const
 
 export type UserMediaProgress = {
-    episode?: number;
-    chapter?: number;
-    volume?: number;
+	episode?: number;
+	chapter?: number;
+	volume?: number;
 }
 
 type UserReview = {
-    rating: number; // 1-10 scale
-    text?: string;
-    spoiler?: boolean;
-    isHtml?: boolean;
+	rating: number; // 1-10 scale
+	text?: string;
+	spoiler?: boolean;
+	isHtml?: boolean;
 }
 
 export type FavouritesElement = {
-    cover: ImageWithSizes;
-    name: MediaTitles;
-    id?: MediaIdentifiers;
-    source: (typeof MediaSource)[number];
+	cover: ImageWithSizes;
+	name: MediaTitles;
+	id?: MediaIdentifiers;
+	source: (typeof MediaSource)[number];
 }
 
 export type FavouritesGroup = {
-    type: (typeof MediaType)[number];
-    favourites: FavouritesElement[];
+	type: (typeof MediaType)[number];
+	favourites: FavouritesElement[];
+}
+
+export type BookElement = {
+	type: "book";
+	title: string | null;
+	number: number;
+	cover: ImageWithSizes | null;
+	addedDate: string | null;
+	edition: string | null;
+	id?: MediaIdentifiers;
+	ean: number | null;
+}
+
+export type NextBookElement = BookElement & {
+	releaseDate: string | null; // ISO date format
+}
+
+export type BookGroup = {
+	type: "book-group";
+	title: string | null;
+	bookType?: string;
+	count: {
+		totalVolumes: number | null;
+		lastVolume: number | null;
+	}
+	source: (typeof MediaSource)[number];
+	author?: string;
+	books: BookElement[];
+	next: NextBookElement[];
 }
