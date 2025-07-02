@@ -25,8 +25,8 @@ export async function GET({ request, url }) {
 
     const baseUrl = url.origin;
     const animeUrl = baseUrl + "/api/get/anilist/anime";
-    const planningUrl = baseUrl + "/api/get/anilist/planning";
-    const mangaCollectionUrl = baseUrl + "/api/get/mangacollec";
+    const planningUrl = baseUrl + "/api/get/planned";
+    const mangaCollectionUrl = baseUrl + "/api/get/books";
     const fetchOptions = { headers: createHeaders(request.headers) }
 
     let cal = ical({
