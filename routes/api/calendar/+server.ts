@@ -81,7 +81,7 @@ export async function GET({ request, url }) {
 
     planningData.anime = planningData.anime.filter(anime =>
         (anime.media.status === 'notYetReleased' && (anime.media.dates?.start?.length === 10 || anime.media.episodes?.next)) ||
-        (anime.media.status === 'airing' && anime.media.episodes?.next && anime.media.episodes.next.number - 1 === 1)
+        (anime.media.status === 'airing' && anime.media.episodes?.next && anime.media.episodes.next.number <= 2)
     );
     planningData.anime.forEach(anime => {
         const eventId = anime.media.source + anime.media.id.anilist || anime.media.id.myanimelist;
