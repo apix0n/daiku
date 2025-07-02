@@ -41,6 +41,7 @@
 		--accentColor: var(--app-accent);
 		background-image: unset;
 		background: var(--background-2);
+		color: var(--text);
 		&:hover {
 			scale: unset;
 			background: var(--background-2);

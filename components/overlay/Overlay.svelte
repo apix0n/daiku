@@ -109,8 +109,8 @@
         justify-content: center;
         align-items: center;
         width: calc(100% - var(--navbar-width) - 8px);
-        height: 100vh;
-        height: 100dvh;
+        height: calc(100% - env(safe-area-inset-top));
+        margin-top: env(safe-area-inset-top);
         border-radius: var(--border-radius) 0 0 var(--border-radius);
         overflow: hidden;
     }
@@ -179,6 +179,7 @@
         border: none;
         font-size: 1.5rem;
         color: var(--text);
+        -webkit-tap-highlight-color: transparent;
         cursor: pointer;
         z-index: 3;
         line-height: 1em;
@@ -230,7 +231,7 @@
         }
     }
 
-    @media screen and (max-width: 100px) and (display-mode: standalone) {
+    @media screen and (max-width: 1000px) and (display-mode: standalone) {
         .overlay::before {
             /* progressive blur for the ios status */
             content: "";

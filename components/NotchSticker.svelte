@@ -12,6 +12,7 @@
     $: safeAreaTop = 0;
     $: safeAreaBottom = 0;
     $: state = "hidden"; // "notch", "island", "notch x"
+    let isIPhone = false;
 
     const islandValues = [
         53, // 16 pro max: larger text
@@ -36,12 +37,19 @@
             .trim();
     };
 
+    function checkIsIPhone() {
+        // iPhone detection based on user agent and platform
+        return /iPhone/.test(navigator.userAgent) ||
+            (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    }
+
     onMount(() => {
+        isIPhone = checkIsIPhone();
         safeAreaTop = Number(getSafeAreaTop().replace("px", ""));
         safeAreaBottom = Number(getSafeAreaBottom().replace("px", ""));
     });
 
-    $: if (safeAreaTop > 20) {
+    $: if (safeAreaTop > 20 && isIPhone) {
         state = "notch";
         if (islandValues.includes(safeAreaTop)) {
             state = "island";

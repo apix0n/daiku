@@ -246,6 +246,7 @@
         border-radius: 3px;
         color: var(--app-accent-contrast);
         font-size: 0.8em;
+        display: inline-block;
     }
 
     .series-number-info.alt {
