@@ -9,6 +9,7 @@ export async function GET({ request, url }) {
         let data = await fetchPlannedData(accounts.anilistId);
         await setValue("alPlanning", data);
         cacheStore.set("alPlanning", { data });
+        cacheStore.clear("planned");
         return json({ success: true });
     } catch (error) {
         console.error(error)

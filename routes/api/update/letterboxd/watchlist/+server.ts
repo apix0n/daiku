@@ -16,6 +16,7 @@ export async function GET({ request, url }) {
         };
         await setValue("lbWatchlist", data);
         cacheStore.set("lbWatchlist", { data });
+        cacheStore.clear("planned");
         return json({ success: true });
     } catch (error) {
         console.error(error);
