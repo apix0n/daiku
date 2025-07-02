@@ -109,8 +109,7 @@
         justify-content: center;
         align-items: center;
         width: calc(100% - var(--navbar-width) - 8px);
-        height: calc(100% - env(safe-area-inset-top));
-        margin-top: env(safe-area-inset-top);
+        height: 100%;
         border-radius: var(--border-radius) 0 0 var(--border-radius);
         overflow: hidden;
     }
@@ -188,6 +187,13 @@
     @media screen and (max-width: 1200px) {
         .content {
             padding: 0 2rem;
+        }
+    }
+
+    @media screen and (min-width: 1000px) {
+        .wrapper {
+            margin-top: env(safe-area-inset-top);
+            height: calc(100% - env(safe-area-inset-top));
         }
     }
 
