@@ -137,6 +137,7 @@ export async function plannedAnime(userPlannedData: AniListResponse): Promise<Me
             },
             episodes: {
                 count: entry.media.episodes,
+                last: entry.media.lastEpisode,
                 next: entry.media.nextAiringEpisode ? {
                     number: entry.media.nextAiringEpisode.episode,
                     timestamp: entry.media.nextAiringEpisode.airingAt * 1000,

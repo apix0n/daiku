@@ -112,6 +112,20 @@ export async function GET({ request, url }) {
                 }
             })
         }
+        if (anime.media.episodes?.last) {
+            cal.createEvent({
+                start: new Date(anime.media.episodes.last.timestamp),
+                end: new Date(anime.media.episodes.last.timestamp + (anime.media.runtime || 30) * 60 * 1000),
+                summary: anime.media.title.english || anime.media.title.romaji,
+                location: `Episode ${anime.media.episodes.last.number}`,
+                url: anime.media.id.anilist ? getLinkFromId(anime.media.id.anilist, anime.media.source, anime.media.type) : null,
+                id: `${eventId}-ep${anime.media.episodes.last.number}`,
+                x: {
+                    'X-COVER': anime.media.cover.medium || anime.media.cover.small,
+                    'X-MEDIA-TYPE': anime.media.type,
+                }
+            });
+        };
     })
 
     const sevenDaysAgo = new Date(now);

@@ -228,6 +228,19 @@
     [data-book-type="next"] .book-cover[data-nocover="true"]::after {
         background-color: var(--background-2);
     }
+    
+    [data-book-type="books"] .book-cover[data-nocover="true"]::after {
+        content: attr(data-number);
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+        left: 0;
+        background-color: var(--background-2);
+    }
 
     img {
         max-height: 100%;
