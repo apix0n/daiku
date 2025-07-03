@@ -1,8 +1,9 @@
 import { getValue, setValue } from "$lib/server/redisInteractions";
+import type { MediaListEntry } from "$lib/types/anilist";
 
 const apiUrl = 'https://animeschedule.net/api/v3';
 
-export async function getAnimeReleaseTime(anilistId) {
+export async function getAnimeReleaseTime(anilistId: number) {
     const cacheKey = `animeschedule:${anilistId}`;
 
     try {
@@ -39,7 +40,7 @@ export async function getAnimeReleaseTime(anilistId) {
 
         return releaseTime;
     } catch (error) {
-        if (error.name === 'AbortError') {
+        if (typeof error === "object" && error !== null && "name" in error && (error as { name: string }).name === 'AbortError') {
             console.log("animeSchedule | request timeout for ID:", anilistId);
         } else {
             console.error("animeSchedule | couldn't fetch release time for", anilistId, ":", error);
@@ -60,22 +61,24 @@ export async function getAnimeReleaseTime(anilistId) {
     }
 }
 
-export async function applyAnimeReleaseTime(anime) {
-    if (anime.media.status !== "RELEASING") {
+export async function applyAnimeReleaseTime(anime: MediaListEntry) {
+    if (anime.media.status !== "RELEASING" && anime.media.status !== "NOT_YET_RELEASED") {
         return;
     }
-    const releaseTime = await getAnimeReleaseTime(anime.media.id);
-    if (releaseTime) {
-        const [hours, minutes] = releaseTime;
-        if (anime.media.nextAiringEpisode?.airingAt) {
-            const nextDate = new Date(anime.media.nextAiringEpisode.airingAt * 1000);
-            nextDate.setUTCHours(hours, minutes, 0, 0);
-            anime.media.nextAiringEpisode.airingAt = Math.floor(nextDate.getTime() / 1000);
+    if (anime.media.nextAiringEpisode) {
+        const releaseTime = await getAnimeReleaseTime(anime.media.id)
+        if (releaseTime) {
+            const [hours, minutes] = releaseTime;
+            if (anime.media.nextAiringEpisode?.airingAt) {
+                const nextDate = new Date(anime.media.nextAiringEpisode.airingAt * 1000);
+                nextDate.setUTCHours(hours, minutes, 0, 0);
+                anime.media.nextAiringEpisode.airingAt = Math.floor(nextDate.getTime() / 1000);
+            }
+            if (anime.media.lastEpisode?.timestamp) {
+                const lastDate = new Date(anime.media.lastEpisode.timestamp);
+                lastDate.setUTCHours(hours, minutes, 0, 0);
+                anime.media.lastEpisode.timestamp = Math.floor(lastDate.getTime());
+            }
         }
-        if (anime.media.lastEpisode?.timestamp) {
-            const lastDate = new Date(anime.media.lastEpisode.timestamp);
-            lastDate.setUTCHours(hours, minutes, 0, 0);
-            anime.media.lastEpisode.timestamp = Math.floor(lastDate.getTime());
-        }
-    }
+    };
 }

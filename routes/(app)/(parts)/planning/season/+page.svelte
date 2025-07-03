@@ -32,8 +32,10 @@
                 a.media.dates?.start != null && a.media.dates.start.length > 4,
         )
         .sort((a, b) => {
-            const aStart = a.media.dates?.start ?? "";
-            const bStart = b.media.dates?.start ?? "";
+            const aStart =
+                a.media.episodes?.next?.timestamp ?? a.media.dates?.start ?? "";
+            const bStart =
+                b.media.episodes?.next?.timestamp ?? b.media.dates?.start ?? "";
             const aTime = aStart ? new Date(aStart).getTime() : 0;
             const bTime = bStart ? new Date(bStart).getTime() : 0;
             return aTime - bTime;
@@ -90,6 +92,7 @@
 
     import Overlay from "$components/overlay/Overlay.svelte";
     import type { MediaElement } from "$lib/types/media.js";
+    import RelativeRelease from "$components/cards/top/RelativeRelease.svelte";
     let selectedAnime: MediaElement | null = null;
 
     function handleCardClick(anime: MediaElement) {
@@ -117,7 +120,15 @@
                 on:click={() => handleCardClick(anime)}
             >
                 <Informations titles={anime.media.title}>
-                    {#if anime.media.dates?.start != null}
+                    {#if anime.media.episodes?.next}
+                        <span class="episodes-info">
+                            <RelativeRelease
+                                mediaType={anime.media.type}
+                                timestamp={anime.media.episodes?.next?.timestamp}
+                                number={anime.media.episodes?.next?.number}
+                            />
+                        </span>
+                    {:else if anime.media.dates?.start != null}
                         <PlanningRelease
                             dateString={anime.media.dates.start}
                             status={anime.media.status}

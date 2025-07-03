@@ -70,7 +70,7 @@
                 status={entry.media.status}
                 mediaType={entry.media.type}
             >
-                {#if entry.media.type === "anime" && entry.media.episodes?.next && entry.media.status === "airing"}
+                {#if entry.media.type === "anime" && entry.media.episodes?.next}
                     <RelativeRelease
                         timestamp={Math.floor(
                             entry.media.episodes?.next?.timestamp,

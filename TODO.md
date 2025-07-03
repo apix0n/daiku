@@ -18,7 +18,7 @@
 - [ ] rework season view
 - [ ] more immersive desktop pwa (with the window controls overlay api)
 - [ ] unpause media if up-to-date with the episode and new episode released
-- [ ] fetch release time for planned seasonal anime
+- [x] fetch release time for planned seasonal anime
 - [ ] multiple page fetching anilist favourites
 - [ ] change tab name when overlay open
 

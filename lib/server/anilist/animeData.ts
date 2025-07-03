@@ -181,7 +181,6 @@ async function currentAnime(userAnimeData: AniListResponse, fetchLastEpisode: bo
                 english: entry.media.title.english || undefined,
                 romaji: entry.media.title.romaji || undefined,
                 native: entry.media.title.native || undefined,
-                nativeOrigin: entry.media.countryOfOrigin?.toLowerCase() || 'jp', // Default to Japan if country of origin is not available
             },
             type: 'anime',
             source: 'anilist',
@@ -260,7 +259,6 @@ function droppedAnime(userAnimeData: AniListResponse) {
                 english: entry.media.title.english || undefined,
                 romaji: entry.media.title.romaji || undefined,
                 native: entry.media.title.native || undefined,
-                nativeOrigin: entry.media.countryOfOrigin?.toLowerCase() || 'jp', // Default to Japan if country of origin is not available
             },
             type: 'anime',
             source: 'anilist',

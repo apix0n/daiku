@@ -5,6 +5,8 @@ import type { AniListResponse } from '$lib/types/anilist';
 import type { MediaElement } from '$lib/types/media';
 import type { PlannedRequest } from '$lib/types/requests';
 import { getIdsFromAnilistId } from './watchedMovies';
+import { getPrecedingEpisode } from './getPrecedingEpisode';
+import { applyAnimeReleaseTime } from '../animeSchedule/animeReleaseTime';
 
 export async function getPlannedAnime(userId: number): Promise<AniListResponse> {
     const query = `
@@ -85,7 +87,7 @@ export async function getPlannedManga(userId: number): Promise<AniListResponse> 
     return await anilistGlobal.fetchGraphQL(query, { userId: userId });
 }
 
-export function plannedAnime(userPlannedData: AniListResponse): MediaElement[] {
+export async function plannedAnime(userPlannedData: AniListResponse): Promise<MediaElement[]> {
     const seen = new Set();
     const allPlanned = userPlannedData.data.MediaListCollection.lists
         .flatMap(list => list.entries)
@@ -96,9 +98,20 @@ export function plannedAnime(userPlannedData: AniListResponse): MediaElement[] {
             return !duplicate;
         }); // Filter out duplicates (same media in multiple lists)
 
-    allPlanned.forEach(media => {
+    await Promise.all(allPlanned.map(async (media) => {
+        try {
+            if (media.media.status === "RELEASING" && media.media.nextAiringEpisode && media.media.nextAiringEpisode.episode <= 2) {
+                media.media.lastEpisode = await getPrecedingEpisode(media.media.id, media.media.nextAiringEpisode.episode);
+                if (media.media.lastEpisode?.number > media.media.nextAiringEpisode?.episode) {
+                    media.media.lastEpisode = undefined;
+                }
+            }
+            await applyAnimeReleaseTime(media);
+        } catch (error) {
+            console.error("Error processing anime:", media.media.title.english || media.media.title.romaji, error);
+        }
         anilistGlobal.applyPosterOverrides(media.media);
-    });
+    }));
 
     return allPlanned.map(entry => ({
         media: {
@@ -265,7 +278,7 @@ export async function fetchPlannedData(userId: number): Promise<PlannedRequest> 
                 service: 'AniList',
                 timestamp: new Date().toISOString()
             },
-            anime: plannedAnime(plannedAnimeData),
+            anime: await plannedAnime(plannedAnimeData),
             manga: plannedManga(plannedMangaData),
             movies: await plannedMovies(plannedAnimeData),
         };
