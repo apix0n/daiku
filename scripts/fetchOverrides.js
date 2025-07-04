@@ -46,7 +46,7 @@ async function fetchOverrides() {
 
     console.log("--- overrides | fetched data");
 
-    const data = { anilist, tmdb, mangacollec };
+    const data = {...defaultData, anilist, tmdb, mangacollec: {...defaultData.mangacollec, ...mangacollec} };
 
     // Save data to a JSON file inside the static folder
     fs.writeFileSync('./lib/overrides/overrides.json', JSON.stringify(data, null, 2));
